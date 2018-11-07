@@ -19,16 +19,16 @@ Pepper_Backend::~Pepper_Backend()
 {}
 
 
-void Pepper_Backend::execute_transition(Transition &trans)
+void Pepper_Backend::execute_transition(shared_ptr <Transition> trans)
 {
 	ROS_INFO("Execute Transition.");
-	trans.action().mapping().name();
-	ROS_INFO("Action: %s", trans.action().name().c_str());
-	if(trans.action().mapping().name() == "stack"){
+	trans->action().mapping().name();
+	ROS_INFO("Action: %s", trans->action().name().c_str());
+	if(trans->action().mapping().name() == "stack"){
 		ROS_INFO("Start Put-Action.");
 		//trans.action().mapping().args[0];
 
-	}else if(trans.action().mapping().name() == "say"){
+	}else if(trans->action().mapping().name() == "say"){
 		ROS_INFO("Start Say-Action.");
 		pepper_smach::NaoQi_animatedSayGoal say_goal;
 		//say_goal.animatedMessage.data = trans.action().mapping().args().at(0);
