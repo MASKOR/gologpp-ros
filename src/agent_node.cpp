@@ -27,18 +27,26 @@ using namespace gologpp;
 
 void test_parser()
 {
-	std::cout<<"Test_parser"<<std::endl;
-	unique_ptr<Statement> mainproc = parser::parse_file(SOURCE_DIR "/example.gpp");
+	VoidExpression *mainproc = parser::parse_file(SOURCE_DIR "/move_base_example.gpp").release();
+
+	gologpp::shared_ptr<NumericFluent> on = global_scope().lookup_global<NumericFluent>("on", 1);
+	gologpp::shared_ptr<Action> put = global_scope().lookup_global<Action>("stack", 2);
+	gologpp::shared_ptr<BooleanFunction> goal = global_scope().lookup_global<BooleanFunction>("goal", 0);
+
+	if (on && put && goal)
+		std::cout << on->name() << " " << put->name() << " " << goal->name() << std::endl;
+
 	eclipse_opts options;
 	options.trace = false;
+	options.toplevel = false;
 	options.guitrace = false;
 
-	ReadylogContext::init(unique_ptr<AExecutionBackend>(new Pepper_Backend), options);
+	ReadylogContext::init(options);
 	ReadylogContext &ctx = ReadylogContext::instance();
 
 	ctx.run(Block(
-	new Scope(global_scope()),
-	{ mainproc.release() }
+		new Scope(global_scope()),
+		{ mainproc }
 	));
 
 	ReadylogContext::shutdown();
