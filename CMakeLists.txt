@@ -16,14 +16,20 @@ pkg_check_modules(parsegologpp REQUIRED parsegolog++)
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
-  rospy
   std_msgs
   genmsg
   message_generation
   actionlib_msgs
   actionlib
-  pepper_smach
+  naoqi_actions
 )
+
+add_definitions(-DLIBQI_VERSION=${naoqi_libqi_VERSION_MAJOR}${naoqi_libqi_VERSION_MINOR})
+if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated-declarations -Wno-placement-new")
+endif()
+
+
 include_directories(
   ${catkin_INCLUDE_DIRS}
   ${readylogpp_INCLUDE_DIRS}
@@ -32,7 +38,7 @@ include_directories(
 catkin_package(
   #INCLUDE_DIRS include
   #LIBRARIES ${PROJECT_NAME}
-  CATKIN_DEPENDS actionlib_msgs actionlib
+  CATKIN_DEPENDS actionlib_msgs actionlib naoqi_actions
   #CATKIN_DEPENDS actionlib actionlib_msgs message_generation roscpp rospy std_msgs
   #DEPENDS system_lib
 )
@@ -41,7 +47,11 @@ set(BUILD_TESTS OFF CACHE BOOL "Enable gologpp tests" FORCE)
 link_directories(${readylogpp_LIBRARY_DIRS} ${parsegologpp_LIBRARY_DIRS})
 
 add_executable(gologpp_agent src/agent_node.cpp src/pepper_backend.cpp )
-#message(readylogvar: ${readylog_LIBRARY})
+set_property(TARGET gologpp_agent PROPERTY CXX_STANDARD 14)
+
+#add_dependencies(naoqi_say_server ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
+
 target_link_libraries(
     gologpp_agent
     ${catkin_LIBRARIES}
