@@ -9,8 +9,9 @@
 
 #include <actionlib/client/simple_action_client.h>
 #include <actionlib/client/terminal_state.h>
+#include <move_base_msgs/MoveBaseAction.h>
 
-#include <pepper_smach/NaoQi_animatedSayAction.h>
+#include <naoqi_actions/NaoQi_animatedSayAction.h>
 
 #include <ros/ros.h>
 
@@ -19,7 +20,7 @@
 
 namespace gologpp {
 
-class Pepper_Backend : public AExecutionBackend
+class Pepper_Backend : public PlatformBackend
 {
 public:
 	Pepper_Backend();
@@ -27,9 +28,11 @@ public:
 	virtual void execute_transition(shared_ptr <Transition> trans)  override;
 
 	template < typename ActionT > void execute_transition_wrapper(typename ActionT::_action_goal_type::_goal_type &goal, shared_ptr <Transition> trans) {
+
 		actionlib::SimpleActionClient < ActionT > &client = std::get < actionlib::SimpleActionClient < ActionT > &>(action_clients);
 		if (trans->action().blocking()) {
 			client.sendGoalAndWait(goal, ros::Duration(30.0));
+			ROS_INFO("Sending goal");
 			trans->state = Action::RUNNING;
 			auto state = client.getState();
 			ROS_INFO ("Action finished: %s", state.toString().c_str());
@@ -65,10 +68,12 @@ public:
 
 
 private:
-	actionlib::SimpleActionClient<pepper_smach::NaoQi_animatedSayAction> animated_say_client;
+	actionlib::SimpleActionClient<naoqi_actions::NaoQi_animatedSayAction> animated_say_client;
+	actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> move_base_client;
 
 	std::tuple <
-		actionlib::SimpleActionClient<pepper_smach::NaoQi_animatedSayAction> &
+		actionlib::SimpleActionClient<naoqi_actions::NaoQi_animatedSayAction> & ,
+		actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> &
 	> action_clients;
 
 
