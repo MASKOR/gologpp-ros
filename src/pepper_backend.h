@@ -2,6 +2,7 @@
 #define ROSBACKEND_H
 
 #include <model/execution.h>
+#include <model/platform_backend.h>
 // Remove spurious clang code model error
 #ifdef Q_CREATOR_RUN
 #undef __GCC_ASM_FLAG_OUTPUTS__
@@ -25,45 +26,39 @@ class Pepper_Backend : public PlatformBackend
 public:
 	Pepper_Backend();
 	virtual ~Pepper_Backend() override;
-	virtual void execute_transition(shared_ptr <Transition> trans)  override;
+	virtual void execute_activity(shared_ptr<Activity> a)  override;
+	virtual void preempt_activity(shared_ptr<Transition> trans) override;
 
-	template < typename ActionT > void execute_transition_wrapper(typename ActionT::_action_goal_type::_goal_type &goal, shared_ptr <Transition> trans) {
+	template < typename ActionT > void execute_transition_wrapper(typename ActionT::_action_goal_type::_goal_type &goal, shared_ptr<Activity> a) {
 
 		actionlib::SimpleActionClient < ActionT > &client = std::get < actionlib::SimpleActionClient < ActionT > &>(action_clients);
-		if (trans->action().blocking()) {
+		if (true) {
 			client.sendGoalAndWait(goal, ros::Duration(30.0));
 			ROS_INFO("Sending goal");
-			trans->state = Action::RUNNING;
 			auto state = client.getState();
 			ROS_INFO ("Action finished: %s", state.toString().c_str());
 
 		} else {
 			client.sendGoal(goal, boost::bind(
 				&Pepper_Backend::doneCb<typename ActionT::_action_result_type::_result_type::ConstPtr>,
-				this, trans, _1, _2
+				this, a, _1, _2
 			) );
-			trans->state = Action::RUNNING;
-			auto state = client.getState();
 		}
 	}
 
-	template < typename ResultConstPtrT > void doneCb(shared_ptr <Transition> &trans, const actionlib::SimpleClientGoalState &state, ResultConstPtrT result) {
+	template < typename ResultConstPtrT > void doneCb(shared_ptr<Activity> a, const actionlib::SimpleClientGoalState &state, ResultConstPtrT result) {
 
 		ROS_INFO("Finished in state [%s]", state.toString().c_str());
-		running_transitions_.erase(trans);
 		switch(state.state_){
-			case actionlib::SimpleClientGoalState::SUCCEEDED: trans->state = Action::SUCCEEDED; break;
-			case actionlib::SimpleClientGoalState::PREEMPTED: trans->state = Action::PREEMPTED; break;
-			case actionlib::SimpleClientGoalState::ABORTED:   trans->state = Action::ABORTED; break;
-			case actionlib::SimpleClientGoalState::PENDING: ; break;
-			case actionlib::SimpleClientGoalState::ACTIVE: ; break;
+			case actionlib::SimpleClientGoalState::SUCCEEDED:  update_activity(a->transition(Transition::Hook::FINISH)) ; break;
+			case actionlib::SimpleClientGoalState::PREEMPTED:; break;
+			case actionlib::SimpleClientGoalState::ABORTED:    update_activity(a->transition(Transition::Hook::FAIL)); break;
+			case actionlib::SimpleClientGoalState::PENDING:	 ; break;
+			case actionlib::SimpleClientGoalState::ACTIVE:   ; break;
 			case actionlib::SimpleClientGoalState::RECALLED: ; break;
 			case actionlib::SimpleClientGoalState::REJECTED: ; break;
 			case actionlib::SimpleClientGoalState::LOST: ; break;
 		}
-		done_transitions_.push(trans);
-		//trans.action().ser;
-		//ROS_INFO("Finished in state [%s]", action_state_);
 	}
 
 

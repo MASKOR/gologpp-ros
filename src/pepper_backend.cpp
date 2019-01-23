@@ -23,32 +23,39 @@ Pepper_Backend::~Pepper_Backend()
 {}
 
 
-void Pepper_Backend::execute_transition(shared_ptr <Transition> trans)
+void Pepper_Backend::execute_activity(shared_ptr<Activity> a)
 {
-	ROS_INFO("Execute Transition. Action: %s arg: %s", trans->action()->name().c_str(), trans->args().at(0)->str().c_str());
-	trans->action()->mapping().name();
-	if(trans->action()->mapping().name() == "stack"){
+	ROS_INFO("Execute Transition. Action: %s arg: %s", a->action()->name().c_str(), a->args().at(0)->str().c_str());
+	a->action()->mapping().name();
+	if(a->action()->mapping().name() == "stack"){
 		//trans.action().mapping().args[0];
 
-	}else if(trans->action()->mapping().name() == "say"){
+	}else if(a->action()->mapping().name() == "say"){
 		naoqi_actions::NaoQi_animatedSayGoal say_goal;
-		say_goal.animatedMessage.data = "Ziel erreicht, Schulnoten";
-		execute_transition_wrapper<naoqi_actions::NaoQi_animatedSayAction>(say_goal, trans);
+		say_goal.animatedMessage.data =  a->args().at(0)->str();
+		execute_transition_wrapper<naoqi_actions::NaoQi_animatedSayAction>(say_goal, a);
 		ROS_INFO("Sending goal");
 
-	}else if(trans->action()->mapping().name() == "movetoframe"){
+	}else if(a->action()->mapping().name() == "movetoframe"){
 		move_base_msgs::MoveBaseGoal goal;
-		goal.target_pose.header.frame_id = trans->args().at(0)->str().c_str();
+		goal.target_pose.header.frame_id = a->args().at(0)->str().c_str();
 		goal.target_pose.header.stamp = ros::Time::now();
 		goal.target_pose.pose.position.x = 0;
 		goal.target_pose.pose.position.y = 0;
 		goal.target_pose.pose.orientation.w = 1;
-		execute_transition_wrapper<move_base_msgs::MoveBaseAction>(goal, trans);
+		execute_transition_wrapper<move_base_msgs::MoveBaseAction>(goal, a);
 	}
 	else{
 		ROS_INFO("No Action is matching.");
 	}
 }
-
+void Pepper_Backend::preempt_activity(shared_ptr<Transition> trans)
+{
+	//handles case when gpp-agent preempts action.
+	if(trans->action()->name() == "movetoframe")
+		move_base_client.cancelAllGoals();
+	else if(trans->action()->name() == "say")
+		animated_say_client.cancelAllGoals();
+}
 
 } //namespace gologpp
