@@ -25,28 +25,20 @@ using namespace gologpp;
 
 
 
-void test_parser()
+void load_n_exec_program(string program)
 {
-	VoidExpression *mainproc = parser::parse_file(SOURCE_DIR "/move_base_example.gpp").release();
-
-	gologpp::shared_ptr<NumericFluent> on = global_scope().lookup_global<NumericFluent>("on", 1);
-	gologpp::shared_ptr<Action> put = global_scope().lookup_global<Action>("stack", 2);
-	gologpp::shared_ptr<BooleanFunction> goal = global_scope().lookup_global<BooleanFunction>("goal", 0);
-
-	if (on && put && goal)
-		std::cout << on->name() << " " << put->name() << " " << goal->name() << std::endl;
+	VoidExpression *mainproc = parser::parse_file(SOURCE_DIR "/"+program+".gpp").release();
 
 	eclipse_opts options;
 	options.trace = false;
 	options.toplevel = false;
 	options.guitrace = false;
-
-	ReadylogContext::init(options);
+	ReadylogContext::init(options, std::unique_ptr<PlatformBackend>(std::make_unique<Pepper_Backend>()) );
 	ReadylogContext &ctx = ReadylogContext::instance();
 
 	ctx.run(Block(
-		new Scope(global_scope()),
-		{ mainproc }
+	new Scope(global_scope()),
+	{ mainproc }
 	));
 
 	ReadylogContext::shutdown();
@@ -57,8 +49,20 @@ void test_parser()
 
 int main(int argc, char **argv)
 {
+	std::string param;
 	ros::init(argc, argv, "gologpp_agent");
-	test_parser();
+	ros::NodeHandle nh("~");
+	if(nh.getParam("program", param)){
+		ROS_INFO("Got parameter: %s", param.c_str());
+		nh.deleteParam("program");
+		load_n_exec_program(param.c_str());
+
+	}else{
+		ROS_INFO("Default program");
+		nh.deleteParam("program");
+		load_n_exec_program("move_base_example");
+
+	}
 	return 0;
 }
 
