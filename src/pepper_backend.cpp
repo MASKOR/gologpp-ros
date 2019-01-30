@@ -57,5 +57,11 @@ void Pepper_Backend::preempt_activity(shared_ptr<Transition> trans)
 	else if(trans->action()->name() == "say")
 		animated_say_client.cancelAllGoals();
 }
+Clock::time_point Pepper_Backend::time() const noexcept
+{
+	//Clock::duration rv = std::chrono::steady_clock::now().time_since_epoch();
+	//return Clock::time_point(rv);
+	return Clock::time_point();
+}
 
 } //namespace gologpp
