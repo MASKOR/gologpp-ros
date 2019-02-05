@@ -1,0 +1,65 @@
+§domain rooms = {r1, r2, room_one_link, lab_entry_link}
+§domain locations = rooms
+
+?fluent visited(§room) {
+domain:
+	§room in rooms;
+initially:
+	(r1) = false;
+	(r2) = false;
+	(room_one_link) = false;
+	(lab_entry_link) = false;
+}
+
+§fluent loc() {
+initially:
+	() = r1;
+}
+
+action movetoframe(§to, §from){
+domain:
+	§to in locations;
+	§from in locations;
+precondition:
+	loc() == §from     		// robot is at position y
+	& §from != §to    		// robot is not at target location 
+	& !visited(§to)   		// robot did not visited target location
+effect:
+	loc() = §to;
+	visited(§to) = true;
+}
+
+action say($saymessage){
+precondition: true
+}
+
+procedure staticplanner(){
+	movetoframe(lab_entry_link, r1);
+	say("Schulnoten, hier gibt es einiges zu sehen");
+	movetoframe(room_one_link, lab_entry_link);
+	say("Ende der Tour, Schulnoten");
+}
+
+/*
+?function goal() {
+	return loc() == lab_entry_link & visited(lab_entry_link) & visited(room_one_link);
+}
+
+%function reward() {
+	if (goal())
+		return 100;
+	else
+		return -1;
+}
+*/
+
+{
+	staticplanner();
+	/* solve(6, reward())
+		while (!goal())
+			pick (§x in {r1, r2, room_one_link, lab_entry_link})
+				pick(§y in {r1, r2, room_one_link, lab_entry_link})
+					movetoframe(§x, §y);
+					*/
+}
+
