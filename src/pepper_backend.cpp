@@ -31,9 +31,9 @@ void Pepper_Backend::execute_activity(shared_ptr<Activity> a)
 		//trans.action().mapping().args[0];
 
 	}else if(a->action()->mapping().name() == "say"){
-		naoqi_actions::NaoQi_animatedSayGoal say_goal;
+		naoqi_wrapper_msgs::NaoQi_animatedSayGoal say_goal;
 		say_goal.animatedMessage.data =  a->args().at(0)->str();
-		execute_transition_wrapper<naoqi_actions::NaoQi_animatedSayAction>(say_goal, a);
+		execute_transition_wrapper<naoqi_wrapper_msgs::NaoQi_animatedSayAction>(say_goal, a);
 		ROS_INFO("Sending goal");
 
 	}else if(a->action()->mapping().name() == "movetoframe"){

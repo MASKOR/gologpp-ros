@@ -21,7 +21,7 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
   actionlib_msgs
   actionlib
-  naoqi_actions
+  naoqi_wrapper_msgs
 )
 
 add_definitions(-DLIBQI_VERSION=${naoqi_libqi_VERSION_MAJOR}${naoqi_libqi_VERSION_MINOR})
@@ -38,7 +38,7 @@ include_directories(
 catkin_package(
   #INCLUDE_DIRS include
   #LIBRARIES ${PROJECT_NAME}
-  CATKIN_DEPENDS actionlib_msgs actionlib naoqi_actions
+  CATKIN_DEPENDS actionlib_msgs actionlib naoqi_wrapper_msgs
   #CATKIN_DEPENDS actionlib actionlib_msgs message_generation roscpp rospy std_msgs
   #DEPENDS system_lib
 )

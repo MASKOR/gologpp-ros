@@ -55,7 +55,7 @@
   <depend>message_generation</depend>
   <depend>roscpp</depend>
   <depend>std_msgs</depend>
-  <depend>naoqi_actions</depend>
+  <depend>naoqi_wrapper_msgs</depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

@@ -12,7 +12,7 @@
 #include <actionlib/client/terminal_state.h>
 #include <move_base_msgs/MoveBaseAction.h>
 
-#include <naoqi_actions/NaoQi_animatedSayAction.h>
+#include <naoqi_wrapper_msgs/NaoQi_animatedSayAction.h>
 
 #include <ros/ros.h>
 
@@ -63,11 +63,11 @@ public:
 
 
 private:
-	actionlib::SimpleActionClient<naoqi_actions::NaoQi_animatedSayAction> animated_say_client;
+	actionlib::SimpleActionClient<naoqi_wrapper_msgs::NaoQi_animatedSayAction> animated_say_client;
 	actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> move_base_client;
 
 	std::tuple <
-	actionlib::SimpleActionClient<naoqi_actions::NaoQi_animatedSayAction> & ,
+	actionlib::SimpleActionClient<naoqi_wrapper_msgs::NaoQi_animatedSayAction> & ,
 	actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> &
 	> action_clients;
 
