@@ -8,9 +8,16 @@
 namespace gologpp {
 
 Pepper_Backend::Pepper_Backend()
-: animated_say_client("/naoqi_animatedSay_server/animatedSay", true)
-, move_base_client("move_base", true)
-, action_clients { animated_say_client, move_base_client}
+: move_base_client("move_base", true)
+, animated_say_client("/naoqi_animatedSay_server/animatedSay", true)
+, animation_client("/naoqi_animation_server/naoqi_animation", true)
+, dialog_client("/naoqi_dialog_server", true)
+//, facetracking_client("/naoqi_wrapper/naoqi_faceTracking_service", true)
+, lookAt_client("/naoqi_lookAt_server/lookAt", true)
+, openWebsite_client("/naoqi_openWebsite_server", true)
+, say_client("/naoqi_say_server/naoqi_say", true)
+, subscribe_client("/naoqi_subscribe_server/subscribe", true)
+, action_clients {move_base_client, animated_say_client, animation_client, dialog_client, /*facetracking_client,*/ lookAt_client, openWebsite_client, say_client, subscribe_client}
 {
 	//ROS_INFO("Waiting for action server to start.");
 	//animated_say_client.waitForServer(); //will wait for infinite time
@@ -30,7 +37,7 @@ void Pepper_Backend::execute_activity(shared_ptr<Activity> a)
 	if(a->target()->mapping().name() == "stack"){
 		//trans.target().mapping().args[0];
 
-	}else if(a->target()->mapping().name() == "say"){
+	}else if(a->target()->mapping().name() == "animatedsay"){
 		naoqi_wrapper_msgs::NaoQi_animatedSayGoal say_goal;
 		say_goal.animatedMessage.data =  a->args().at(0)->str();
 		execute_transition_wrapper<naoqi_wrapper_msgs::NaoQi_animatedSayAction>(say_goal, a);
@@ -44,6 +51,36 @@ void Pepper_Backend::execute_activity(shared_ptr<Activity> a)
 		goal.target_pose.pose.position.y = 0;
 		goal.target_pose.pose.orientation.w = 1;
 		execute_transition_wrapper<move_base_msgs::MoveBaseAction>(goal, a);
+
+	}else if(a->target()->mapping().name() == "animation"){
+		naoqi_wrapper_msgs::NaoQi_animationGoal goal;
+		goal.animation.data = a->args().at(0)->str().c_str();
+		execute_transition_wrapper<naoqi_wrapper_msgs::NaoQi_animationAction>(goal, a);
+
+	} else if(a->target()->mapping().name() == "dialog"){
+		naoqi_wrapper_msgs::NaoQi_dialogGoal goal;
+		goal.dialogTopicFile.data = a->args().at(0)->str().c_str();
+		execute_transition_wrapper<naoqi_wrapper_msgs::NaoQi_dialogAction>(goal, a);
+
+	} else if(a->target()->mapping().name() == "lookAt"){
+		naoqi_wrapper_msgs::NaoQi_lookAtGoal goal;
+		//goal.frame =  a->args().at(0)->str().c_str();
+		execute_transition_wrapper<naoqi_wrapper_msgs::NaoQi_lookAtAction>(goal, a);
+
+	} else if(a->target()->mapping().name() == "openWebsite"){
+		naoqi_wrapper_msgs::NaoQi_openWebsiteGoal goal;
+		goal.url.data = a->args().at(0)->str().c_str();
+		execute_transition_wrapper<naoqi_wrapper_msgs::NaoQi_openWebsiteAction>(goal, a);
+
+	} else if(a->target()->mapping().name() == "say"){
+		naoqi_wrapper_msgs::NaoQi_sayGoal goal;
+		goal.message.data =  a->args().at(0)->str().c_str();
+		execute_transition_wrapper<naoqi_wrapper_msgs::NaoQi_sayAction>(goal, a);
+
+	} else if(a->target()->mapping().name() == "subscribe"){
+		naoqi_wrapper_msgs::NaoQi_subscribeGoal goal;
+		goal.eventName.data = a->args().at(0)->str().c_str();
+		execute_transition_wrapper<naoqi_wrapper_msgs::NaoQi_subscribeAction>(goal, a);
 	}
 	else{
 		ROS_INFO("No Action is matching.");

@@ -13,6 +13,16 @@
 #include <move_base_msgs/MoveBaseAction.h>
 
 #include <naoqi_wrapper_msgs/NaoQi_animatedSayAction.h>
+#include <naoqi_wrapper_msgs/NaoQi_animationAction.h>
+#include <naoqi_wrapper_msgs/NaoQi_dialogAction.h>
+#include <naoqi_wrapper_msgs/FaceTracking.h>
+#include <naoqi_wrapper_msgs/NaoQi_lookAtAction.h>
+#include <naoqi_wrapper_msgs/NaoQi_openWebsiteAction.h>
+#include <naoqi_wrapper_msgs/NaoQi_sayAction.h>
+#include <naoqi_wrapper_msgs/NaoQi_subscribeAction.h>
+
+
+
 
 #include <ros/ros.h>
 
@@ -63,12 +73,27 @@ public:
 
 
 private:
-	actionlib::SimpleActionClient<naoqi_wrapper_msgs::NaoQi_animatedSayAction> animated_say_client;
 	actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> move_base_client;
+	actionlib::SimpleActionClient<naoqi_wrapper_msgs::NaoQi_animatedSayAction> animated_say_client;
+	actionlib::SimpleActionClient<naoqi_wrapper_msgs::NaoQi_animationAction> animation_client;
+	actionlib::SimpleActionClient<naoqi_wrapper_msgs::NaoQi_dialogAction> dialog_client;
+	//actionlib::SimpleActionClient<naoqi_wrapper_msgs::FaceTracking> facetracking_client;
+	actionlib::SimpleActionClient<naoqi_wrapper_msgs::NaoQi_lookAtAction> lookAt_client;
+	actionlib::SimpleActionClient<naoqi_wrapper_msgs::NaoQi_openWebsiteAction> openWebsite_client;
+	actionlib::SimpleActionClient<naoqi_wrapper_msgs::NaoQi_sayAction> say_client;
+	actionlib::SimpleActionClient<naoqi_wrapper_msgs::NaoQi_subscribeAction> subscribe_client;
+
 
 	std::tuple <
+	actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> & ,
 	actionlib::SimpleActionClient<naoqi_wrapper_msgs::NaoQi_animatedSayAction> & ,
-	actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> &
+	actionlib::SimpleActionClient<naoqi_wrapper_msgs::NaoQi_animationAction> &,
+	actionlib::SimpleActionClient<naoqi_wrapper_msgs::NaoQi_dialogAction> & ,
+	//actionlib::SimpleActionClient<naoqi_wrapper_msgs::FaceTracking> &,
+	actionlib::SimpleActionClient<naoqi_wrapper_msgs::NaoQi_lookAtAction> &,
+	actionlib::SimpleActionClient<naoqi_wrapper_msgs::NaoQi_openWebsiteAction> &,
+	actionlib::SimpleActionClient<naoqi_wrapper_msgs::NaoQi_sayAction> &,
+	actionlib::SimpleActionClient<naoqi_wrapper_msgs::NaoQi_subscribeAction> &
 	> action_clients;
 
 
