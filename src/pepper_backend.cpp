@@ -25,18 +25,18 @@ Pepper_Backend::~Pepper_Backend()
 
 void Pepper_Backend::execute_activity(shared_ptr<Activity> a)
 {
-	ROS_INFO("Execute Transition. Action: %s arg: %s", a->action()->name().c_str(), a->args().at(0)->str().c_str());
-	a->action()->mapping().name();
-	if(a->action()->mapping().name() == "stack"){
-		//trans.action().mapping().args[0];
+	ROS_INFO("Execute Transition. Action: %s arg: %s", a->target()->name().c_str(), a->args().at(0)->str().c_str());
+	a->target()->mapping().name();
+	if(a->target()->mapping().name() == "stack"){
+		//trans.target().mapping().args[0];
 
-	}else if(a->action()->mapping().name() == "say"){
+	}else if(a->target()->mapping().name() == "say"){
 		naoqi_wrapper_msgs::NaoQi_animatedSayGoal say_goal;
 		say_goal.animatedMessage.data =  a->args().at(0)->str();
 		execute_transition_wrapper<naoqi_wrapper_msgs::NaoQi_animatedSayAction>(say_goal, a);
 		ROS_INFO("Sending goal");
 
-	}else if(a->action()->mapping().name() == "movetoframe"){
+	}else if(a->target()->mapping().name() == "movetoframe"){
 		move_base_msgs::MoveBaseGoal goal;
 		goal.target_pose.header.frame_id = a->args().at(0)->str().c_str();
 		goal.target_pose.header.stamp = ros::Time::now();
@@ -52,9 +52,9 @@ void Pepper_Backend::execute_activity(shared_ptr<Activity> a)
 void Pepper_Backend::preempt_activity(shared_ptr<Transition> trans)
 {
 	//handles case when gpp-agent preempts action.
-	if(trans->action()->name() == "movetoframe")
+	if(trans->target()->name() == "movetoframe")
 		move_base_client.cancelAllGoals();
-	else if(trans->action()->name() == "say")
+	else if(trans->target()->name() == "say")
 		animated_say_client.cancelAllGoals();
 }
 Clock::time_point Pepper_Backend::time() const noexcept
