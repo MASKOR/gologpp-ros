@@ -1,0 +1,17 @@
+$fluent outcome(){
+initially:
+	()= "";
+}
+
+action dialog($topicfile){
+
+}
+
+action subscribe($s) {
+
+}
+
+{
+	dialog("pepper_smach/examples/dialogues/obj_detection.top");
+	subscribe("MiddleTactilTouched");
+}
