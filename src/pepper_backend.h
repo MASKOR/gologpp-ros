@@ -55,7 +55,7 @@ public:
 		ROS_INFO("Finished in state [%s]", state.toString().c_str());
 		switch(state.state_){
 		case actionlib::SimpleClientGoalState::SUCCEEDED:
-			update_activity(a->transition(Transition::Hook::FINISH));
+			update_activity(a->transition(Transition::Hook::FINISH), to_golog_constant<ResultConstPtrT>(result));
 			break;
 		case actionlib::SimpleClientGoalState::PREEMPTED:
 			break;
@@ -69,6 +69,11 @@ public:
 		case actionlib::SimpleClientGoalState::LOST:
 			;
 		}
+	}
+
+	template <class ResultT> AbstractConstant *to_golog_constant(ResultT)
+	{
+		return nullptr;
 	}
 
 
@@ -99,5 +104,11 @@ private:
 
 	//std::unordered_map<actionlib::SimpleActionClient<actionlib_test::DoPutAction>,Transition> action_map;
 };
+
+
+template<> AbstractConstant *Pepper_Backend::to_golog_constant(naoqi_wrapper_msgs::NaoQi_dialogResultConstPtr);
+
+
+
 } //namespace gologpp
 #endif // ROSBACKEND_H
