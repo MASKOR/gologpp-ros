@@ -34,14 +34,10 @@ void Pepper_Backend::execute_activity(shared_ptr<Activity> a)
 {
 	ROS_INFO("Execute Transition. Action: %s arg: %s", a->target()->name().c_str(), a->args().at(0)->str().c_str());
 	a->target()->mapping().name();
-	if(a->target()->mapping().name() == "stack"){
-		//trans.target().mapping().args[0];
-
-	}else if(a->target()->mapping().name() == "animatedsay"){
+	if(a->target()->mapping().name() == "animatedsay"){
 		naoqi_wrapper_msgs::NaoQi_animatedSayGoal say_goal;
 		say_goal.animatedMessage.data =  a->args().at(0)->str();
 		execute_transition_wrapper<naoqi_wrapper_msgs::NaoQi_animatedSayAction>(say_goal, a);
-		ROS_INFO("Sending goal");
 
 	}else if(a->target()->mapping().name() == "movetoframe"){
 		move_base_msgs::MoveBaseGoal goal;
@@ -99,6 +95,11 @@ Clock::time_point Pepper_Backend::time() const noexcept
 	//Clock::duration rv = std::chrono::steady_clock::now().time_since_epoch();
 	//return Clock::time_point(rv);
 	return Clock::time_point();
+}
+template<>
+AbstractConstant *Pepper_Backend::to_golog_constant(naoqi_wrapper_msgs::NaoQi_dialogResultConstPtr result)
+{
+	return new StringConstant(result->outcome);
 }
 
 } //namespace gologpp
