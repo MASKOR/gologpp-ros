@@ -3,6 +3,7 @@
 #include <typeinfo>
 #include <string>
 #include <geometry_msgs/PoseStamped.h>
+#include <thread>
 
 
 namespace gologpp {
@@ -17,8 +18,11 @@ Pepper_Backend::Pepper_Backend()
 , openWebsite_client("/naoqi_openWebsite_server", true)
 , say_client("/naoqi_say_server/naoqi_say", true)
 , subscribe_client("/naoqi_subscribe_server/subscribe", true)
-, action_clients {move_base_client, animated_say_client, animation_client, dialog_client, /*facetracking_client,*/ lookAt_client, openWebsite_client, say_client, subscribe_client}
+, yolo_obj_detection_position_client("/yolo_obj_detection_position_server", true)
+, action_clients {move_base_client, animated_say_client, animation_client, dialog_client
+                  , /*facetracking_client,*/ lookAt_client, openWebsite_client, say_client, subscribe_client, yolo_obj_detection_position_client}
 {
+    facetracking_client = nh_.serviceClient<naoqi_wrapper_msgs::FaceTracking>("/face_tracking");
 	//ROS_INFO("Waiting for action server to start.");
 	//animated_say_client.waitForServer(); //will wait for infinite time
 	//  doput_client.waitForServer();
@@ -85,6 +89,27 @@ void Pepper_Backend::execute_activity(shared_ptr<Activity> a)
 		naoqi_wrapper_msgs::NaoQi_subscribeGoal goal;
 		goal.eventName.data = a->args().at(0)->str();
 		execute_transition_wrapper<naoqi_wrapper_msgs::NaoQi_subscribeAction>(goal, a);
+
+    } else if (a->target()->mapping().name() == "detect_position") {
+        darknet_actions::obj_detectionGoal goal;
+		goal.to_detected_obj = a->args().at(0)->str();
+        execute_transition_wrapper<darknet_actions::obj_detectionAction>(goal, a);
+
+    } else if (a->target()->mapping().name() == "face_tracking") {
+		std::thread service_thread( [&] (bool enable, shared_ptr<Activity> activity) {
+			naoqi_wrapper_msgs::FaceTracking srv;
+			srv.request.enableFaceTracking = enable;
+			if (facetracking_client.call(srv)) {
+				update_activity(activity->transition(Transition::Hook::FINISH));
+			} else {
+				update_activity(activity->transition(Transition::Hook::FAIL));
+			}
+		}, bool(*a->args().at(0)), a);
+		service_thread.detach();
+	} else if (a->target()->mapping().name() == "logger"){
+		for(int i = 0; i <a->args().size(); i++) {
+			ROS_INFO_STREAM(a->args().at(i)->str());
+		}
 	}
 	else{
 		ROS_INFO("No Action is matching.");
