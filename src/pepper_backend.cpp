@@ -41,7 +41,7 @@ void Pepper_Backend::execute_activity(shared_ptr<Activity> a)
 
 	}else if(a->target()->mapping().name() == "movetoframe"){
 		move_base_msgs::MoveBaseGoal goal;
-		goal.target_pose.header.frame_id = a->args().at(0)->str().c_str();
+		goal.target_pose.header.frame_id = a->args().at(0)->str();
 		goal.target_pose.header.stamp = ros::Time::now();
 		goal.target_pose.pose.position.x = 0;
 		goal.target_pose.pose.position.y = 0;
@@ -50,32 +50,40 @@ void Pepper_Backend::execute_activity(shared_ptr<Activity> a)
 
 	}else if(a->target()->mapping().name() == "animation"){
 		naoqi_wrapper_msgs::NaoQi_animationGoal goal;
-		goal.animation.data = a->args().at(0)->str().c_str();
+		goal.animation.data = a->args().at(0)->str();
 		execute_transition_wrapper<naoqi_wrapper_msgs::NaoQi_animationAction>(goal, a);
 
 	} else if(a->target()->mapping().name() == "dialog"){
 		naoqi_wrapper_msgs::NaoQi_dialogGoal goal;
-		goal.dialogTopicFile.data = a->args().at(0)->str().c_str();
+		goal.dialogTopicFile.data = a->args().at(0)->str();
 		execute_transition_wrapper<naoqi_wrapper_msgs::NaoQi_dialogAction>(goal, a);
 
 	} else if(a->target()->mapping().name() == "lookAt"){
 		naoqi_wrapper_msgs::NaoQi_lookAtGoal goal;
-		//goal.frame =  a->args().at(0)->str().c_str();
+		goal.position.push_back(double(*a->args().at(0)));
+		goal.position.push_back(double(*a->args().at(1)));
+		goal.position.push_back(double(*a->args().at(2)));
+		goal.frame = 2;
+		goal.fractionMaxSpeed = 1;
+		goal.useWholeBody = false;
+
+		//goal.position.push_back(int(*a->args().at(1)));
+		//goal.position.push_back(int(*a->args().at(2)));
 		execute_transition_wrapper<naoqi_wrapper_msgs::NaoQi_lookAtAction>(goal, a);
 
 	} else if(a->target()->mapping().name() == "openWebsite"){
 		naoqi_wrapper_msgs::NaoQi_openWebsiteGoal goal;
-		goal.url.data = a->args().at(0)->str().c_str();
+		goal.url.data = a->args().at(0)->str();
 		execute_transition_wrapper<naoqi_wrapper_msgs::NaoQi_openWebsiteAction>(goal, a);
 
 	} else if(a->target()->mapping().name() == "say"){
 		naoqi_wrapper_msgs::NaoQi_sayGoal goal;
-		goal.message.data =  a->args().at(0)->str().c_str();
+		goal.message.data =  a->args().at(0)->str();
 		execute_transition_wrapper<naoqi_wrapper_msgs::NaoQi_sayAction>(goal, a);
 
 	} else if(a->target()->mapping().name() == "subscribe"){
 		naoqi_wrapper_msgs::NaoQi_subscribeGoal goal;
-		goal.eventName.data = a->args().at(0)->str().c_str();
+		goal.eventName.data = a->args().at(0)->str();
 		execute_transition_wrapper<naoqi_wrapper_msgs::NaoQi_subscribeAction>(goal, a);
 	}
 	else{
