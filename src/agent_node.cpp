@@ -50,16 +50,16 @@ void load_n_exec_program(string program)
 int main(int argc, char **argv)
 {
 	std::string param;
-	ros::init(argc, argv, "gologpp_agent");
-	ros::NodeHandle nh("~");
-	if(nh.getParam("program", param)){
+    ros::init(argc, argv, "gologpp_agent");
+    ros::NodeHandle nh("~");
+    if(nh.getParam("program", param)){
 		ROS_INFO("Got parameter: %s", param.c_str());
-		nh.deleteParam("program");
+        nh.deleteParam("program");
 		load_n_exec_program(param.c_str());
 
 	}else{
 		ROS_INFO("Default program");
-		nh.deleteParam("program");
+        nh.deleteParam("program");
 		load_n_exec_program("move_base_example");
 
 	}
