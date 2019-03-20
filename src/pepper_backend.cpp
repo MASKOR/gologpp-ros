@@ -134,5 +134,10 @@ AbstractConstant *Pepper_Backend::to_golog_constant(naoqi_wrapper_msgs::NaoQi_di
 {
 	return new StringConstant(result->outcome);
 }
+template<>
+AbstractConstant *Pepper_Backend::to_golog_constant(darknet_actions::obj_detectionResultConstPtr result)
+{
+	return new NumericConstant(result->obj_pos);
+}
 
 } //namespace gologpp
