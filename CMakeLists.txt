@@ -22,6 +22,8 @@ find_package(catkin REQUIRED COMPONENTS
   actionlib_msgs
   actionlib
   naoqi_wrapper_msgs
+  darknet_actions
+  darknet_ros_msgs
 )
 
 add_definitions(-DLIBQI_VERSION=${naoqi_libqi_VERSION_MAJOR}${naoqi_libqi_VERSION_MINOR})
