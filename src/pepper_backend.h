@@ -1,6 +1,7 @@
 #ifndef ROSBACKEND_H
 #define ROSBACKEND_H
 
+#include <model/transition.h>
 #include <model/execution.h>
 #include <model/platform_backend.h>
 // Remove spurious clang code model error
