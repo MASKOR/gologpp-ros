@@ -91,9 +91,9 @@ void Pepper_Backend::execute_activity(shared_ptr<Activity> a)
 		execute_transition_wrapper<naoqi_wrapper_msgs::NaoQi_subscribeAction>(goal, a);
 
     } else if (a->target()->mapping().name() == "detect_position") {
-        darknet_actions::obj_detectionGoal goal;
+		darknet_actions_msgs::obj_detectionGoal goal;
 		goal.to_detected_obj = a->args().at(0)->str();
-        execute_transition_wrapper<darknet_actions::obj_detectionAction>(goal, a);
+		execute_transition_wrapper<darknet_actions_msgs::obj_detectionAction>(goal, a);
 
     } else if (a->target()->mapping().name() == "face_tracking") {
 		std::thread service_thread( [&] (bool enable, shared_ptr<Activity> activity) {
@@ -140,7 +140,7 @@ AbstractConstant *Pepper_Backend::to_golog_constant(naoqi_wrapper_msgs::NaoQi_di
 	return new StringConstant(result->outcome);
 }
 template<>
-AbstractConstant *Pepper_Backend::to_golog_constant(darknet_actions::obj_detectionResultConstPtr result)
+AbstractConstant *Pepper_Backend::to_golog_constant(darknet_actions_msgs::obj_detectionResultConstPtr result)
 {
 	return new NumericConstant(result->obj_pos);
 }

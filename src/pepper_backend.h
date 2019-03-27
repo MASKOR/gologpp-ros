@@ -12,8 +12,7 @@
 #include <actionlib/client/terminal_state.h>
 #include <move_base_msgs/MoveBaseAction.h>
 
-#include <darknet_actions/obj_detectionAction.h>
-#include <darknet_ros_msgs/BoundingBoxes.h>
+#include <darknet_actions_msgs/obj_detectionAction.h>
 
 #include <naoqi_wrapper_msgs/NaoQi_animatedSayAction.h>
 #include <naoqi_wrapper_msgs/NaoQi_animationAction.h>
@@ -94,7 +93,7 @@ private:
 	actionlib::SimpleActionClient<naoqi_wrapper_msgs::NaoQi_openWebsiteAction> openWebsite_client;
 	actionlib::SimpleActionClient<naoqi_wrapper_msgs::NaoQi_sayAction> say_client;
 	actionlib::SimpleActionClient<naoqi_wrapper_msgs::NaoQi_subscribeAction> subscribe_client;
-    actionlib::SimpleActionClient<darknet_actions::obj_detectionAction> yolo_obj_detection_position_client;
+	actionlib::SimpleActionClient<darknet_actions_msgs::obj_detectionAction> yolo_obj_detection_position_client;
 
 	std::tuple <
 	actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> & ,
@@ -106,14 +105,14 @@ private:
 	actionlib::SimpleActionClient<naoqi_wrapper_msgs::NaoQi_openWebsiteAction> &,
 	actionlib::SimpleActionClient<naoqi_wrapper_msgs::NaoQi_sayAction> &,
     actionlib::SimpleActionClient<naoqi_wrapper_msgs::NaoQi_subscribeAction> &,
-    actionlib::SimpleActionClient<darknet_actions::obj_detectionAction> &
+	actionlib::SimpleActionClient<darknet_actions_msgs::obj_detectionAction> &
 	> action_clients;
 
 
 	//std::unordered_map<actionlib::SimpleActionClient<actionlib_test::DoPutAction>,Transition> action_map;
 };
 
-template<> AbstractConstant *Pepper_Backend::to_golog_constant(darknet_actions::obj_detectionResultConstPtr);
+template<> AbstractConstant *Pepper_Backend::to_golog_constant(darknet_actions_msgs::obj_detectionResultConstPtr);
 template<> AbstractConstant *Pepper_Backend::to_golog_constant(naoqi_wrapper_msgs::NaoQi_dialogResultConstPtr);
 
 
