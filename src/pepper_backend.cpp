@@ -106,10 +106,15 @@ void Pepper_Backend::execute_activity(shared_ptr<Activity> a)
 			}
 		}, bool(*a->args().at(0)), a);
 		service_thread.detach();
+
 	} else if (a->target()->mapping().name() == "logger"){
-		for(int i = 0; i <a->args().size(); i++) {
-			ROS_INFO_STREAM(a->args().at(i)->str());
-		}
+		std::thread logger_thread( [&] (shared_ptr<Activity> activity) {
+			for(size_t i = 0; i < activity->args().size(); i++) {
+				ROS_INFO_STREAM(activity->args().at(i)->str());
+			}
+			update_activity(activity->transition(Transition::Hook::FINISH));
+		},a );
+		logger_thread.detach();
 	}
 	else{
 		ROS_INFO("No Action is matching.");
