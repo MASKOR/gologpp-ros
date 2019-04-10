@@ -69,10 +69,6 @@ action logger($output){
 {
 	lookAt(5., -10., 1.);
 	dialog("pepper_smach/examples/dialogues/welcome_tdf.top");				
-/*
-	initial_pos("stop sign") = 1;
-	initial_pos("bottle") = 2;
-	initial_pos("traffic light") = 3;*/
 	while(condition()) {
 		start(animation("animations/Stand/BodyTalk/Listening/Listening_5"));	
 		start(say("Welches Objekt soll ich suchen?"));
@@ -88,9 +84,9 @@ action logger($output){
 			start(face_tracking(false));
 			start(say("Okay. Lass mich auf den Tisch \\pau=1\\ schauen"));
 			finish(face_tracking(false));		
-			start(lookAt(5., 0., 1.));
+			start(lookAt(5., 0., -1.));
 			finish(say("Okay. Lass mich auf den Tisch \\pau=1\\ schauen"));
-			finish(lookAt(5., 0., 1.));
+			finish(lookAt(5., 0., -1.));
 
 			detect_position(obj());
 								
