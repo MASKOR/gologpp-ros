@@ -13,14 +13,13 @@ Pepper_Backend::Pepper_Backend()
 , animated_say_client("/naoqi_animatedSay_server/animatedSay", true)
 , animation_client("/naoqi_animation_server/naoqi_animation", true)
 , dialog_client("/naoqi_dialog_server", true)
-//, facetracking_client("/naoqi_wrapper/naoqi_faceTracking_service", true)
 , lookAt_client("/naoqi_lookAt_server/lookAt", true)
-, openWebsite_client("/naoqi_openWebsite_server", true)
+, openWebsite_client("/naoqi_openWebsite_server/openWebsite", true)
 , say_client("/naoqi_say_server/naoqi_say", true)
 , subscribe_client("/naoqi_subscribe_server/subscribe", true)
 , yolo_obj_detection_position_client("/yolo_obj_detection_position_server", true)
 , action_clients {move_base_client, animated_say_client, animation_client, dialog_client
-                  , /*facetracking_client,*/ lookAt_client, openWebsite_client, say_client, subscribe_client, yolo_obj_detection_position_client}
+, lookAt_client, openWebsite_client, say_client, subscribe_client, yolo_obj_detection_position_client}
 {
     facetracking_client = nh_.serviceClient<naoqi_wrapper_msgs::FaceTracking>("/face_tracking");
 	//ROS_INFO("Waiting for action server to start.");
