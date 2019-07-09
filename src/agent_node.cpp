@@ -27,7 +27,7 @@ using namespace gologpp;
 
 void load_n_exec_program(string program)
 {
-	VoidExpression *mainproc = parser::parse_file(SOURCE_DIR "/"+program+".gpp").release();
+	Expression *mainproc = parser::parse_file(SOURCE_DIR "/"+program+".gpp").release();
 
 	eclipse_opts options;
 	options.trace = false;
