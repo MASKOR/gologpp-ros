@@ -77,6 +77,7 @@ void Pepper_Backend::execute_activity(shared_ptr<Activity> a)
 	} else if(a->target()->mapping().name() == "openWebsite"){
 		naoqi_wrapper_msgs::NaoQi_openWebsiteGoal goal;
 		goal.url.data = a->args().at(0)->str();
+		goal.waitForWebCommand = bool(*a->args().at(1));
 		execute_transition_wrapper<naoqi_wrapper_msgs::NaoQi_openWebsiteAction>(goal, a);
 
 	} else if(a->target()->mapping().name() == "say"){
