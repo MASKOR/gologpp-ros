@@ -2,7 +2,7 @@
 #include <iostream>
 #include <atomic>
 
-#include "pepper_backend.h"
+#include "ros_backend.h"
 
 #include <model/formula.h>
 #include <model/reference.h>
@@ -21,27 +21,30 @@
 //#endif
 #include <ros/ros.h>
 
-using namespace gologpp;
+
+namespace gpp = gologpp;
 
 
 
-void load_n_exec_program(string program)
+void load_n_exec_program(std::string program)
 {
-	Expression *mainproc = parser::parse_file(SOURCE_DIR "/"+program+".gpp").release();
+	gpp::Expression *mainproc = gpp::parser::parse_file(SOURCE_DIR "/"+program+".gpp").release();
 
-	eclipse_opts options;
+	gpp::eclipse_opts options;
 	options.trace = false;
 	options.toplevel = false;
 	options.guitrace = false;
-	ReadylogContext::init(options, std::unique_ptr<PlatformBackend>(std::make_unique<Pepper_Backend>()) );
-	ReadylogContext &ctx = ReadylogContext::instance();
+	gpp::ReadylogContext::init(
+	options, gpp::unique_ptr<gpp::PlatformBackend>(new RosBackend())
+	);
+	gpp::ReadylogContext &ctx = gpp::ReadylogContext::instance();
 
-	ctx.run(Block(
-	new Scope(global_scope()),
+	ctx.run(gpp::Block(
+	new gpp::Scope(gpp::global_scope()),
 	{ mainproc }
 	));
 
-	ReadylogContext::shutdown();
+	gpp::ReadylogContext::shutdown();
 }
 
 
@@ -50,23 +53,21 @@ void load_n_exec_program(string program)
 int main(int argc, char **argv)
 {
 	std::string param;
-    ros::init(argc, argv, "gologpp_agent");
-    ros::NodeHandle nh("~");
-    if(nh.getParam("program", param)){
+	ros::init(argc, argv, "gologpp_agent");
+	ros::NodeHandle nh("~");
+	if (nh.getParam("program", param)) {
 		ROS_INFO("Got parameter: %s", param.c_str());
-        nh.deleteParam("program");
+		nh.deleteParam("program");
 		load_n_exec_program(param.c_str());
 
-	}else{
+	} else {
 		ROS_INFO("Default program");
-        nh.deleteParam("program");
+		nh.deleteParam("program");
 		load_n_exec_program("move_base_example");
 
 	}
 	return 0;
 }
-
-
 
 
 

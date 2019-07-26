@@ -1,123 +1,58 @@
 #ifndef ROSBACKEND_H
 #define ROSBACKEND_H
 
-#include <model/transition.h>
-#include <model/execution.h>
-#include <model/platform_backend.h>
 // Remove spurious clang code model error
 #ifdef Q_CREATOR_RUN
 #undef __GCC_ASM_FLAG_OUTPUTS__
 #endif
 
-#include <actionlib/client/simple_action_client.h>
-#include <actionlib/client/terminal_state.h>
-#include <move_base_msgs/MoveBaseAction.h>
-
-#include <darknet_actions_msgs/obj_detectionAction.h>
-
-#include <naoqi_wrapper_msgs/NaoQi_animatedSayAction.h>
-#include <naoqi_wrapper_msgs/NaoQi_animationAction.h>
-#include <naoqi_wrapper_msgs/NaoQi_dialogAction.h>
-#include <naoqi_wrapper_msgs/FaceTracking.h>
-#include <naoqi_wrapper_msgs/NaoQi_lookAtAction.h>
-#include <naoqi_wrapper_msgs/NaoQi_openWebsiteAction.h>
-#include <naoqi_wrapper_msgs/NaoQi_sayAction.h>
-#include <naoqi_wrapper_msgs/NaoQi_subscribeAction.h>
-
-
-
+#include <model/transition.h>
+#include <model/platform_backend.h>
 
 #include <ros/ros.h>
 
-#include <tuple>
+#include <unordered_map>
+
+namespace gpp = gologpp;
 
 
-namespace gologpp {
+class AbstractActionManager;
 
-class RosBackend : public PlatformBackend
+
+class RosBackend : public gpp::PlatformBackend
 {
 public:
 	RosBackend();
 	virtual ~RosBackend() override;
-	virtual void execute_activity(shared_ptr<Activity> a)  override;
-	virtual void preempt_activity(shared_ptr<Transition> trans) override;
-	virtual Clock::time_point time() const noexcept override;
-	
-	ros::NodeHandle nh_;
-	
-	template < typename ActionT > void execute_transition_wrapper(typename ActionT::_action_goal_type::_goal_type &goal, shared_ptr<Activity> a) {
-		
-		actionlib::SimpleActionClient < ActionT > &client = std::get < actionlib::SimpleActionClient < ActionT > &>(action_clients);
-		ROS_INFO("Sending goal");
-		client.sendGoal(goal, boost::bind(
-		&RosBackend::doneCb<typename ActionT::_action_result_type::_result_type::ConstPtr>,
-		this, a, _1, _2
-		) );
-	}
-	
-	template < typename ResultConstPtrT > void doneCb(shared_ptr<Activity> a, const actionlib::SimpleClientGoalState &state, ResultConstPtrT result) {
-		
-		ROS_INFO("Finished in state [%s]", state.toString().c_str());
-		switch(state.state_){
-		case actionlib::SimpleClientGoalState::SUCCEEDED:
-			update_activity(a->transition(Transition::Hook::FINISH), to_golog_constant<ResultConstPtrT>(result));
-			break;
-		case actionlib::SimpleClientGoalState::PREEMPTED:
-			break;
-		case actionlib::SimpleClientGoalState::ABORTED:
-			update_activity(a->transition(Transition::Hook::FAIL));
-			break;
-		case actionlib::SimpleClientGoalState::PENDING:
-		case actionlib::SimpleClientGoalState::ACTIVE:
-		case actionlib::SimpleClientGoalState::RECALLED:
-		case actionlib::SimpleClientGoalState::REJECTED:
-		case actionlib::SimpleClientGoalState::LOST:
-			;
-		}
-	}
-	
-	template <class ResultT> Value *to_golog_constant(ResultT)
-	{
-		return nullptr;
-	}
-	
-	
+	virtual void execute_activity(gpp::shared_ptr<gpp::Activity> a) override;
+	virtual void preempt_activity(gpp::shared_ptr<gpp::Transition> trans) override;
+	virtual gpp::Clock::time_point time() const noexcept override;
+
 private:
-	actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> move_base_client;
-	actionlib::SimpleActionClient<naoqi_wrapper_msgs::NaoQi_animatedSayAction> animated_say_client;
-	actionlib::SimpleActionClient<naoqi_wrapper_msgs::NaoQi_animationAction> animation_client;
-	actionlib::SimpleActionClient<naoqi_wrapper_msgs::NaoQi_dialogAction> dialog_client;
-	
-	ros::ServiceClient facetracking_client;
-	
-	actionlib::SimpleActionClient<naoqi_wrapper_msgs::NaoQi_lookAtAction> lookAt_client;
-	actionlib::SimpleActionClient<naoqi_wrapper_msgs::NaoQi_openWebsiteAction> openWebsite_client;
-	actionlib::SimpleActionClient<naoqi_wrapper_msgs::NaoQi_sayAction> say_client;
-	actionlib::SimpleActionClient<naoqi_wrapper_msgs::NaoQi_subscribeAction> subscribe_client;
-	actionlib::SimpleActionClient<darknet_actions_msgs::obj_detectionAction> yolo_obj_detection_position_client;
-	
-	std::tuple <
-		actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> & ,
-		actionlib::SimpleActionClient<naoqi_wrapper_msgs::NaoQi_animatedSayAction> & ,
-		actionlib::SimpleActionClient<naoqi_wrapper_msgs::NaoQi_animationAction> &,
-		actionlib::SimpleActionClient<naoqi_wrapper_msgs::NaoQi_dialogAction> & ,
-		//actionlib::SimpleActionClient<naoqi_wrapper_msgs::FaceTracking> &,
-		actionlib::SimpleActionClient<naoqi_wrapper_msgs::NaoQi_lookAtAction> &,
-		actionlib::SimpleActionClient<naoqi_wrapper_msgs::NaoQi_openWebsiteAction> &,
-		actionlib::SimpleActionClient<naoqi_wrapper_msgs::NaoQi_sayAction> &,
-		actionlib::SimpleActionClient<naoqi_wrapper_msgs::NaoQi_subscribeAction> &,
-		actionlib::SimpleActionClient<darknet_actions_msgs::obj_detectionAction> &
-	> action_clients;
-	
-	
-	//std::unordered_map<actionlib::SimpleActionClient<actionlib_test::DoPutAction>,Transition> action_map;
+	// Implemented in pepper_actions.cpp:
+	// Fill action_containers_ by calling define_action_client for
+	// each action that should be made available.
+	void define_actions();
+
+	template<class ActionT>
+	void define_action_client(const std::string &name);
+
+	AbstractActionManager &get_action_client(gpp::shared_ptr<gpp::Activity>);
+
+	ros::NodeHandle nh_;
+
+	std::unordered_map<
+		std::string,
+		std::unique_ptr<AbstractActionManager>
+	> action_managers_;
 };
 
-template<> Value *RosBackend::to_golog_constant(darknet_actions_msgs::obj_detectionResultConstPtr);
-template<> Value *RosBackend::to_golog_constant(naoqi_wrapper_msgs::NaoQi_dialogResultConstPtr);
-template<> Value *RosBackend::to_golog_constant(naoqi_wrapper_msgs::NaoQi_openWebsiteResultConstPtr);
+
+template<class ActionT>
+void RosBackend::define_action_client(const std::string &name)
+{
+	// TODO: Create ActionContainer<ActionT> and put in action_containers_
+}
 
 
-
-} //namespace gologpp
 #endif // ROSBACKEND_H
