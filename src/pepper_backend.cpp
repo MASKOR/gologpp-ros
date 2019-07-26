@@ -135,19 +135,19 @@ Clock::time_point Pepper_Backend::time() const noexcept
 	return Clock::time_point();
 }
 template<>
-Constant *Pepper_Backend::to_golog_constant(naoqi_wrapper_msgs::NaoQi_dialogResultConstPtr result)
+Value *Pepper_Backend::to_golog_constant(naoqi_wrapper_msgs::NaoQi_dialogResultConstPtr result)
 {
-	return new Constant(StringType::name(), result->outcome);
+	return new Value(StringType::name(), result->outcome);
 }
 template<>
-Constant *Pepper_Backend::to_golog_constant(darknet_actions_msgs::obj_detectionResultConstPtr result)
+Value *Pepper_Backend::to_golog_constant(darknet_actions_msgs::obj_detectionResultConstPtr result)
 {
-	return new Constant(NumberType::name(),result->obj_pos);
+	return new Value(NumberType::name(),result->obj_pos);
 }
 
 template<>
-Constant *Pepper_Backend::to_golog_constant(naoqi_wrapper_msgs::NaoQi_openWebsiteResultConstPtr result)
+Value *Pepper_Backend::to_golog_constant(naoqi_wrapper_msgs::NaoQi_openWebsiteResultConstPtr result)
 {
-	return new Constant(StringType::name(), result->command);
+	return new Value(StringType::name(), result->command);
 }
 } //namespace gologpp

@@ -76,7 +76,7 @@ public:
 		}
 	}
 
-	template <class ResultT> Constant *to_golog_constant(ResultT)
+	template <class ResultT> Value *to_golog_constant(ResultT)
 	{
 		return nullptr;
 	}
@@ -113,9 +113,9 @@ private:
 	//std::unordered_map<actionlib::SimpleActionClient<actionlib_test::DoPutAction>,Transition> action_map;
 };
 
-template<> Constant *Pepper_Backend::to_golog_constant(darknet_actions_msgs::obj_detectionResultConstPtr);
-template<> Constant *Pepper_Backend::to_golog_constant(naoqi_wrapper_msgs::NaoQi_dialogResultConstPtr);
-template<> Constant *Pepper_Backend::to_golog_constant(naoqi_wrapper_msgs::NaoQi_openWebsiteResultConstPtr);
+template<> Value *Pepper_Backend::to_golog_constant(darknet_actions_msgs::obj_detectionResultConstPtr);
+template<> Value *Pepper_Backend::to_golog_constant(naoqi_wrapper_msgs::NaoQi_dialogResultConstPtr);
+template<> Value *Pepper_Backend::to_golog_constant(naoqi_wrapper_msgs::NaoQi_openWebsiteResultConstPtr);
 
 
 
