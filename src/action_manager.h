@@ -50,7 +50,6 @@ public:
 	void doneCb(const actionlib::SimpleClientGoalState &state, ResultT result);
 	gpp::Value *to_golog_constant(ResultT);
 
-
 private:
 	ClientT action_client_;
 	GoalT current_goal_;
