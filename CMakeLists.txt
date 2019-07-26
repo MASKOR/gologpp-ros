@@ -47,7 +47,8 @@ set(BUILD_TESTS OFF CACHE BOOL "Enable gologpp tests" FORCE)
 
 link_directories(${readylogpp_LIBRARY_DIRS} ${parsegologpp_LIBRARY_DIRS})
 
-add_executable(gologpp_agent src/agent_node.cpp src/pepper_backend.cpp )
+add_executable(gologpp_agent src/agent_node.cpp src/ros_backend.cpp
+	src/pepper_actions.cpp)
 set_property(TARGET gologpp_agent PROPERTY CXX_STANDARD 14)
 
 #add_dependencies(naoqi_say_server ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})

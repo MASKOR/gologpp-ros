@@ -1,4 +1,4 @@
-#include "pepper_backend.h"
+#include "ros_backend.h"
 #include <iostream>
 #include <typeinfo>
 #include <string>
@@ -8,7 +8,7 @@
 
 namespace gologpp {
 
-Pepper_Backend::Pepper_Backend()
+RosBackend::RosBackend()
 : move_base_client("move_base", true)
 , animated_say_client("/naoqi_animatedSay_server/animatedSay", true)
 , animation_client("/naoqi_animation_server/naoqi_animation", true)
@@ -29,11 +29,11 @@ Pepper_Backend::Pepper_Backend()
 }
 
 
-Pepper_Backend::~Pepper_Backend()
+RosBackend::~RosBackend()
 {}
 
 
-void Pepper_Backend::execute_activity(shared_ptr<Activity> a)
+void RosBackend::execute_activity(shared_ptr<Activity> a)
 {
 	ROS_INFO("Execute Transition. Action: %s arg: %s", a->target()->name().c_str(), a->args().at(0)->str().c_str());
 	a->target()->mapping().name();
@@ -120,7 +120,7 @@ void Pepper_Backend::execute_activity(shared_ptr<Activity> a)
 		ROS_INFO("No Action is matching.");
 	}
 }
-void Pepper_Backend::preempt_activity(shared_ptr<Transition> trans)
+void RosBackend::preempt_activity(shared_ptr<Transition> trans)
 {
 	//handles case when gpp-agent preempts action.
 	if(trans->target()->name() == "movetoframe")
@@ -128,25 +128,25 @@ void Pepper_Backend::preempt_activity(shared_ptr<Transition> trans)
 	else if(trans->target()->name() == "say")
 		animated_say_client.cancelAllGoals();
 }
-Clock::time_point Pepper_Backend::time() const noexcept
+Clock::time_point RosBackend::time() const noexcept
 {
 	//Clock::duration rv = std::chrono::steady_clock::now().time_since_epoch();
 	//return Clock::time_point(rv);
 	return Clock::time_point();
 }
 template<>
-Value *Pepper_Backend::to_golog_constant(naoqi_wrapper_msgs::NaoQi_dialogResultConstPtr result)
+Value *RosBackend::to_golog_constant(naoqi_wrapper_msgs::NaoQi_dialogResultConstPtr result)
 {
 	return new Value(StringType::name(), result->outcome);
 }
 template<>
-Value *Pepper_Backend::to_golog_constant(darknet_actions_msgs::obj_detectionResultConstPtr result)
+Value *RosBackend::to_golog_constant(darknet_actions_msgs::obj_detectionResultConstPtr result)
 {
 	return new Value(NumberType::name(),result->obj_pos);
 }
 
 template<>
-Value *Pepper_Backend::to_golog_constant(naoqi_wrapper_msgs::NaoQi_openWebsiteResultConstPtr result)
+Value *RosBackend::to_golog_constant(naoqi_wrapper_msgs::NaoQi_openWebsiteResultConstPtr result)
 {
 	return new Value(StringType::name(), result->command);
 }
