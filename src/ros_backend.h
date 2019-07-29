@@ -48,11 +48,7 @@ private:
 };
 
 
-template<class ActionT>
-void RosBackend::define_action_client(const std::string &name)
-{
-	// TODO: Create ActionContainer<ActionT> and put in action_containers_
-}
+
 
 
 #endif // ROSBACKEND_H
