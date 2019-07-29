@@ -40,7 +40,7 @@ public:
 	using ResultT = typename ActionT::_action_result_type::_result_type::ConstPtr;
 	using ClientT = typename actionlib::SimpleActionClient<ActionT>;
 
-	ActionManager();
+	ActionManager(const std::string &, RosBackend &backend);
 
 	virtual void execute_current_activity() override;
 
@@ -60,6 +60,12 @@ template<class ServiceT>
 class ServiceManager : public AbstractActionManager {
 	// TODO
 };
+
+template<class ActionT>
+ActionManager<ActionT>::ActionManager(const std::string &topic_name, RosBackend &backend)
+: AbstractActionManager(backend)
+, action_client_(topic_name, true)
+{}
 
 
 template<class ActionT>
