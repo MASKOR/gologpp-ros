@@ -69,7 +69,7 @@ ActionManager<ActionT>::ActionManager(const std::string &topic_name, RosBackend 
 
 template<class ActionT>
 void ActionManager<ActionT>::execute_current_activity() {
-	current_goal_(build_goal(current_activity));
+	current_goal_ = build_goal(*current_activity);
 	action_client_.sendGoal(current_goal_, boost::bind(
 	&ActionManager<ActionT>::doneCb,
 	this, _1, _2
