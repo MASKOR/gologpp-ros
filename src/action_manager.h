@@ -113,5 +113,14 @@ gpp::Value *ActionManager<ActionT>::to_golog_constant(ActionManager<ActionT>::Re
 	return nullptr;
 }
 
+template<class ActionT>
+void RosBackend::define_action_client(const std::string &topic_name)
+{
+	// TODO: Create ActionContainer<ActionT> and put in action_containers_
+	action_managers_.emplace(
+	topic_name,
+	std::unique_ptr<AbstractActionManager>(new ActionManager<ActionT>(topic_name, *this))
+	);
+}
 
 #endif
