@@ -25,7 +25,6 @@ public:
 	void execute(gpp::shared_ptr<gpp::Activity>);
 
 	virtual void execute_current_activity() = 0;
-	virtual gpp::Value *get_result() = 0;
 
 protected:
 	gpp::shared_ptr<gpp::Activity> current_activity;
