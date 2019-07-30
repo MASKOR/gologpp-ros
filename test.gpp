@@ -1,0 +1,12 @@
+action say(string str){
+mapping:
+	"/naoqi_say_server/naoqi_say" {
+		say_string = str 
+	}
+}
+
+
+{
+say("Hallo");
+//lookAt(5.,0.,-1.);
+}
