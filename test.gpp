@@ -5,8 +5,19 @@ mapping:
 	}
 }
 
+action lookAt(number x, number y, number z){
+mapping:
+	"/naoqi_lookAt_server/lookAt" {
+	x = x,
+	y = y,
+	z = z,
+	frame = 2,
+	fractionMaxSpeed = 1,
+	useWholeBody = false
+	}
+}
 
 {
 say("Hallo");
-//lookAt(5.,0.,-1.);
+lookAt(5.,0.,-1.);
 }
