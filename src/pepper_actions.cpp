@@ -156,7 +156,7 @@ void bumperCallback(const naoqi_bridge_msgs::Bumper::ConstPtr& msg)
 
 void RosBackend::init_exog_event()
 {
-	sub_exog_event<naoqi_bridge_msgs::Bumper, naoqi_bridge_msgs::Bumper::ConstPtr&>(
+	sub_exog_event<naoqi_bridge_msgs::Bumper, naoqi_bridge_msgs::Bumper::ConstPtr>(
 		"/pepper_robot/naoqi_driver/bumper",
 		bumperCallback,
 		1000
