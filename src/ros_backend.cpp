@@ -5,6 +5,8 @@
 RosBackend::RosBackend()
 {
 	define_actions();
+	init_exog_event();
+	spin_exog_thread();
 }
 
 

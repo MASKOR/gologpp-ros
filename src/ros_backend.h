@@ -39,7 +39,20 @@ private:
 
 	AbstractActionManager &get_action_client(gpp::shared_ptr<gpp::Activity>);
 
+	void init_exog_event();
+	// M: msgs type; C: callback parameter type
+	template<class M, class C>
+	void sub_exog_event(
+		const std::string &,
+		const boost::function< void(C)> &,
+		int msgs_queue_size = 1000
+	);
+
+	void spin_exog_thread();
+	//void bumperCallback(const naoqi_bridge_msgs::Bumper::ConstPtr& msg);
+
 	ros::NodeHandle nh_;
+	std::vector<ros::Subscriber> exog_subs_;
 
 	std::unordered_map<
 		std::string,
