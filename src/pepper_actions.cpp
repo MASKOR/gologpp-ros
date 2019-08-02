@@ -1,6 +1,6 @@
 #include "action_manager.h"
 #include "ros_backend.h"
-#include "exog_manager.cpp"
+#include "exog_manager.h"
 
 
 #include <actionlib/client/simple_action_client.h>

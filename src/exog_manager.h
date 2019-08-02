@@ -11,7 +11,7 @@ void RosBackend::sub_exog_event(
 	const boost::function< void(C)> & callback,
 	int msgs_queue_size
 ) {
-	exog_subs_.push_back(nh_.subscribe<M>(topic, msgs_queue_size, &callback));
+	exog_subs_.push_back(nh_.subscribe<M>(topic, msgs_queue_size, callback));
 }
 
 #endif // EXOGMANAGER_H

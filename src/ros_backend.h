@@ -49,7 +49,6 @@ private:
 	);
 
 	void spin_exog_thread();
-	//void bumperCallback(const naoqi_bridge_msgs::Bumper::ConstPtr& msg);
 
 	ros::NodeHandle nh_;
 	std::vector<ros::Subscriber> exog_subs_;
