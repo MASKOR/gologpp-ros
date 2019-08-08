@@ -23,8 +23,10 @@ public:
 	/* Set current_activity_, call execute_current_activity()
 	 * */
 	void execute(gpp::shared_ptr<gpp::Activity>);
+	void preempt(gpp::shared_ptr<gpp::Activity>);
 
 	virtual void execute_current_activity() = 0;
+	virtual void preempt_current_activity() = 0;
 
 protected:
 	gpp::shared_ptr<gpp::Activity> current_activity;
@@ -42,6 +44,7 @@ public:
 	ActionManager(const std::string &, RosBackend &backend);
 
 	virtual void execute_current_activity() override;
+	virtual void preempt_current_activity() override;
 
 	// Specialized for every action type in e.g. pepper_actions.cpp
 	GoalT build_goal(const gpp::Activity &);
@@ -66,6 +69,10 @@ ActionManager<ActionT>::ActionManager(const std::string &topic_name, RosBackend 
 , action_client_(topic_name, true)
 {}
 
+template<class ActionT>
+void ActionManager<ActionT>::preempt_current_activity() {
+action_client_.cancelGoal();
+}
 
 template<class ActionT>
 void ActionManager<ActionT>::execute_current_activity() {

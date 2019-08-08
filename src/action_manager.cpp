@@ -12,4 +12,8 @@ void AbstractActionManager::execute(gpp::shared_ptr<gpp::Activity>a) {
 	execute_current_activity();
 }
 
+void AbstractActionManager::preempt(gpp::shared_ptr<gpp::Activity>a) {
+	current_activity = a;
+	preempt_current_activity();
+}
 
