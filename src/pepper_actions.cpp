@@ -2,6 +2,7 @@
 #include "ros_backend.h"
 #include "exog_manager.h"
 
+#include <model/action.h>
 
 #include <actionlib/client/simple_action_client.h>
 #include <actionlib/client/terminal_state.h>
@@ -152,6 +153,17 @@ void RosBackend::define_actions()
 void bumperCallback(const naoqi_bridge_msgs::Bumper::ConstPtr& msg)
 {
 	ROS_INFO_STREAM("I heard: " << int(msg->statePressed));
+	for (std::vector<std::shared_ptr<gpp::Global>>::iterator it = gpp::global_scope().globals().begin();
+			it != gpp::global_scope().globals().end(); ++it){
+		if(gpp::shared_ptr< gpp::ExogAction> exog = std::dynamic_pointer_cast< gpp::ExogAction>(*it)){
+			if(exog->mapping().backend_name() == "/pepper_robot/naoqi_driver/bumper") {
+				gpp::Value *param =new gpp::Value(gpp::NumberType::name(), int(msg->statePressed));
+				gpp::vector< gpp::unique_ptr<gpp::Value> > args;
+				args.emplace_back(param);
+				gpp::ExogEvent* ev = new gpp::ExogEvent(exog, std::move(args));
+			}
+		}
+	}
 }
 
 void RosBackend::init_exog_event()
