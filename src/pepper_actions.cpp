@@ -8,7 +8,7 @@
 #include <actionlib/client/terminal_state.h>
 #include <move_base_msgs/MoveBaseAction.h>
 
-#include <darknet_actions_msgs/obj_detectionAction.h>
+#include <darknet_action_msgs/obj_detectionAction.h>
 
 #include <naoqi_wrapper_msgs/NaoQi_animatedSayAction.h>
 #include <naoqi_wrapper_msgs/NaoQi_animationAction.h>
@@ -22,7 +22,7 @@
 #include <naoqi_bridge_msgs/Bumper.h>
 
 namespace naoqi = naoqi_wrapper_msgs;
-namespace darknet = darknet_actions_msgs;
+namespace darknet = darknet_action_msgs;
 
 
 template<>
@@ -105,7 +105,7 @@ template<>
 ActionManager<darknet::obj_detectionAction>::GoalT
 ActionManager<darknet::obj_detectionAction>::build_goal(const gpp::Activity &a)
 {
-	darknet_actions_msgs::obj_detectionGoal goal;
+	darknet::obj_detectionGoal goal;
 	goal.to_detected_obj = std::string(a.mapped_arg_value("to_detected_obj"));
 	return goal;
 }
