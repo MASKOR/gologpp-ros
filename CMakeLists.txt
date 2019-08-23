@@ -22,6 +22,7 @@ find_package(catkin REQUIRED COMPONENTS
   actionlib_msgs
   actionlib
   naoqi_wrapper_msgs
+  naoqi_bridge_msgs
   darknet_action_msgs
 )
 
