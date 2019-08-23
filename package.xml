@@ -56,6 +56,7 @@
   <depend>roscpp</depend>
   <depend>std_msgs</depend>
   <depend>naoqi_wrapper_msgs</depend>
+  <depend>naoqi_bridge_msgs</depend>
   <depend>darknet_action_msgs</depend>
 
   <!-- The export tag contains other, unspecified, tags -->
