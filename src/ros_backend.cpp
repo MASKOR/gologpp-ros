@@ -54,6 +54,15 @@ void RosBackend::exog_event_to_queue(const std::string &map_name, gpp::unique_pt
 	ctx.exog_queue_push(ev);
 }
 
+void RosBackend::spin_exog_thread()
+{
+	std::thread spin_thread( [&] () {
+
+				ros::spin();
+			});
+	spin_thread.detach();
+}
+
 gpp::Clock::time_point RosBackend::time() const noexcept
 {
 	gpp::Clock::duration rv = std::chrono::steady_clock::now().time_since_epoch();

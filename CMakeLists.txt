@@ -53,7 +53,6 @@ add_executable(gologpp_agent
     src/ros_backend.cpp
     src/pepper_actions.cpp
     src/action_manager.cpp
-    src/exog_manager.cpp
 )
 set_property(TARGET gologpp_agent PROPERTY CXX_STANDARD 14)
 
