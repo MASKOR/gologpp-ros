@@ -9,6 +9,8 @@
 #include <model/transition.h>
 #include <model/platform_backend.h>
 
+#include <semantics/readylog/execution.h>
+
 #include <ros/ros.h>
 
 #include <unordered_map>
@@ -27,6 +29,8 @@ public:
 	virtual void execute_activity(gpp::shared_ptr<gpp::Activity> a) override;
 	virtual void preempt_activity(gpp::shared_ptr<gpp::Transition> trans) override;
 	virtual gpp::Clock::time_point time() const noexcept override;
+
+	static void exog_event_to_queue(const std::string &map_name, gpp::unique_ptr<gpp::Value> param);
 
 private:
 	// Implemented in pepper_actions.cpp:

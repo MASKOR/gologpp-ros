@@ -36,6 +36,24 @@ AbstractActionManager& RosBackend::get_action_client(gpp::shared_ptr<gpp::Activi
 	return *action_managers_.find(std::string(a->mapped_name()))->second;
 }
 
+void RosBackend::exog_event_to_queue(const std::string &map_name, gpp::unique_ptr<gpp::Value> param)
+{
+	std::shared_ptr<gpp::ExogEvent> ev;
+	for (std::vector<std::shared_ptr<gpp::Global>>::iterator it = gpp::global_scope().globals().begin();
+			it != gpp::global_scope().globals().end(); ++it){
+		if(gpp::shared_ptr< gpp::ExogAction> exog = std::dynamic_pointer_cast< gpp::ExogAction>(*it)){
+			if(exog->mapping().backend_name() == map_name) {
+				gpp::vector< gpp::unique_ptr<gpp::Value> > args;
+				args.emplace_back(std::move(param));
+				std::shared_ptr<gpp::ExogEvent> ev(new gpp::ExogEvent(exog, std::move(args)));
+				break;
+			}
+		}
+	}
+	gpp::ReadylogContext &ctx = gpp::ReadylogContext::instance();
+	ctx.exog_queue_push(ev);
+}
+
 gpp::Clock::time_point RosBackend::time() const noexcept
 {
 	gpp::Clock::duration rv = std::chrono::steady_clock::now().time_since_epoch();
