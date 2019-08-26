@@ -5,10 +5,9 @@
 
 class RosBackend;
 
-template<class M, class C>
-void RosBackend::sub_exog_event(
-	const std::string &topic,
-	const boost::function< void(C)> & callback,
+template<class M>
+void RosBackend::sub_exog_event(const std::string &topic,
+	const boost::function<void(typename M::ConstPtr)> &callback,
 	int msgs_queue_size
 ) {
 	exog_subs_.push_back(nh_.subscribe<M>(topic, msgs_queue_size, callback));

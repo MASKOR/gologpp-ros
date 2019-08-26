@@ -45,10 +45,10 @@ private:
 
 	void init_exog_event();
 	// M: msgs type; C: callback parameter type
-	template<class M, class C>
+	template<class M>
 	void sub_exog_event(
 		const std::string &,
-		const boost::function< void(C)> &,
+		const boost::function< void(typename M::ConstPtr)> &,
 		int msgs_queue_size = 1000
 	);
 
