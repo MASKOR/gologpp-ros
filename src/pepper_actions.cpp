@@ -150,22 +150,24 @@ void RosBackend::define_actions()
 	define_action_client<naoqi::NaoQi_subscribeAction>("/naoqi_subscribe_server/subscribe");
 }
 
-void bumperCallback(const naoqi_bridge_msgs::Bumper::ConstPtr& msg)
+
+
+
+template<>
+void
+ExogManager<naoqi_bridge_msgs::Bumper>::topic_cb(const naoqi_bridge_msgs::Bumper::ConstPtr& msg)
 {
-	ROS_INFO_STREAM("I heard: " << int(msg->statePressed));
-	gpp::unique_ptr<gpp::Value> param (new gpp::Value(gpp::NumberType::name(), int(msg->statePressed)));
-	RosBackend::exog_event_to_queue(
-		"/pepper_robot/naoqi_driver/bumper",
+	ROS_INFO_STREAM("I heard: " << bool(msg->statePressed));
+	gpp::unique_ptr<gpp::Value> param (new gpp::Value(gpp::BoolType::name(), bool(msg->statePressed)));
+	exog_event_to_queue(
 		std::move(param)
 	);
 }
 
-void RosBackend::init_exog_event()
+void RosBackend::init_exog()
 {
 	sub_exog_event<naoqi_bridge_msgs::Bumper>(
-		"/pepper_robot/naoqi_driver/bumper",
-		bumperCallback,
-		1000
+		"/pepper_robot/naoqi_driver/bumper"
 	);
 }
 

@@ -43,36 +43,25 @@ private:
 
 	AbstractActionManager &get_action_client(gpp::shared_ptr<gpp::Activity>);
 
-	void init_exog_event();
-	// M: msgs type; C: callback parameter type
-	template<class M>
+	void init_exog();
+
+	// ExogT: msgs type; C: callback parameter type
+	template<class ExogT>
 	void sub_exog_event(
-		const std::string &,
-		const boost::function< void(typename M::ConstPtr)> &,
-		int msgs_queue_size = 1000
+		const std::string &
+		//const boost::function< void(typename ExogT::ConstPtr)> &,
+		//int msgs_queue_size = 1000
 	);
 
 	void spin_exog_thread();
-
-	ros::NodeHandle nh_;
-	std::vector<ros::Subscriber> exog_subs_;
+	std::vector<
+		std::unique_ptr<AbstractExogManager>
+	> exog_managers_;
 
 	std::unordered_map<
 		std::string,
 		std::unique_ptr<AbstractActionManager>
 	> action_managers_;
 };
-
-template<class M>
-void RosBackend::sub_exog_event(const std::string &topic,
-	const boost::function<void(typename M::ConstPtr)> &callback,
-	int msgs_queue_size
-) {
-	exog_subs_.push_back(nh_.subscribe<M>(topic, msgs_queue_size, callback));
-}
-
-
-
-
 
 #endif // ROSBACKEND_H
