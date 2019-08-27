@@ -19,7 +19,7 @@ namespace gpp = gologpp;
 
 
 class AbstractActionManager;
-
+class AbstractExogManager;
 
 class RosBackend : public gpp::PlatformBackend
 {

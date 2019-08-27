@@ -1,4 +1,5 @@
 #include "action_manager.h"
+#include "exog_manager.h"
 #include "ros_backend.h"
 
 #include <model/execution.h>
