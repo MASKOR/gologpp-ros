@@ -1,5 +1,4 @@
 #include "action_manager.h"
-#include "ros_backend.h"
 
 AbstractActionManager::AbstractActionManager(RosBackend &backend)
 : backend(backend)

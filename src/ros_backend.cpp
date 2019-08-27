@@ -1,11 +1,12 @@
-#include "ros_backend.h"
 #include "action_manager.h"
+#include "exog_manager.h"
+#include "ros_backend.h"
 
 
 RosBackend::RosBackend()
 {
 	define_actions();
-	init_exog_event();
+	init_exog();
 	spin_exog_thread();
 }
 
