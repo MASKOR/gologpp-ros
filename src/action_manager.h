@@ -71,7 +71,7 @@ ActionManager<ActionT>::ActionManager(const std::string &topic_name, RosBackend 
 
 template<class ActionT>
 void ActionManager<ActionT>::preempt_current_activity() {
-action_client_.cancelGoal();
+	action_client_.cancelGoal();
 }
 
 template<class ActionT>

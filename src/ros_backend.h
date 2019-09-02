@@ -48,8 +48,6 @@ private:
 	template<class ExogT>
 	void sub_exog_event(
 		const std::string &
-		//const boost::function< void(typename ExogT::ConstPtr)> &,
-		//int msgs_queue_size = 1000
 	);
 
 	void spin_exog_thread();
