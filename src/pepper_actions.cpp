@@ -6,10 +6,20 @@
 
 #include <actionlib/client/simple_action_client.h>
 #include <actionlib/client/terminal_state.h>
+
+#ifdef MOVE_BASE_MSGS_PKG
 #include <move_base_msgs/MoveBaseAction.h>
+#endif
 
+#ifdef DARKNET_ACTION_MSGS_PKG
 #include <darknet_action_msgs/obj_detectionAction.h>
+#endif
 
+#ifdef NAOQI_BRIDGE_MSGS_PKG
+#include <naoqi_bridge_msgs/Bumper.h>
+#endif
+
+#ifdef NAOQI_WRAPPER_MSGS_PKG
 #include <naoqi_wrapper_msgs/NaoQi_animatedSayAction.h>
 #include <naoqi_wrapper_msgs/NaoQi_animationAction.h>
 #include <naoqi_wrapper_msgs/NaoQi_dialogAction.h>
@@ -19,17 +29,11 @@
 #include <naoqi_wrapper_msgs/NaoQi_sayAction.h>
 #include <naoqi_wrapper_msgs/NaoQi_subscribeAction.h>
 
-#include <naoqi_bridge_msgs/Bumper.h>
-
 namespace naoqi = naoqi_wrapper_msgs;
+#endif
+
+#ifdef DARKNET_ACTION_MSGS_PKG
 namespace darknet = darknet_action_msgs;
-
-
-template<>
-gpp::Value *
-ActionManager<naoqi::NaoQi_dialogAction>::to_golog_constant(ResultT result){
-	return new gpp::Value(gpp::StringType::name(), result->outcome);
-}
 
 
 template<>
@@ -37,14 +41,20 @@ gpp::Value *
 ActionManager<darknet::obj_detectionAction>::to_golog_constant(ResultT result) {
 	return new gpp::Value(gpp::NumberType::name(),result->obj_pos);
 }
+#endif //DARKNET_ACTION_MSGS_PKG
 
+#ifdef NAOQI_WRAPPER_MSGS_PKG
+template<>
+gpp::Value *
+ActionManager<naoqi::NaoQi_dialogAction>::to_golog_constant(ResultT result){
+	return new gpp::Value(gpp::StringType::name(), result->outcome);
+}
 
 template<>
 gpp::Value *
 ActionManager<naoqi::NaoQi_openWebsiteAction>::to_golog_constant(ResultT result) {
 	return new gpp::Value(gpp::StringType::name(), result->command);
 }
-
 
 template<>
 ActionManager<naoqi::NaoQi_dialogAction>::GoalT
@@ -79,34 +89,12 @@ ActionManager<naoqi::NaoQi_lookAtAction>::build_goal(const gpp::Activity &a)
 }
 
 template<>
-ActionManager<move_base_msgs::MoveBaseAction>::GoalT
-ActionManager<move_base_msgs::MoveBaseAction>::build_goal(const gpp::Activity &a)
-{
-	move_base_msgs::MoveBaseGoal goal;
-	goal.target_pose.header.frame_id = std::string(a.mapped_arg_value("frame_id"));
-	goal.target_pose.header.stamp =  ros::Time::now();
-	goal.target_pose.pose.position.x = int(a.mapped_arg_value("x"));
-	goal.target_pose.pose.position.y = int(a.mapped_arg_value("y"));
-	goal.target_pose.pose.orientation.w = int(a.mapped_arg_value("w"));;
-	return goal;
-}
-
-template<>
 ActionManager<naoqi::NaoQi_openWebsiteAction>::GoalT
 ActionManager<naoqi::NaoQi_openWebsiteAction>::build_goal(const gpp::Activity &a)
 {
 	naoqi_wrapper_msgs::NaoQi_openWebsiteGoal goal;
 	goal.url.data = std::string(a.mapped_arg_value("url"));
 	goal.waitForWebCommand = bool(a.mapped_arg_value("waitForWebCommand"));
-	return goal;
-}
-
-template<>
-ActionManager<darknet::obj_detectionAction>::GoalT
-ActionManager<darknet::obj_detectionAction>::build_goal(const gpp::Activity &a)
-{
-	darknet::obj_detectionGoal goal;
-	goal.to_detected_obj = std::string(a.mapped_arg_value("to_detected_obj"));
 	return goal;
 }
 
@@ -137,22 +125,59 @@ ActionManager<naoqi::NaoQi_subscribeAction>::build_goal(const gpp::Activity &a)
 	return goal;
 }
 
+#endif // NAOQI_WRAPPER_MSGS_PKG
+
+#ifdef DARKNET_ACTION_MSGS_PKG
+template<>
+ActionManager<darknet::obj_detectionAction>::GoalT
+ActionManager<darknet::obj_detectionAction>::build_goal(const gpp::Activity &a)
+{
+	darknet::obj_detectionGoal goal;
+	goal.to_detected_obj = std::string(a.mapped_arg_value("to_detected_obj"));
+	return goal;
+}
+#endif // DARKNET_ACTION_MSGS_PKG
+
+#ifdef MOVE_BASE_MSGS_PKG
+template<>
+ActionManager<move_base_msgs::MoveBaseAction>::GoalT
+ActionManager<move_base_msgs::MoveBaseAction>::build_goal(const gpp::Activity &a)
+{
+	move_base_msgs::MoveBaseGoal goal;
+	goal.target_pose.header.frame_id = std::string(a.mapped_arg_value("frame_id"));
+	goal.target_pose.header.stamp =  ros::Time::now();
+	goal.target_pose.pose.position.x = int(a.mapped_arg_value("x"));
+	goal.target_pose.pose.position.y = int(a.mapped_arg_value("y"));
+	goal.target_pose.pose.orientation.w = int(a.mapped_arg_value("w"));;
+	return goal;
+}
+#endif //MOVE_BASE_MSGS_PKG
+
+
 void RosBackend::define_actions()
 {
+#ifdef NAOQI_WRAPPER_MSGS_PKG
 	define_action_client<naoqi::NaoQi_dialogAction>("/naoqi_dialog_server");
 	define_action_client<naoqi::NaoQi_sayAction>("/naoqi_say_server/naoqi_say");
 	define_action_client<naoqi::NaoQi_lookAtAction>("/naoqi_lookAt_server/lookAt");
-	define_action_client<move_base_msgs::MoveBaseAction>("move_base");
 	define_action_client<naoqi::NaoQi_openWebsiteAction>("/naoqi_openWebsite_server/openWebsite");
-	define_action_client<darknet::obj_detectionAction>("/yolo_obj_detection_position_server");
 	define_action_client<naoqi::NaoQi_animatedSayAction>("/naoqi_animatedSay_server/animatedSay");
 	define_action_client<naoqi::NaoQi_animationAction>("/naoqi_animation_server/naoqi_animation");
 	define_action_client<naoqi::NaoQi_subscribeAction>("/naoqi_subscribe_server/subscribe");
+#endif
+
+#ifdef DARKNET_ACTION_MSGS_PKG
+	define_action_client<darknet::obj_detectionAction>("/yolo_obj_detection_position_server");
+#endif
+
+#ifdef MOVE_BASE_MSGS_PKG
+	define_action_client<move_base_msgs::MoveBaseAction>("move_base");
+#endif
 }
 
 
 
-
+#ifdef NAOQI_BRIDGE_MSGS_PKG
 template<>
 void
 ExogManager<naoqi_bridge_msgs::Bumper>::topic_cb(const naoqi_bridge_msgs::Bumper::ConstPtr& msg)
@@ -163,11 +188,14 @@ ExogManager<naoqi_bridge_msgs::Bumper>::topic_cb(const naoqi_bridge_msgs::Bumper
 		std::move(param)
 	);
 }
+#endif //NAOQI_BRIDGE_MSGS_PKG
 
 void RosBackend::init_exog()
 {
+#ifdef NAOQI_BRIDGE_MSGS_PKG
 	sub_exog_event<naoqi_bridge_msgs::Bumper>(
 		"/pepper_robot/naoqi_driver/bumper"
 	);
+#endif
 }
 

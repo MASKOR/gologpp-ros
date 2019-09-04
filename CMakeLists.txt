@@ -24,6 +24,7 @@ find_package(catkin REQUIRED COMPONENTS
   naoqi_wrapper_msgs
   naoqi_bridge_msgs
   darknet_action_msgs
+  move_base_msgs
 )
 
 add_definitions(-DLIBQI_VERSION=${naoqi_libqi_VERSION_MAJOR}${naoqi_libqi_VERSION_MINOR})
@@ -58,7 +59,21 @@ add_executable(gologpp_agent
 set_property(TARGET gologpp_agent PROPERTY CXX_STANDARD 14)
 
 #add_dependencies(naoqi_say_server ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+if(naoqi_wrapper_msgs_FOUND)
+	target_compile_definitions(gologpp_agent PUBLIC -DNAOQI_WRAPPER_MSGS_PKG)
+endif()
 
+if(naoqi_bridge_msgs_FOUND)
+	target_compile_definitions(gologpp_agent PUBLIC -DNAOQI_BRIDGE_MSGS_PKG)
+endif()
+
+if(darknet_action_msgs_FOUND)
+	target_compile_definitions(gologpp_agent PUBLIC -DDARKNET_ACTION_MSGS_PKG)
+endif()
+
+if(move_base_msgs_FOUND)
+	target_compile_definitions(gologpp_agent PUBLIC -DMOVE_BASE_MSGS_PKG)
+endif()
 
 target_link_libraries(
     gologpp_agent
