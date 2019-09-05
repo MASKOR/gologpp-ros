@@ -5,8 +5,22 @@
 
 RosBackend::RosBackend()
 {
-	define_actions();
-	init_exog();
+#ifdef NAOQI_WRAPPER_MSGS_PKG
+	define_naoqi_wrapper_actions();
+#endif
+
+#ifdef MOVE_BASE_MSGS_PKG
+	define_move_base_actions();
+#endif
+
+#ifdef DARKNET_ACTION_MSGS_PKG
+	define_darknet_actions();
+#endif
+
+#ifdef NAOQI_BRIDGE_MSGS_PKG
+	init_naoqi_bridge_exog();
+#endif
+
 	spin_exog_thread();
 }
 

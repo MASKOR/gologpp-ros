@@ -35,14 +35,15 @@ private:
 	// Implemented in pepper_actions.cpp:
 	// Fill action_containers_ by calling define_action_client for
 	// each action that should be made available.
-	void define_actions();
-
+	void define_naoqi_wrapper_actions();
+	void define_move_base_actions();
+	void define_darknet_actions();
 	template<class ActionT>
 	void define_action_client(const std::string &name);
 
 	AbstractActionManager &get_action_client(gpp::shared_ptr<gpp::Activity>);
 
-	void init_exog();
+	void init_naoqi_bridge_exog();
 
 	// ExogT: msgs type; C: callback parameter type
 	template<class ExogT>
