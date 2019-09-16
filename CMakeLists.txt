@@ -52,7 +52,6 @@ link_directories(${readylogpp_LIBRARY_DIRS} ${parsegologpp_LIBRARY_DIRS})
 add_executable(gologpp_agent
 	src/agent_node.cpp
 	src/ros_backend.cpp
-	#src/pepper_actions.cpp
 	src/action_manager.cpp
 	src/exog_manager.cpp
 	src/naoqi_wrapper_actions.cpp
