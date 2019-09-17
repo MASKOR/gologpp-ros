@@ -102,14 +102,14 @@ ActionManager<naoqi::NaoQi_subscribeAction>::build_goal(const gpp::Activity &a)
 	return goal;
 }
 
-//template<>
-//ServiceManager<naoqi::FaceTracking>::RequestT
-//ServiceManager<naoqi::FaceTracking>::build_request(const gpp::Activity &a)
-//{
-//	naoqi::FaceTrackingRequest req;
-//	req.enableFaceTracking = bool(a.mapped_arg_value("enable"));
-//	return req;
-//}
+template<>
+ServiceManager<naoqi::FaceTracking>::RequestT
+ServiceManager<naoqi::FaceTracking>::build_request(const gpp::Activity &a)
+{
+	naoqi::FaceTrackingRequest req;
+	req.enableFaceTracking = bool(a.mapped_arg_value("enable"));
+	return req;
+}
 
 void RosBackend::define_naoqi_wrapper_actions()
 {

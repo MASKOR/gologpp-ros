@@ -61,38 +61,22 @@ template<class ServiceT>
 class ServiceManager : public AbstractActionManager {
 	// TODO
 public:
-	using RequestT = typename ServiceT::Request_;
+	using RequestT = typename ServiceT::Request;
 	using ResponseT = typename ServiceT::Response;
 	using Client = ros::ServiceClient;
 
 	ServiceManager(const std::string &, RosBackend &backend);
 
-	RequestT build_request(const gpp::Activity);
+	RequestT build_request(const gpp::Activity&);
 
 	virtual void execute_current_activity() override;
+	virtual void preempt_current_activity() override;
 private:
 	Client service_client_;
 	RequestT current_request_;
 	ResponseT current_response;
 };
 
-template<class ServiceT>
-void ServiceManager<ServiceT>::execute_current_activity() {
-	current_request_ = build_request(*current_activity_);
-
-	std::thread service_thread( [&] (ServiceT current_request, std::shared_ptr<gpp::Activity> current_activity) {
-		if(service_client_.call(current_request)) {
-			backend.update_activity(
-			current_activity->transition(gpp::Transition::Hook::FINISH)
-			);
-		} else {
-			backend.update_activity(
-			current_activity->transition(gpp::Transition::Hook::FAIL)
-			);
-		}
-	},current_request_, current_activity_);
-	service_thread.detach();
-}
 
 template<class ServiceT>
 ServiceManager<ServiceT>::ServiceManager(const std::string &topic_name, RosBackend &backend)
@@ -107,6 +91,26 @@ ActionManager<ActionT>::ActionManager(const std::string &topic_name, RosBackend 
 : AbstractActionManager(backend)
 , action_client_(topic_name, true)
 {}
+
+template<class ServiceT>
+void ServiceManager<ServiceT>::execute_current_activity() {
+	current_request_ = build_request(*current_activity_);
+	std::thread service_thread( [&] (ServiceT current_request, std::shared_ptr<gpp::Activity> current_activity) {
+		if(service_client_.call(current_request)) {
+			backend.update_activity(
+			current_activity->transition(gpp::Transition::Hook::FINISH),
+			nullptr
+			);
+		} else {
+			backend.update_activity(
+			current_activity->transition(gpp::Transition::Hook::FAIL),
+			nullptr
+			);
+		}
+	},current_request_, current_activity_);
+	service_thread.detach();
+}
+
 
 template<class ActionT>
 void ActionManager<ActionT>::preempt_current_activity() {
