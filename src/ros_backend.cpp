@@ -49,7 +49,7 @@ void RosBackend::execute_activity(gpp::shared_ptr<gpp::Activity> a)
 AbstractActionManager& RosBackend::get_ActionManager(gpp::shared_ptr<gpp::Activity> a)
 {
 
-	if(	*action_managers_.find(std::string(a->mapped_name())) == *action_managers_.end())
+	if(*action_managers_.find(std::string(a->mapped_name())) == *action_managers_.end())
 	{
 		return *service_managers_.find(std::string(a->mapped_name()))->second;
 	}
