@@ -111,6 +111,8 @@ void ServiceManager<ServiceT>::execute_current_activity() {
 	service_thread.detach();
 }
 
+template<class ServiceT>
+void ServiceManager<ServiceT>::preempt_current_activity() {}
 
 template<class ActionT>
 void ActionManager<ActionT>::preempt_current_activity() {
