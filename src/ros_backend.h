@@ -54,6 +54,11 @@ private:
 
 	void spin_exog_thread();
 
+	template<class ServiceT>
+	void create_ServiceManager(
+		const std::string &
+	);
+
 	std::vector<
 		std::unique_ptr<AbstractExogManager>
 	> exog_managers_;
@@ -62,6 +67,11 @@ private:
 		std::string,
 		std::unique_ptr<AbstractActionManager>
 	> action_managers_;
+
+	std::unordered_map<
+		std::string,
+		std::unique_ptr<AbstractActionManager>
+	> service_managers_;
 };
 
 #endif // ROSBACKEND_H

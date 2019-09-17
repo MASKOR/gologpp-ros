@@ -120,5 +120,6 @@ void RosBackend::define_naoqi_wrapper_actions()
 	create_ActionManager<naoqi::NaoQi_animatedSayAction>("/naoqi_animatedSay_server/animatedSay");
 	create_ActionManager<naoqi::NaoQi_animationAction>("/naoqi_animation_server/naoqi_animation");
 	create_ActionManager<naoqi::NaoQi_subscribeAction>("/naoqi_subscribe_server/subscribe");
+	create_ServiceManager<naoqi::FaceTracking>("/face_tracking");
 }
 #endif // NAOQI_WRAPPER_MSGS_PKG
