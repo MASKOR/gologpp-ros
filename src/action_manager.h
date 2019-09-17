@@ -65,12 +65,14 @@ public:
 	using ResponseT = typename ServiceT::Response;
 	using Client = ros::ServiceClient;
 
+	virtual void execute_current_activity() override;
+	virtual void preempt_current_activity() override;
+
 	ServiceManager(const std::string &, RosBackend &backend);
 
 	RequestT build_request(const gpp::Activity&);
+	gpp::Value *to_golog_constant(ResponseT);
 
-	virtual void execute_current_activity() override;
-	virtual void preempt_current_activity() override;
 private:
 	Client service_client_;
 	RequestT current_request_;
@@ -104,12 +106,12 @@ void ServiceManager<ServiceT>::execute_current_activity() {
 		if(service_client_.call(current_request, current_response)) {
 			backend.update_activity(
 			current_activity->transition(gpp::Transition::Hook::FINISH),
-			nullptr
+			to_golog_constant(current_response)
 			);
 		} else {
 			backend.update_activity(
 			current_activity->transition(gpp::Transition::Hook::FAIL),
-			nullptr
+			to_golog_constant(current_response)
 			);
 		}
 	},current_request_, current_response_, current_activity_);
@@ -165,6 +167,12 @@ void ActionManager<ActionT>::doneCb(const actionlib::SimpleClientGoalState &stat
 
 template<class ActionT>
 gpp::Value *ActionManager<ActionT>::to_golog_constant(ActionManager<ActionT>::ResultT)
+{
+	return nullptr;
+}
+
+template<class ServiceT>
+gpp::Value *ServiceManager<ServiceT>::to_golog_constant(ServiceManager<ServiceT>::ResponseT)
 {
 	return nullptr;
 }
