@@ -100,14 +100,23 @@ ActionManager<naoqi::NaoQi_subscribeAction>::build_goal(const gpp::Activity &a)
 	return goal;
 }
 
+template<>
+ServiceManager<naoqi::FaceTracking>::RequestT
+ServiceManager<naoqi::FaceTracking>::build_request(const gpp::Activity &a)
+{
+	naoqi::FaceTrackingRequest req;
+	req.enableFaceTracking = bool(a.mapped_arg_value("enable"));
+	return req;
+}
+
 void RosBackend::define_naoqi_wrapper_actions()
 {
-	define_action_client<naoqi::NaoQi_dialogAction>("/naoqi_dialog_server");
-	define_action_client<naoqi::NaoQi_sayAction>("/naoqi_say_server/naoqi_say");
-	define_action_client<naoqi::NaoQi_lookAtAction>("/naoqi_lookAt_server/lookAt");
-	define_action_client<naoqi::NaoQi_openWebsiteAction>("/naoqi_openWebsite_server/openWebsite");
-	define_action_client<naoqi::NaoQi_animatedSayAction>("/naoqi_animatedSay_server/animatedSay");
-	define_action_client<naoqi::NaoQi_animationAction>("/naoqi_animation_server/naoqi_animation");
-	define_action_client<naoqi::NaoQi_subscribeAction>("/naoqi_subscribe_server/subscribe");
+	create_ActionManager<naoqi::NaoQi_dialogAction>("/naoqi_dialog_server");
+	create_ActionManager<naoqi::NaoQi_sayAction>("/naoqi_say_server/naoqi_say");
+	create_ActionManager<naoqi::NaoQi_lookAtAction>("/naoqi_lookAt_server/lookAt");
+	create_ActionManager<naoqi::NaoQi_openWebsiteAction>("/naoqi_openWebsite_server/openWebsite");
+	create_ActionManager<naoqi::NaoQi_animatedSayAction>("/naoqi_animatedSay_server/animatedSay");
+	create_ActionManager<naoqi::NaoQi_animationAction>("/naoqi_animation_server/naoqi_animation");
+	create_ActionManager<naoqi::NaoQi_subscribeAction>("/naoqi_subscribe_server/subscribe");
 }
 #endif // NAOQI_WRAPPER_MSGS_PKG

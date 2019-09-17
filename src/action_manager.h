@@ -29,7 +29,7 @@ public:
 	virtual void preempt_current_activity() = 0;
 
 protected:
-	gpp::shared_ptr<gpp::Activity> current_activity;
+	gpp::shared_ptr<gpp::Activity> current_activity_;
 	RosBackend &backend;
 };
 
@@ -76,7 +76,7 @@ void ActionManager<ActionT>::preempt_current_activity() {
 
 template<class ActionT>
 void ActionManager<ActionT>::execute_current_activity() {
-	current_goal_ = build_goal(*current_activity);
+	current_goal_ = build_goal(*current_activity_);
 	action_client_.sendGoal(current_goal_, boost::bind(
 	&ActionManager<ActionT>::doneCb,
 	this, _1, _2
@@ -90,7 +90,7 @@ void ActionManager<ActionT>::doneCb(const actionlib::SimpleClientGoalState &stat
 	switch(state.state_) {
 	case actionlib::SimpleClientGoalState::SUCCEEDED:
 		backend.update_activity(
-		current_activity->transition(gpp::Transition::Hook::FINISH),
+		current_activity_->transition(gpp::Transition::Hook::FINISH),
 		to_golog_constant(result)
 		);
 		break;
@@ -99,7 +99,7 @@ void ActionManager<ActionT>::doneCb(const actionlib::SimpleClientGoalState &stat
 		break;
 	case actionlib::SimpleClientGoalState::ABORTED:
 		backend.update_activity(
-		current_activity->transition(gpp::Transition::Hook::FAIL),
+		current_activity_->transition(gpp::Transition::Hook::FAIL),
 		nullptr
 		);
 		break;
@@ -120,7 +120,7 @@ gpp::Value *ActionManager<ActionT>::to_golog_constant(ActionManager<ActionT>::Re
 }
 
 template<class ActionT>
-void RosBackend::define_action_client(const std::string &topic_name)
+void RosBackend::create_ActionManager(const std::string &topic_name)
 {
 	// TODO: Create ActionContainer<ActionT> and put in action_containers_
 	action_managers_.emplace(

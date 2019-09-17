@@ -38,20 +38,22 @@ private:
 	void define_naoqi_wrapper_actions();
 	void define_move_base_actions();
 	void define_darknet_actions();
-	template<class ActionT>
-	void define_action_client(const std::string &name);
-
-	AbstractActionManager &get_action_client(gpp::shared_ptr<gpp::Activity>);
-
 	void init_naoqi_bridge_exog();
 
-	// ExogT: msgs type; C: callback parameter type
+	//create actionManager
+	template<class ActionT>
+	void create_ActionManager(const std::string &name);
+
+	AbstractActionManager &get_ActionManager(gpp::shared_ptr<gpp::Activity>);
+
+	// create exogManager
 	template<class ExogT>
-	void sub_exog_event(
+	void create_exogManger(
 		const std::string &
 	);
 
 	void spin_exog_thread();
+
 	std::vector<
 		std::unique_ptr<AbstractExogManager>
 	> exog_managers_;

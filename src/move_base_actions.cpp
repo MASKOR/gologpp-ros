@@ -26,7 +26,7 @@ ActionManager<move_base_msgs::MoveBaseAction>::build_goal(const gpp::Activity &a
 
 void RosBackend::define_move_base_actions()
 {
-	define_action_client<move_base_msgs::MoveBaseAction>("move_base");
+	create_ActionManager<move_base_msgs::MoveBaseAction>("move_base");
 }
 
 #endif //MOVE_BASE_MSGS_PKG

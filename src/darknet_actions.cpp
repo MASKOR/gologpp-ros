@@ -30,7 +30,7 @@ ActionManager<darknet::obj_detectionAction>::build_goal(const gpp::Activity &a)
 void RosBackend::define_darknet_actions()
 {
 
-	define_action_client<darknet::obj_detectionAction>("/yolo_obj_detection_position_server");
+	create_ActionManager<darknet::obj_detectionAction>("/yolo_obj_detection_position_server");
 
 }
 #endif
