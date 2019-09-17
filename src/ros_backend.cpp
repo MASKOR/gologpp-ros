@@ -48,7 +48,13 @@ void RosBackend::execute_activity(gpp::shared_ptr<gpp::Activity> a)
 
 AbstractActionManager& RosBackend::get_ActionManager(gpp::shared_ptr<gpp::Activity> a)
 {
-	return *action_managers_.find(std::string(a->mapped_name()))->second;
+
+	if(	*action_managers_.find(std::string(a->mapped_name())) == *action_managers_.end())
+	{
+		return *service_managers_.find(std::string(a->mapped_name()))->second;
+	}
+	else
+		return *action_managers_.find(std::string(a->mapped_name()))->second;
 }
 
 void RosBackend::spin_exog_thread()
