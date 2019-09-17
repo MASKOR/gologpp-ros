@@ -58,7 +58,7 @@ void ExogManager<ExogT>::exog_event_to_queue(gpp::unique_ptr<gpp::Value> param)
 }
 
 template<class ExogT>
-void RosBackend::create_exogManger(const std::string &topic)
+void RosBackend::create_ExogManger(const std::string &topic)
 {
 	exog_managers_.push_back(
 		std::unique_ptr<AbstractExogManager>(new ExogManager<ExogT>(*this, topic))

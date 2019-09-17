@@ -18,7 +18,7 @@ ExogManager<naoqi_bridge_msgs::Bumper>::topic_cb(const naoqi_bridge_msgs::Bumper
 
 void RosBackend::init_naoqi_bridge_exog()
 {
-	create_exogManger<naoqi_bridge_msgs::Bumper>(
+	create_ExogManger<naoqi_bridge_msgs::Bumper>(
 		"/pepper_robot/naoqi_driver/bumper"
 	);
 }

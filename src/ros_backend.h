@@ -48,7 +48,7 @@ private:
 
 	// create exogManager
 	template<class ExogT>
-	void create_exogManger(
+	void create_ExogManger(
 		const std::string &
 	);
 
