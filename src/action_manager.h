@@ -92,11 +92,12 @@ ActionManager<ActionT>::ActionManager(const std::string &topic_name, RosBackend 
 , action_client_(topic_name, true)
 {}
 
+
 template<class ServiceT>
 void ServiceManager<ServiceT>::execute_current_activity() {
 	current_request_ = build_request(*current_activity_);
-	std::thread service_thread( [&] (ServiceT current_request, std::shared_ptr<gpp::Activity> current_activity) {
-		if(service_client_.call(current_request)) {
+	std::thread service_thread( [&] (RequestT current_request, std::shared_ptr<gpp::Activity> current_activity) {
+		if(service_client_.call()) {
 			backend.update_activity(
 			current_activity->transition(gpp::Transition::Hook::FINISH),
 			nullptr
