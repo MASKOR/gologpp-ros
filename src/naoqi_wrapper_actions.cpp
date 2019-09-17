@@ -17,6 +17,8 @@
 #include <naoqi_wrapper_msgs/NaoQi_sayAction.h>
 #include <naoqi_wrapper_msgs/NaoQi_subscribeAction.h>
 
+#include <naoqi_wrapper_msgs/FaceTracking.h>
+
 namespace naoqi = naoqi_wrapper_msgs;
 
 template<>
