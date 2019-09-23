@@ -190,7 +190,7 @@ void RosBackend::create_ActionManager(const std::string &topic_name)
 template<class ServiceT>
 void RosBackend::create_ServiceManager(const std::string &topic_name)
 {
-	service_managers_.emplace(
+	action_managers_.emplace(
 	topic_name,
 	std::unique_ptr<AbstractActionManager>(new ServiceManager<ServiceT>(topic_name, *this))
 	);

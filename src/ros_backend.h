@@ -40,7 +40,6 @@ private:
 	void define_darknet_actions();
 	void init_naoqi_bridge_exog();
 
-	//create actionManager
 	template<class ActionT>
 	void create_ActionManager(const std::string &name);
 
@@ -67,11 +66,6 @@ private:
 		std::string,
 		std::unique_ptr<AbstractActionManager>
 	> action_managers_;
-
-	std::unordered_map<
-		std::string,
-		std::unique_ptr<AbstractActionManager>
-	> service_managers_;
 };
 
 #endif // ROSBACKEND_H
