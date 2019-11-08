@@ -38,7 +38,7 @@ private:
 	void define_naoqi_wrapper_actions();
 	void define_move_base_actions();
 	void define_darknet_actions();
-	void init_naoqi_bridge_exog();
+	void define_naoqi_bridge_actions();
 
 	template<class ActionT>
 	void create_ActionManager(const std::string &name);

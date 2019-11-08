@@ -15,7 +15,7 @@ ExogManager<naoqi_bridge_msgs::Bumper>::params_to_map(const naoqi_bridge_msgs::B
 	return params_to_map;
 }
 
-void RosBackend::init_naoqi_bridge_exog()
+void RosBackend::define_naoqi_bridge_actions()
 {
 	create_ExogManger<naoqi_bridge_msgs::Bumper>(
 		"/pepper_robot/naoqi_driver/bumper"
