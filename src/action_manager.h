@@ -3,6 +3,7 @@
 
 #include <model/transition.h>
 #include <model/platform_backend.h>
+#include <model/activity.h>
 
 #include <actionlib/client/simple_action_client.h>
 #include <actionlib/client/terminal_state.h>
@@ -104,13 +105,13 @@ void ServiceManager<ServiceT>::execute_current_activity() {
 	std::shared_ptr<gpp::Activity> current_activity
 	) {
 		if(service_client_.call(current_request, current_response)) {
-			backend.update_activity(
-			current_activity->transition(gpp::Transition::Hook::FINISH),
+			current_activity->update(
+			(gpp::Transition::Hook::FINISH),
 			to_golog_constant(current_response)
 			);
 		} else {
-			backend.update_activity(
-			current_activity->transition(gpp::Transition::Hook::FAIL),
+			current_activity->update(
+			(gpp::Transition::Hook::FAIL),
 			to_golog_constant(current_response)
 			);
 		}
@@ -141,8 +142,8 @@ void ActionManager<ActionT>::doneCb(const actionlib::SimpleClientGoalState &stat
 	ROS_INFO("Finished in state [%s]", state.toString().c_str());
 	switch(state.state_) {
 	case actionlib::SimpleClientGoalState::SUCCEEDED:
-		backend.update_activity(
-		current_activity_->transition(gpp::Transition::Hook::FINISH),
+		current_activity_->update(
+		(gpp::Transition::Hook::FINISH),
 		to_golog_constant(result)
 		);
 		break;
@@ -150,9 +151,9 @@ void ActionManager<ActionT>::doneCb(const actionlib::SimpleClientGoalState &stat
 		// TODO
 		break;
 	case actionlib::SimpleClientGoalState::ABORTED:
-		backend.update_activity(
-		current_activity_->transition(gpp::Transition::Hook::FAIL),
-		nullptr
+		current_activity_->update(
+		(gpp::Transition::Hook::FAIL),
+		to_golog_constant(result)
 		);
 		break;
 	case actionlib::SimpleClientGoalState::PENDING:
