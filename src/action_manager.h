@@ -107,12 +107,12 @@ void ServiceManager<ServiceT>::execute_current_activity() {
 		if(service_client_.call(current_request, current_response)) {
 			current_activity->update(
 			(gpp::Transition::Hook::FINISH),
-			to_golog_constant(current_response)
+			boost::optional<gpp::Value>(to_golog_constant(current_response))
 			);
 		} else {
 			current_activity->update(
 			(gpp::Transition::Hook::FAIL),
-			to_golog_constant(current_response)
+			boost::optional<gpp::Value>(to_golog_constant(current_response))
 			);
 		}
 	},current_request_, current_response_, current_activity_);
@@ -144,7 +144,7 @@ void ActionManager<ActionT>::doneCb(const actionlib::SimpleClientGoalState &stat
 	case actionlib::SimpleClientGoalState::SUCCEEDED:
 		current_activity_->update(
 		(gpp::Transition::Hook::FINISH),
-		to_golog_constant(result)
+		boost::optional<gpp::Value>(to_golog_constant(result))
 		);
 		break;
 	case actionlib::SimpleClientGoalState::PREEMPTED:
@@ -153,7 +153,7 @@ void ActionManager<ActionT>::doneCb(const actionlib::SimpleClientGoalState &stat
 	case actionlib::SimpleClientGoalState::ABORTED:
 		current_activity_->update(
 		(gpp::Transition::Hook::FAIL),
-		to_golog_constant(result)
+		boost::optional<gpp::Value>(to_golog_constant(result))
 		);
 		break;
 	case actionlib::SimpleClientGoalState::PENDING:
