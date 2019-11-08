@@ -63,7 +63,7 @@ int main(int argc, char **argv)
 	} else {
 		ROS_INFO("Default program");
 		nh.deleteParam("program");
-		load_n_exec_program("move_base_example");
+		load_n_exec_program("example");
 
 	}
 	return 0;

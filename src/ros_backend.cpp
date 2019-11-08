@@ -18,7 +18,7 @@ RosBackend::RosBackend()
 #endif
 
 #ifdef NAOQI_BRIDGE_MSGS_PKG
-	init_naoqi_bridge_exog();
+	define_naoqi_bridge_actions();
 #endif
 
 	spin_exog_thread();
