@@ -33,8 +33,8 @@ RosBackend::~RosBackend()
 void RosBackend::preempt_activity(gpp::shared_ptr<gpp::Transition> trans)
 {
 	// TODO: Tell ActionManager to preempt
-	gpp::shared_ptr<gpp::Activity> a = std::make_shared<gpp::Activity>(trans);
-	get_ActionManager(a).preempt(a);
+	//gpp::shared_ptr<gpp::Activity> a = std::make_shared<gpp::Activity>(trans);
+	//get_ActionManager(a).preempt(a);
 }
 
 
