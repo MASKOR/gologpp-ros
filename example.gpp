@@ -1,0 +1,71 @@
+number fluent position_outcome() {
+initially:
+	() = 0;
+}
+
+action detect_position(string obj) {
+senses:
+	position_outcome()	
+mapping:
+	"/yolo_obj_detection_position_server"{
+		to_detected_obj = obj	
+	}
+}
+
+action say(string str){
+mapping:
+	"/naoqi_say_server/naoqi_say" {
+		say_string = str 
+	}
+}
+
+bool fluent bumper_state() {
+initially:
+        () = false;                
+} 
+
+exog_action bumper(bool pressed) {
+mapping:
+	"/pepper_robot/naoqi_driver/bumper" {
+		pressed = pressed 	
+	}
+effect: 
+	bumper_state() = pressed;
+}
+
+string fluent dialog_outcome() {
+initially:
+        ()= "";
+}
+
+action dialog(string topicfile) {
+senses:
+	dialog_outcome()
+mapping:
+	"" {
+		 = topicfile
+	}
+}
+
+bool fluent touch_sensor_state() {
+initially:
+        () = false;                
+} 
+
+exog_action touch(bool pressed) {
+mapping:
+	"" {
+		 = pressed 	
+	}
+effect: 
+	touch_sensor_state() = pressed;
+}
+
+
+
+{
+test(touch_sensor_state());
+say("Hallo");
+dialog("path/to/dialogfile");
+
+}
