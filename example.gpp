@@ -42,8 +42,8 @@ action dialog(string topicfile) {
 senses:
 	dialog_outcome()
 mapping:
-	"" {
-		 = topicfile
+	"/naoqi_dialog_server" {
+		topic_file = topicfile
 	}
 }
 
@@ -54,8 +54,8 @@ initially:
 
 exog_action touch(bool pressed) {
 mapping:
-	"" {
-		 = pressed 	
+	"/pepper_robot/naoqi_driver/head_touch" {
+		pressed = pressed 	
 	}
 effect: 
 	touch_sensor_state() = pressed;
@@ -66,6 +66,6 @@ effect:
 {
 test(touch_sensor_state());
 say("Hallo");
-dialog("path/to/dialogfile");
+//dialog("pepper_smach/examples/dialogues/welcome_tdf.top");
 
 }
