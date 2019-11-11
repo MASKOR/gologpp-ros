@@ -1,0 +1,19 @@
+topic: ~example_topic()
+language: ged
+
+concept:(food) [fruits chicken beef eggs]
+concept:(bestätigen)[Okay ja gerne]
+concept:()
+
+u: ([e:FrontTactilTouched e:MiddleTactilTouched e:RearTactilTouched]) Hallo und Herzlich Willkommen zum Tag der Forschung. Mein Name ist Pepper. Ich bin ein humanoider Service Roboter. Heute möchte ich Ihnen zeigen, wie ich die Position, der Objekte auf dem Tisch neben mir, wiedergebe.
+
+u: (_~bestätigen) $smach_outcome=$true
+
+u: (Wie [geht funktioniert] das?) Ein Agentenprogramm entscheidet welche Aktion als nächstes ausgeführt wird. Die Aktion selber wird dann unter ROS ausgeführt. 
+	u1:([Agent Program Agentenprogram]) Aktionen haben Vorbedingungen und Effekte, die über den Programmverlauf entscheiden.
+	u1:([ros]) Ros ist ein Framework für mobile Roboter mit fertigen Packeten für verschiedene Aufgaben.
+	
+u:(Was kannst du sonst noch?) Ich habe schon im Autohaus verkauft, im Kindergarten und bald auch als Tour Guide unterhalten.
+Ansonten gibt es im NaoQi Store noch tolle Apps.
+
+u:([Tüschüss AufWiedersehen]) Auf Wiedersehen.
