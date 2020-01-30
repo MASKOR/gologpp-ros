@@ -10,7 +10,7 @@ template <>
 std::unordered_map< std::string, gpp::unique_ptr<gpp::Value> >
 ExogManager<naoqi_bridge_msgs::Bumper>::params_to_map(const naoqi_bridge_msgs::Bumper::ConstPtr& msg) {
 
-	gpp::unique_ptr<gpp::Value> param (new gpp::Value(gpp::BoolType::name(), bool(msg->statePressed)));
+	gpp::unique_ptr<gpp::Value> param (new gpp::Value(gpp::get_type<gpp::BoolType>(), bool(msg->statePressed)));
 	std::unordered_map< std::string, gpp::unique_ptr<gpp::Value> > params_to_map;
 	params_to_map.insert({"pressed", std::move(param)});
 	return params_to_map;
@@ -20,7 +20,7 @@ template <>
 std::unordered_map< std::string, gpp::unique_ptr<gpp::Value> >
 ExogManager<naoqi_bridge_msgs::HeadTouch>::params_to_map(const naoqi_bridge_msgs::HeadTouch::ConstPtr& msg) {
 
-	gpp::unique_ptr<gpp::Value> param (new gpp::Value(gpp::BoolType::name(), bool(msg->statePressed)));
+	gpp::unique_ptr<gpp::Value> param (new gpp::Value(gpp::get_type<gpp::BoolType>(), bool(msg->statePressed)));
 	std::unordered_map< std::string, gpp::unique_ptr<gpp::Value> > params_to_map;
 	params_to_map.insert({"pressed", std::move(param)});
 	return params_to_map;

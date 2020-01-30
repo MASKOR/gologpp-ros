@@ -57,26 +57,29 @@ template<class ExogT>
 void
 ExogManager<ExogT>::topic_cb(const typename ExogT::ConstPtr& msg)
 {
-	ROS_INFO_STREAM("I heard: " << bool(msg->statePressed));
-	exog_event_to_queue(
-		params_to_map(msg)
-	);
+	if(backend.ctx_ready){
+		//Topic msgs map to exog Event and pushed to Exog Queue
+		exog_event_to_queue(
+			params_to_map(msg)
+		);
+	}
 }
 
 template<class ExogT>
 void ExogManager<ExogT>::exog_event_to_queue( std::unordered_map< std::string, gpp::unique_ptr<gpp::Value> > params_to_map)
 {
-	std::shared_ptr<gpp::ExogEvent> ev;
-	std::unordered_map< gpp::Reference <gpp::Variable>, gpp::unique_ptr<gpp::Value> > params_to_args;
+		std::shared_ptr<gpp::ExogEvent> ev;
+		std::unordered_map< gpp::Reference <gpp::Variable>, gpp::unique_ptr<gpp::Value> > params_to_args;
 
-				for (auto it = params_to_map.begin(); it != params_to_map.end(); it++){
-					gpp::Reference<gpp::Variable> *var_of_target = exog_->param_ref(it->first);
-					params_to_args.emplace(std::move(*var_of_target), std::move(it->second));
-				}
-				ev = std::make_shared<gpp::ExogEvent>(exog_, std::move(params_to_args));
+		for (auto it = params_to_map.begin(); it != params_to_map.end(); it++){
+			gpp::Reference<gpp::Variable> *var_of_target = exog_->param_ref(it->first);
+			params_to_args.emplace(std::move(*var_of_target), std::move(it->second));
+		}
+		ev = std::make_shared<gpp::ExogEvent>(exog_, std::move(params_to_args));
 
-	gpp::ReadylogContext &ctx = gpp::ReadylogContext::instance();
-	ctx.exog_queue_push(ev);
+
+		gpp::ReadylogContext &ctx = gpp::ReadylogContext::instance();
+		ctx.exog_queue_push(ev);
 }
 
 template<class ExogT>

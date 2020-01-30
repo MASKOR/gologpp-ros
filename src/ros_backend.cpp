@@ -3,8 +3,10 @@
 #include "ros_backend.h"
 
 
+
 RosBackend::RosBackend()
 {
+	this->ctx_ready = false;
 #ifdef NAOQI_WRAPPER_MSGS_PKG
 	define_naoqi_wrapper_actions();
 #endif
@@ -21,6 +23,8 @@ RosBackend::RosBackend()
 	define_naoqi_bridge_actions();
 #endif
 
+	define_opencv_apps_actions();
+
 	spin_exog_thread();
 }
 
@@ -30,7 +34,7 @@ RosBackend::~RosBackend()
 
 
 
-void RosBackend::preempt_activity(gpp::shared_ptr<gpp::Transition> trans)
+void RosBackend::preempt_activity(gpp::shared_ptr<gpp::Activity> trans)
 {
 	// TODO: Tell ActionManager to preempt
 	//gpp::shared_ptr<gpp::Activity> a = std::make_shared<gpp::Activity>(trans);

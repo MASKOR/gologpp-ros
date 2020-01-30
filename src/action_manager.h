@@ -149,7 +149,7 @@ void ActionManager<ActionT>::doneCb(const actionlib::SimpleClientGoalState &stat
 	case actionlib::SimpleClientGoalState::SUCCEEDED:
 		current_activity_->update(
 			gpp::Transition::Hook::FINISH,
-			to_golog_constant(result)
+			std::move(to_golog_constant(result))
 		);
 		break;
 	case actionlib::SimpleClientGoalState::PREEMPTED:
@@ -158,7 +158,7 @@ void ActionManager<ActionT>::doneCb(const actionlib::SimpleClientGoalState &stat
 	case actionlib::SimpleClientGoalState::ABORTED:
 		current_activity_->update(
 			(gpp::Transition::Hook::FAIL),
-			to_golog_constant(result)
+			std::move(to_golog_constant(result))
 		);
 		break;
 	case actionlib::SimpleClientGoalState::PENDING:

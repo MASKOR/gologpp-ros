@@ -58,6 +58,7 @@ add_executable(gologpp_agent
 	src/move_base_actions.cpp
 	src/darknet_actions.cpp
 	src/naoqi_bridge_actions.cpp
+	src/opencv_apps_actions.cpp
 )
 set_property(TARGET gologpp_agent PROPERTY CXX_STANDARD 14)
 

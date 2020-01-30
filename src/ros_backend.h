@@ -27,9 +27,11 @@ public:
 	RosBackend();
 	virtual ~RosBackend() override;
 	virtual void execute_activity(gpp::shared_ptr<gpp::Activity> a) override;
-	virtual void preempt_activity(gpp::shared_ptr<gpp::Transition> trans) override;
+	virtual void preempt_activity(gpp::shared_ptr<gpp::Activity> trans) override;
 	virtual gpp::Clock::time_point time() const noexcept override;
 
+	//std::mutex exog_mutex;
+	std::atomic<bool> ctx_ready;
 
 private:
 	// Implemented in pepper_actions.cpp:
@@ -39,6 +41,7 @@ private:
 	void define_move_base_actions();
 	void define_darknet_actions();
 	void define_naoqi_bridge_actions();
+	void define_opencv_apps_actions();
 
 	template<class ActionT>
 	void create_ActionManager(const std::string &name);

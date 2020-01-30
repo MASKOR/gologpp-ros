@@ -15,7 +15,7 @@ namespace darknet = darknet_action_msgs;
 template<>
 boost::optional<gpp::Value>
 ActionManager<darknet::obj_detectionAction>::to_golog_constant(ResultT result) {
-	return gpp::Value(gpp::NumberType::name(),result->obj_pos);
+	return gpp::Value(gpp::get_type<gpp::NumberType>(), result->obj_pos);
 }
 
 template<>
