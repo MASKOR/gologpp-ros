@@ -47,6 +47,21 @@ mapping:
 	}
 }
 
+string fluent web_name() {
+initially:
+        () = "";                
+} 
+
+action openWebsite (string url, bool waitForWebCommand){
+senses:
+	web_name()
+mapping:
+		"/naoqi_openWebsite_server/openWebsite"{
+			url = url,
+			waitForWebCommand = waitForWebCommand	
+	}
+}
+
 bool fluent touch_sensor_state() {
 initially:
         () = false;                
@@ -61,11 +76,52 @@ effect:
 	touch_sensor_state() = pressed;
 }
 
+bool fluent name_state() {
+initially:
+        () = false;                
+} 
+string fluent name() {
+initially:
+        () = "";                
+}
+
+action LearnFace (string name){	
+mapping:
+		"/face_recognition_trainer_actionserver"{
+			learn_name = name
+	}
+}
+
+number fluent confidence_val() {
+initially:
+        () = 0;                
+}
+
+exog_action recog_name(string name, number confidence) {
+mapping:
+	"/face_recognition/output" {
+		name = name,
+		confidence = confidence 	
+	}
+effect:
+	name_state() = true;
+	name() = name;
+	confidence_val() = confidence;
+}
+
 
 
 {
-test(touch_sensor_state());
-say("Hallo");
-//dialog("pepper_smach/examples/dialogues/welcome_tdf.top");
+openWebsite("http://192.168.1.200:3412/examples/html/pepper_keyboard/keyboard.html?ros=true", true);
+//end(openWebsite("http://192.168.1.200:3412/examples/html/pepper_keyboard/keyboard.html?ros=true", true));
+say(web_name());
 
+say("Hallo");
+
+start(openWebsite("http://192.168.1.200:3412/examples/html/pepper_videostream.html?ros=true", false));
+//LearnFace("max");
+
+test(name_state() & confidence_val() > 3000);
+say("test");
+say(name());
 }

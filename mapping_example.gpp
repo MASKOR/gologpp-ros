@@ -11,7 +11,7 @@ mapping:
 
 action go_to(number x, number y, number yaw) {
 mapping:
-	move_base {
+	"move_base" {
 		x = x,
 		y = y,
 		yaw = yaw,
