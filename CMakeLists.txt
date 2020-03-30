@@ -21,10 +21,15 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
   actionlib_msgs
   actionlib
-  naoqi_wrapper_msgs
-  naoqi_bridge_msgs
-  darknet_action_msgs
-  move_base_msgs
+)
+
+find_package(catkin OPTIONAL_COMPONENTS
+	actionlib
+	darknet_action_msgs
+	naoqi_wrapper_msgs
+	naoqi_bridge_msgs
+	move_base_msgs
+	opencv_apps_action_msgs
 )
 
 add_definitions(-DLIBQI_VERSION=${naoqi_libqi_VERSION_MAJOR}${naoqi_libqi_VERSION_MINOR})
@@ -38,6 +43,7 @@ include_directories(
   ${readylogpp_INCLUDE_DIRS}
   ${parsegologpp_INCLUDE_DIRS}
 )
+
 catkin_package(
   #INCLUDE_DIRS include
   #LIBRARIES ${PROJECT_NAME}
@@ -45,6 +51,7 @@ catkin_package(
   #CATKIN_DEPENDS actionlib actionlib_msgs message_generation roscpp rospy std_msgs
   #DEPENDS system_lib
 )
+
 set(BUILD_TESTS OFF CACHE BOOL "Enable gologpp tests" FORCE)
 
 link_directories(${readylogpp_LIBRARY_DIRS} ${parsegologpp_LIBRARY_DIRS})
@@ -54,29 +61,34 @@ add_executable(gologpp_agent
 	src/ros_backend.cpp
 	src/action_manager.cpp
 	src/exog_manager.cpp
-	src/naoqi_wrapper_actions.cpp
-	src/move_base_actions.cpp
-	src/darknet_actions.cpp
-	src/naoqi_bridge_actions.cpp
-	src/opencv_apps_actions.cpp
 )
 set_property(TARGET gologpp_agent PROPERTY CXX_STANDARD 14)
 
 #add_dependencies(naoqi_say_server ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 if(naoqi_wrapper_msgs_FOUND)
+	target_sources(gologpp_agent PRIVATE src/naoqi_wrapper_actions.cpp)
 	target_compile_definitions(gologpp_agent PUBLIC -DNAOQI_WRAPPER_MSGS_PKG)
 endif()
 
 if(naoqi_bridge_msgs_FOUND)
+	target_sources(gologpp_agent PRIVATE src/naoqi_bridge_actions.cpp)
 	target_compile_definitions(gologpp_agent PUBLIC -DNAOQI_BRIDGE_MSGS_PKG)
 endif()
 
+
 if(darknet_action_msgs_FOUND)
+	target_sources(gologpp_agent PRIVATE src/darknet_actions.cpp)
 	target_compile_definitions(gologpp_agent PUBLIC -DDARKNET_ACTION_MSGS_PKG)
 endif()
 
 if(move_base_msgs_FOUND)
+	target_sources(gologpp_agent PRIVATE src/move_base_actions.cpp)
 	target_compile_definitions(gologpp_agent PUBLIC -DMOVE_BASE_MSGS_PKG)
+endif()
+
+if(opencv_apps_action_msgs_FOUND)
+	target_sources(gologpp_agent PRIVATE src/opencv_apps_actions.cpp)
+	target_compile_definitions(gologpp_agent PUBLIC -DOPENCV_APPS_MSGS_PKG)
 endif()
 
 target_link_libraries(
@@ -85,4 +97,3 @@ target_link_libraries(
     ${readylogpp_LIBRARIES}
     ${parsegologpp_LIBRARIES}
 )
-
