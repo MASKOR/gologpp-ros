@@ -56,7 +56,7 @@ public:
 	GoalT build_goal(const gpp::Activity &);
 
 	void doneCb(const actionlib::SimpleClientGoalState &state, ResultT result);
-	boost::optional<gpp::Value> to_golog_constant(ResultT);
+	gpp::Value* to_golog_constant(ResultT);
 
 private:
 	ClientT action_client_;
@@ -77,7 +77,7 @@ public:
 	ServiceManager(const std::string &, RosBackend &backend);
 
 	RequestT build_request(const gpp::Activity&);
-	boost::optional<gpp::Value> to_golog_constant(ResponseT);
+	gpp::Value* to_golog_constant(ResponseT);
 
 private:
 	Client service_client_;
@@ -149,7 +149,7 @@ void ActionManager<ActionT>::doneCb(const actionlib::SimpleClientGoalState &stat
 	case actionlib::SimpleClientGoalState::SUCCEEDED:
 		current_activity_->update(
 			gpp::Transition::Hook::FINISH,
-			std::move(to_golog_constant(result))
+			to_golog_constant(result)
 		);
 		break;
 	case actionlib::SimpleClientGoalState::PREEMPTED:
@@ -157,8 +157,8 @@ void ActionManager<ActionT>::doneCb(const actionlib::SimpleClientGoalState &stat
 		break;
 	case actionlib::SimpleClientGoalState::ABORTED:
 		current_activity_->update(
-			(gpp::Transition::Hook::FAIL),
-			std::move(to_golog_constant(result))
+			gpp::Transition::Hook::FAIL,
+			to_golog_constant(result)
 		);
 		break;
 	case actionlib::SimpleClientGoalState::PENDING:
@@ -172,15 +172,15 @@ void ActionManager<ActionT>::doneCb(const actionlib::SimpleClientGoalState &stat
 
 
 template<class ActionT>
-boost::optional<gpp::Value> ActionManager<ActionT>::to_golog_constant(ActionManager<ActionT>::ResultT)
+gpp::Value* ActionManager<ActionT>::to_golog_constant(ActionManager<ActionT>::ResultT)
 {
-	return boost::optional<gpp::Value>();
+	return nullptr;
 }
 
 template<class ServiceT>
-boost::optional<gpp::Value> ServiceManager<ServiceT>::to_golog_constant(ServiceManager<ServiceT>::ResponseT)
+gpp::Value* ServiceManager<ServiceT>::to_golog_constant(ServiceManager<ServiceT>::ResponseT)
 {
-	return boost::optional<gpp::Value>();
+	return nullptr;
 }
 
 template<class ActionT>
