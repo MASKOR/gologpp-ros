@@ -22,15 +22,15 @@
 namespace naoqi = naoqi_wrapper_msgs;
 
 template<>
-gpp::Value*
+boost::optional<gpp::Value>
 ActionManager<naoqi::NaoQi_dialogAction>::to_golog_constant(ResultT result){
-	return new gpp::Value(gpp::get_type<gpp::StringType>(), result->outcome);
+	return gpp::Value(gpp::get_type<gpp::StringType>(), result->outcome);
 }
 
 template<>
-gpp::Value*
+boost::optional<gpp::Value>
 ActionManager<naoqi::NaoQi_openWebsiteAction>::to_golog_constant(ResultT result) {
-	return new gpp::Value(gpp::get_type<gpp::StringType>(), result->command);
+	return gpp::Value(gpp::get_type<gpp::StringType>(), result->command);
 }
 
 
