@@ -23,8 +23,9 @@ RosBackend::RosBackend()
 	define_naoqi_bridge_actions();
 #endif
 
+#ifdef OPENCV_APPS_MSGS_PKG
 	define_opencv_apps_actions();
-
+#endif
 	spin_exog_thread();
 }
 
