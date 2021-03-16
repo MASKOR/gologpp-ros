@@ -25,8 +25,8 @@ public:
 	ros::Subscriber exog_subscriber_;
 
 	void topic_cb(const typename ExogT::ConstPtr&);
-	void exog_event_to_queue(std::unordered_map< std::string, gpp::unique_ptr<gpp::Value> > params_to_map);
-	 std::unordered_map< std::string, gpp::unique_ptr<gpp::Value> > params_to_map(const typename ExogT::ConstPtr& msg);
+	void exog_event_to_queue(std::unordered_map< std::string, gpp::unique_ptr<gpp::Value> > &&params_to_map);
+	std::unordered_map< std::string, gpp::unique_ptr<gpp::Value> > params_to_map(const typename ExogT::ConstPtr& msg);
 private:
 	gpp::shared_ptr< gpp::ExogAction> exog_;
 };
@@ -66,17 +66,16 @@ ExogManager<ExogT>::topic_cb(const typename ExogT::ConstPtr& msg)
 }
 
 template<class ExogT>
-void ExogManager<ExogT>::exog_event_to_queue( std::unordered_map< std::string, gpp::unique_ptr<gpp::Value> > params_to_map)
+void ExogManager<ExogT>::exog_event_to_queue( std::unordered_map< std::string, gpp::unique_ptr<gpp::Value> > &&params_to_map)
 {
-		std::shared_ptr<gpp::ExogEvent> ev;
-		std::unordered_map< gpp::Reference <gpp::Variable>, gpp::unique_ptr<gpp::Value> > params_to_args;
+		gpp::Binding param_binding;
 
 		for (auto it = params_to_map.begin(); it != params_to_map.end(); it++){
-			gpp::Reference<gpp::Variable> *var_of_target = exog_->param_ref(it->first);
-			params_to_args.emplace(std::move(*var_of_target), std::move(it->second));
+			gpp::unique_ptr<gpp::Reference<gpp::Variable>> param_ref { exog_->param_ref(it->first) };
+			param_binding.bind(param_ref->target(), std::move(it->second));
 		}
-		ev = std::make_shared<gpp::ExogEvent>(exog_, std::move(params_to_args));
 
+		gpp::shared_ptr<gpp::ExogEvent> ev { new gpp::ExogEvent(exog_, std::move(param_binding)) };
 
 		gpp::ReadylogContext &ctx = gpp::ReadylogContext::instance();
 		ctx.exog_queue_push(ev);

@@ -28,22 +28,25 @@ namespace gpp = gologpp;
 
 void load_n_exec_program(std::string program)
 {
-	gpp::Instruction *mainproc = gpp::parser::parse_file(SOURCE_DIR "/"+program+".gpp").release();
+	gpp::parser::parse_file(SOURCE_DIR "/"+program+".gpp");
+
+	gpp::shared_ptr<gpp::Reference<gpp::Procedure>> mainproc {
+		gpp::global_scope().lookup_global<gpp::Procedure>("main")->make_ref({})
+	};
 
 	gpp::eclipse_opts options;
 	options.trace = false;
 	options.toplevel = false;
 	options.guitrace = false;
 	RosBackend* rosbackend = new RosBackend();
+
 	gpp::ReadylogContext::init(
-	options, gpp::unique_ptr<gpp::PlatformBackend>(rosbackend)
+		options, gpp::unique_ptr<gpp::PlatformBackend>(rosbackend)
 	);
 	gpp::ReadylogContext &ctx = gpp::ReadylogContext::instance();
+
 	rosbackend->ctx_ready = true;
-	ctx.run(gpp::Block(
-		new gpp::Scope(gpp::global_scope()),
-		{ mainproc }
-	));
+	ctx.run(*mainproc);
 	rosbackend->ctx_ready = false;
 
 	gpp::ReadylogContext::shutdown();

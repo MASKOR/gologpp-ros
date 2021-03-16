@@ -3,7 +3,7 @@
 #include "exog_manager.h"
 #include "ros_backend.h"
 
-#include <model/execution.h>
+#include <execution/controller.h>
 
 #include <actionlib/client/simple_action_client.h>
 #include <actionlib/client/terminal_state.h>
@@ -13,7 +13,7 @@
 namespace darknet = darknet_action_msgs;
 
 template<>
-boost::optional<gpp::Value>
+gpp::optional<gpp::Value>
 ActionManager<darknet::obj_detectionAction>::to_golog_constant(ResultT result) {
 	return gpp::Value(gpp::get_type<gpp::NumberType>(), result->obj_pos);
 }

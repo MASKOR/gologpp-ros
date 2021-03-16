@@ -3,7 +3,7 @@
 #include "exog_manager.h"
 #include "ros_backend.h"
 
-#include <model/execution.h>
+#include <execution/controller.h>
 
 #include <actionlib/client/simple_action_client.h>
 #include <actionlib/client/terminal_state.h>
@@ -22,13 +22,13 @@
 namespace naoqi = naoqi_wrapper_msgs;
 
 template<>
-boost::optional<gpp::Value>
+gpp::optional<gpp::Value>
 ActionManager<naoqi::NaoQi_dialogAction>::to_golog_constant(ResultT result){
 	return gpp::Value(gpp::get_type<gpp::StringType>(), result->outcome);
 }
 
 template<>
-boost::optional<gpp::Value>
+gpp::optional<gpp::Value>
 ActionManager<naoqi::NaoQi_openWebsiteAction>::to_golog_constant(ResultT result) {
 	return gpp::Value(gpp::get_type<gpp::StringType>(), result->command);
 }

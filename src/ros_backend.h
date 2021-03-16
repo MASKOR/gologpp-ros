@@ -6,8 +6,10 @@
 #undef __GCC_ASM_FLAG_OUTPUTS__
 #endif
 
-#include <model/transition.h>
-#include <model/platform_backend.h>
+#define BOOST_BIND_GLOBAL_PLACEHOLDERS
+
+#include <execution/transition.h>
+#include <execution/platform_backend.h>
 
 #include <semantics/readylog/execution.h>
 
@@ -15,25 +17,39 @@
 
 #include <unordered_map>
 
-namespace gpp = gologpp;
-
 
 class AbstractActionManager;
 class AbstractExogManager;
 
-class RosBackend : public gpp::PlatformBackend
+class RosBackend : public gologpp::PlatformBackend
 {
+private:
+	using string = gologpp::string;
+	using Value = gologpp::Value;
+	using Type = gologpp::Type;
+	using Activity = gologpp::Activity;
+	using Clock = gologpp::Clock;
+	template<class T> using shared_ptr = gologpp::shared_ptr<T>;
+
 public:
 	RosBackend();
 	virtual ~RosBackend() override;
-	virtual void execute_activity(gpp::shared_ptr<gpp::Activity> a) override;
-	virtual void preempt_activity(gpp::shared_ptr<gpp::Activity> trans) override;
-	virtual gpp::Clock::time_point time() const noexcept override;
+	virtual void execute_activity(shared_ptr<Activity> a) override;
+	virtual void preempt_activity(shared_ptr<Activity> trans) override;
+	virtual Clock::time_point time() const noexcept override;
+
+	virtual Value eval_exog_function(
+		const Type &return_type,
+		const string &backend_name,
+		const std::unordered_map<string, Value> &args
+	) override;
 
 	//std::mutex exog_mutex;
 	std::atomic<bool> ctx_ready;
 
 private:
+	virtual void terminate_() override;
+
 	// Implemented in pepper_actions.cpp:
 	// Fill action_containers_ by calling define_action_client for
 	// each action that should be made available.
@@ -46,7 +62,7 @@ private:
 	template<class ActionT>
 	void create_ActionManager(const std::string &name);
 
-	AbstractActionManager &get_ActionManager(gpp::shared_ptr<gpp::Activity>);
+	AbstractActionManager &get_ActionManager(shared_ptr<Activity>);
 
 	// create exogManager
 	template<class ExogT>

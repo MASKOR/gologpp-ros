@@ -1,11 +1,9 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.0)
 project(gologpp_agent)
 
 
 add_definitions(-DSOURCE_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}\")
 find_package(PkgConfig)
-## Compile as C++11, supported in ROS Kinetic and newer
-# add_compile_options(-std=c++11)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -62,7 +60,6 @@ add_executable(gologpp_agent
 	src/action_manager.cpp
 	src/exog_manager.cpp
 )
-set_property(TARGET gologpp_agent PROPERTY CXX_STANDARD 14)
 
 #add_dependencies(naoqi_say_server ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 if(naoqi_wrapper_msgs_FOUND)
@@ -96,4 +93,10 @@ target_link_libraries(
     ${catkin_LIBRARIES}
     ${readylogpp_LIBRARIES}
     ${parsegologpp_LIBRARIES}
+)
+
+target_compile_features(
+	gologpp_agent
+	PUBLIC
+	cxx_std_17
 )
