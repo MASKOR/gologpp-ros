@@ -6,6 +6,7 @@ namespace gpp = gologpp;
 
 class RosBackend;
 
+
 class AbstractExogManager {
 public:
 	AbstractExogManager(RosBackend &backend);
@@ -13,12 +14,11 @@ public:
 
 protected:
 	RosBackend &backend;
-
 };
+
 
 template<class ExogT>
 class ExogManager : public AbstractExogManager {
-
 public:
 	ExogManager(RosBackend &backend, const std::string& topic, int msgs_queue_size = 1000);
 
@@ -27,9 +27,11 @@ public:
 	void topic_cb(const typename ExogT::ConstPtr&);
 	void exog_event_to_queue(std::unordered_map< std::string, gpp::unique_ptr<gpp::Value> > &&params_to_map);
 	std::unordered_map< std::string, gpp::unique_ptr<gpp::Value> > params_to_map(const typename ExogT::ConstPtr& msg);
+
 private:
 	gpp::shared_ptr< gpp::ExogAction> exog_;
 };
+
 
 template<class ExogT>
 ExogManager<ExogT>::ExogManager(RosBackend &backend, const std::string& topic, int msgs_queue_size)
@@ -53,6 +55,7 @@ ExogManager<ExogT>::ExogManager(RosBackend &backend, const std::string& topic, i
 	}
 }
 
+
 template<class ExogT>
 void
 ExogManager<ExogT>::topic_cb(const typename ExogT::ConstPtr& msg)
@@ -64,6 +67,7 @@ ExogManager<ExogT>::topic_cb(const typename ExogT::ConstPtr& msg)
 		);
 	}
 }
+
 
 template<class ExogT>
 void ExogManager<ExogT>::exog_event_to_queue( std::unordered_map< std::string, gpp::unique_ptr<gpp::Value> > &&params_to_map)
@@ -80,6 +84,7 @@ void ExogManager<ExogT>::exog_event_to_queue( std::unordered_map< std::string, g
 		gpp::ReadylogContext &ctx = gpp::ReadylogContext::instance();
 		ctx.exog_queue_push(ev);
 }
+
 
 template<class ExogT>
 void RosBackend::create_ExogManger(const std::string &topic)

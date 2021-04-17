@@ -45,6 +45,8 @@ void load_n_exec_program(std::string program)
 	);
 	gpp::ReadylogContext &ctx = gpp::ReadylogContext::instance();
 
+	mainproc->attach_semantics(ctx.semantics_factory());
+
 	rosbackend->ctx_ready = true;
 	ctx.run(*mainproc);
 	rosbackend->ctx_ready = false;

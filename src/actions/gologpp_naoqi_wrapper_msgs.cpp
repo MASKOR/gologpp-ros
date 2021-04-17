@@ -1,4 +1,3 @@
-#ifdef NAOQI_WRAPPER_MSGS_PKG
 #include "action_manager.h"
 #include "exog_manager.h"
 #include "ros_backend.h"
@@ -123,4 +122,4 @@ void RosBackend::define_naoqi_wrapper_actions()
 	create_ActionManager<naoqi::NaoQi_subscribeAction>("/naoqi_subscribe_server/subscribe");
 	create_ServiceManager<naoqi::FaceTracking>("/face_tracking");
 }
-#endif // NAOQI_WRAPPER_MSGS_PKG
+

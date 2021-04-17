@@ -1,12 +1,8 @@
-#ifdef MOVE_BASE_MSGS_PKG
 #include "action_manager.h"
 #include "exog_manager.h"
 #include "ros_backend.h"
 
 #include <execution/controller.h>
-
-#include <actionlib/client/simple_action_client.h>
-#include <actionlib/client/terminal_state.h>
 
 #include <move_base_msgs/MoveBaseAction.h>
 
@@ -25,8 +21,4 @@ ActionManager<move_base_msgs::MoveBaseAction>::build_goal(const gpp::Activity &a
 }
 
 void RosBackend::define_move_base_actions()
-{
-	create_ActionManager<move_base_msgs::MoveBaseAction>("move_base");
-}
-
-#endif //MOVE_BASE_MSGS_PKG
+{ create_ActionManager<move_base_msgs::MoveBaseAction>("move_base"); }

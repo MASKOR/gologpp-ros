@@ -7,19 +7,19 @@
 #include <actionlib/client/simple_action_client.h>
 #include <actionlib/client/terminal_state.h>
 
-#ifdef MOVE_BASE_MSGS_PKG
+#ifdef move_base_msgs_FOUND
 #include <move_base_msgs/MoveBaseAction.h>
 #endif
 
-#ifdef DARKNET_ACTION_MSGS_PKG
+#ifdef darknet_action_msgs_FOUND
 #include <darknet_action_msgs/obj_detectionAction.h>
 #endif
 
-#ifdef NAOQI_BRIDGE_MSGS_PKG
+#ifdef naoqi_bridge_msgs_FOUND
 #include <naoqi_bridge_msgs/Bumper.h>
 #endif
 
-#ifdef NAOQI_WRAPPER_MSGS_PKG
+#ifdef naoqi_wrapper_msgs_FOUND
 #include <naoqi_wrapper_msgs/NaoQi_animatedSayAction.h>
 #include <naoqi_wrapper_msgs/NaoQi_animationAction.h>
 #include <naoqi_wrapper_msgs/NaoQi_dialogAction.h>
@@ -32,7 +32,7 @@
 namespace naoqi = naoqi_wrapper_msgs;
 #endif
 
-#ifdef DARKNET_ACTION_MSGS_PKG
+#ifdef darknet_action_msgs_FOUND
 namespace darknet = darknet_action_msgs;
 
 
@@ -41,9 +41,9 @@ gpp::Value *
 ActionManager<darknet::obj_detectionAction>::to_golog_constant(ResultT result) {
 	return new gpp::Value(gpp::NumberType::name(),result->obj_pos);
 }
-#endif //DARKNET_ACTION_MSGS_PKG
+#endif // darknet_action_msgs_FOUND
 
-#ifdef NAOQI_WRAPPER_MSGS_PKG
+#ifdef naoqi_wrapper_msgs_FOUND
 template<>
 gpp::Value *
 ActionManager<naoqi::NaoQi_dialogAction>::to_golog_constant(ResultT result){
@@ -125,9 +125,9 @@ ActionManager<naoqi::NaoQi_subscribeAction>::build_goal(const gpp::Activity &a)
 	return goal;
 }
 
-#endif // NAOQI_WRAPPER_MSGS_PKG
+#endif // naoqi_wrapper_msgs_FOUND
 
-#ifdef DARKNET_ACTION_MSGS_PKG
+#ifdef darknet_action_msgs_FOUND
 template<>
 ActionManager<darknet::obj_detectionAction>::GoalT
 ActionManager<darknet::obj_detectionAction>::build_goal(const gpp::Activity &a)
@@ -136,9 +136,9 @@ ActionManager<darknet::obj_detectionAction>::build_goal(const gpp::Activity &a)
 	goal.to_detected_obj = std::string(a.mapped_arg_value("to_detected_obj"));
 	return goal;
 }
-#endif // DARKNET_ACTION_MSGS_PKG
+#endif // darknet_action_msgs_FOUND
 
-#ifdef MOVE_BASE_MSGS_PKG
+#ifdef move_base_msgs_FOUND
 template<>
 ActionManager<move_base_msgs::MoveBaseAction>::GoalT
 ActionManager<move_base_msgs::MoveBaseAction>::build_goal(const gpp::Activity &a)
@@ -151,12 +151,12 @@ ActionManager<move_base_msgs::MoveBaseAction>::build_goal(const gpp::Activity &a
 	goal.target_pose.pose.orientation.w = int(a.mapped_arg_value("w"));;
 	return goal;
 }
-#endif //MOVE_BASE_MSGS_PKG
+#endif // move_base_msgs_FOUND
 
 
 void RosBackend::define_actions()
 {
-#ifdef NAOQI_WRAPPER_MSGS_PKG
+#ifdef naoqi_wrapper_msgs_FOUND
 	define_action_client<naoqi::NaoQi_dialogAction>("/naoqi_dialog_server");
 	define_action_client<naoqi::NaoQi_sayAction>("/naoqi_say_server/naoqi_say");
 	define_action_client<naoqi::NaoQi_lookAtAction>("/naoqi_lookAt_server/lookAt");
@@ -166,18 +166,18 @@ void RosBackend::define_actions()
 	define_action_client<naoqi::NaoQi_subscribeAction>("/naoqi_subscribe_server/subscribe");
 #endif
 
-#ifdef DARKNET_ACTION_MSGS_PKG
+#ifdef darknet_action_msgs_FOUND
 	define_action_client<darknet::obj_detectionAction>("/yolo_obj_detection_position_server");
 #endif
 
-#ifdef MOVE_BASE_MSGS_PKG
+#ifdef move_base_msgs_FOUND
 	define_action_client<move_base_msgs::MoveBaseAction>("move_base");
 #endif
 }
 
 
 
-#ifdef NAOQI_BRIDGE_MSGS_PKG
+#ifdef naoqi_bridge_msgs_FOUND
 template<>
 void
 ExogManager<naoqi_bridge_msgs::Bumper>::topic_cb(const naoqi_bridge_msgs::Bumper::ConstPtr& msg)
@@ -188,11 +188,11 @@ ExogManager<naoqi_bridge_msgs::Bumper>::topic_cb(const naoqi_bridge_msgs::Bumper
 		std::move(param)
 	);
 }
-#endif //NAOQI_BRIDGE_MSGS_PKG
+#endif // naoqi_bridge_msgs_FOUND
 
 void RosBackend::init_exog()
 {
-#ifdef NAOQI_BRIDGE_MSGS_PKG
+#ifdef naoqi_bridge_msgs_FOUND
 	sub_exog_event<naoqi_bridge_msgs::Bumper>(
 		"/pepper_robot/naoqi_driver/bumper"
 	);

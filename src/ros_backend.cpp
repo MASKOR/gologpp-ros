@@ -8,24 +8,28 @@
 RosBackend::RosBackend()
 {
 	this->ctx_ready = false;
-#ifdef NAOQI_WRAPPER_MSGS_PKG
+#ifdef naoqi_wrapper_msgs_FOUND
 	define_naoqi_wrapper_actions();
 #endif
 
-#ifdef MOVE_BASE_MSGS_PKG
+#ifdef move_base_msgs_FOUND
 	define_move_base_actions();
 #endif
 
-#ifdef DARKNET_ACTION_MSGS_PKG
+#ifdef darknet_action_msgs_FOUND
 	define_darknet_actions();
 #endif
 
-#ifdef NAOQI_BRIDGE_MSGS_PKG
+#ifdef naoqi_bridge_msgs_FOUND
 	define_naoqi_bridge_actions();
 #endif
 
-#ifdef OPENCV_APPS_MSGS_PKG
+#ifdef opencv_apps_msgs_FOUND
 	define_opencv_apps_actions();
+#endif
+
+#ifdef turtle_actionlib_FOUND
+	define_turtle_actions();
 #endif
 	spin_exog_thread();
 }

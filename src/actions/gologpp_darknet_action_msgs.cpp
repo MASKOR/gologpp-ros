@@ -1,4 +1,3 @@
-#ifdef DARKNET_ACTION_MSGS_PKG
 #include "action_manager.h"
 #include "exog_manager.h"
 #include "ros_backend.h"
@@ -33,4 +32,3 @@ void RosBackend::define_darknet_actions()
 	create_ActionManager<darknet::obj_detectionAction>("/yolo_obj_detection_position_server");
 
 }
-#endif

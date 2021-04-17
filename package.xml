@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>gologpp_agent</name>
-  <version>0.0.0</version>
+  <version>0.0.1</version>
   <description>The gologpp_agent package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
@@ -52,12 +52,12 @@
 
   <depend>actionlib</depend>
   <depend>actionlib_msgs</depend>
-  <depend>message_generation</depend>
   <depend>roscpp</depend>
-  <depend>std_msgs</depend>
   <depend>naoqi_wrapper_msgs</depend>
   <depend>naoqi_bridge_msgs</depend>
   <depend>darknet_action_msgs</depend>
+  <depend>move_base_msgs</depend>
+  <depend>opencv_apps_action_msgs</depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

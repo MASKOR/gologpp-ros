@@ -13,16 +13,16 @@ pkg_check_modules(readylogpp REQUIRED readylog++)
 pkg_check_modules(parsegologpp REQUIRED parsegolog++)
 
 find_package(catkin REQUIRED COMPONENTS
-  roscpp
-  std_msgs
-  genmsg
-  message_generation
-  actionlib_msgs
-  actionlib
+	roscpp
+	rosconsole
+	std_msgs
+	genmsg
+	message_generation
+	actionlib_msgs
+	actionlib
 )
 
-find_package(catkin OPTIONAL_COMPONENTS
-	actionlib
+set(gologpp_action_pkgs
 	darknet_action_msgs
 	naoqi_wrapper_msgs
 	naoqi_bridge_msgs
@@ -30,24 +30,19 @@ find_package(catkin OPTIONAL_COMPONENTS
 	opencv_apps_action_msgs
 )
 
+find_package(catkin OPTIONAL_COMPONENTS ${gologpp_action_pkgs})
+
 add_definitions(-DLIBQI_VERSION=${naoqi_libqi_VERSION_MAJOR}${naoqi_libqi_VERSION_MINOR})
 if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated-declarations -Wno-placement-new")
 endif()
 
 
-include_directories(
-  ${catkin_INCLUDE_DIRS}
-  ${readylogpp_INCLUDE_DIRS}
-  ${parsegologpp_INCLUDE_DIRS}
-)
-
 catkin_package(
-  #INCLUDE_DIRS include
-  #LIBRARIES ${PROJECT_NAME}
-  CATKIN_DEPENDS actionlib_msgs actionlib naoqi_wrapper_msgs
-  #CATKIN_DEPENDS actionlib actionlib_msgs message_generation roscpp rospy std_msgs
-  #DEPENDS system_lib
+	#INCLUDE_DIRS include
+	#LIBRARIES ${PROJECT_NAME}
+	CATKIN_DEPENDS actionlib_msgs actionlib roscpp
+	${gologpp_action_pkgs}
 )
 
 set(BUILD_TESTS OFF CACHE BOOL "Enable gologpp tests" FORCE)
@@ -61,38 +56,28 @@ add_executable(gologpp_agent
 	src/exog_manager.cpp
 )
 
-#add_dependencies(naoqi_say_server ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-if(naoqi_wrapper_msgs_FOUND)
-	target_sources(gologpp_agent PRIVATE src/naoqi_wrapper_actions.cpp)
-	target_compile_definitions(gologpp_agent PUBLIC -DNAOQI_WRAPPER_MSGS_PKG)
-endif()
+target_include_directories(gologpp_agent PUBLIC
+	src/
+	${catkin_INCLUDE_DIRS}
+	${readylogpp_INCLUDE_DIRS}
+	${parsegologpp_INCLUDE_DIRS}
+)
 
-if(naoqi_bridge_msgs_FOUND)
-	target_sources(gologpp_agent PRIVATE src/naoqi_bridge_actions.cpp)
-	target_compile_definitions(gologpp_agent PUBLIC -DNAOQI_BRIDGE_MSGS_PKG)
-endif()
-
-
-if(darknet_action_msgs_FOUND)
-	target_sources(gologpp_agent PRIVATE src/darknet_actions.cpp)
-	target_compile_definitions(gologpp_agent PUBLIC -DDARKNET_ACTION_MSGS_PKG)
-endif()
-
-if(move_base_msgs_FOUND)
-	target_sources(gologpp_agent PRIVATE src/move_base_actions.cpp)
-	target_compile_definitions(gologpp_agent PUBLIC -DMOVE_BASE_MSGS_PKG)
-endif()
-
-if(opencv_apps_action_msgs_FOUND)
-	target_sources(gologpp_agent PRIVATE src/opencv_apps_actions.cpp)
-	target_compile_definitions(gologpp_agent PUBLIC -DOPENCV_APPS_MSGS_PKG)
-endif()
+foreach(pkg ${gologpp_action_pkgs})
+	if ("${${pkg}_FOUND}")
+		target_sources(gologpp_agent PRIVATE "src/actions/gologpp_${pkg}.cpp")
+		target_compile_definitions(gologpp_agent PUBLIC "-D${pkg}_FOUND")
+	endif()
+endforeach()
 
 target_link_libraries(
-    gologpp_agent
-    ${catkin_LIBRARIES}
-    ${readylogpp_LIBRARIES}
-    ${parsegologpp_LIBRARIES}
+	gologpp_agent
+	roscpp
+	rosconsole
+	actionlib
+	${catkin_LIBRARIES}
+	${readylogpp_LIBRARIES}
+	${parsegologpp_LIBRARIES}
 )
 
 target_compile_features(

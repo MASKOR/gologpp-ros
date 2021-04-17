@@ -1,4 +1,3 @@
-#ifdef NAOQI_BRIDGE_MSGS_PKG
 #include "exog_manager.h"
 #include "ros_backend.h"
 #include <naoqi_bridge_msgs/Bumper.h>
@@ -35,7 +34,3 @@ void RosBackend::define_naoqi_bridge_actions()
 		"/pepper_robot/naoqi_driver/head_touch"
 	);
 }
-
-
-#endif //NAOQI_BRIDGE_MSGS_PKG
-
