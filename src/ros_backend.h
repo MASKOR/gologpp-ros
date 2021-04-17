@@ -50,14 +50,13 @@ public:
 private:
 	virtual void terminate_() override;
 
-	// Implemented in pepper_actions.cpp:
-	// Fill action_containers_ by calling define_action_client for
-	// each action that should be made available.
+	// May have an implementation iff the corresponding package has been found
 	void define_naoqi_wrapper_actions();
 	void define_move_base_actions();
 	void define_darknet_actions();
 	void define_naoqi_bridge_actions();
 	void define_opencv_apps_actions();
+	void define_turtle_actions();
 
 	template<class ActionT>
 	void create_ActionManager(const std::string &name);

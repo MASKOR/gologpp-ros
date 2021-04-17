@@ -23,6 +23,7 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 set(gologpp_action_pkgs
+	turtle_actionlib
 	darknet_action_msgs
 	naoqi_wrapper_msgs
 	naoqi_bridge_msgs
