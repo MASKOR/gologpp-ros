@@ -66,7 +66,9 @@ AbstractActionManager& RosBackend::get_ActionManager(shared_ptr<Activity> a)
 void RosBackend::spin_exog_thread()
 {
 	std::thread spin_thread( [&] () {
-				ros::spin();
+				//ros::spin();
+				auto agent_node = Singleton::instance();
+				rclcpp::spin(agent_node);
 			});
 	spin_thread.detach();
 }

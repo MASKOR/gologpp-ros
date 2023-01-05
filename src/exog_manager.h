@@ -4,6 +4,8 @@
 
 namespace gpp = gologpp;
 
+using std::placeholders::_1;
+
 class RosBackend;
 
 
@@ -22,7 +24,7 @@ class ExogManager : public AbstractExogManager {
 public:
 	ExogManager(RosBackend &backend, const std::string& topic, int msgs_queue_size = 1000);
 
-	ros::Subscriber exog_subscriber_;
+	typename rclcpp::Subscription<ExogT>::SharedPtr exog_subscriber_;
 
 	void topic_cb(const typename ExogT::ConstPtr&);
 	void exog_event_to_queue(std::unordered_map< std::string, gpp::unique_ptr<gpp::Value> > &&params_to_map);
@@ -37,8 +39,7 @@ template<class ExogT>
 ExogManager<ExogT>::ExogManager(RosBackend &backend, const std::string& topic, int msgs_queue_size)
 : AbstractExogManager (backend)
 {
-	ros::NodeHandle nh("~");
-	exog_subscriber_ = nh.subscribe<ExogT>(topic, msgs_queue_size, boost::bind(&ExogManager<ExogT>::topic_cb, this, _1));
+	exog_subscriber_ = rclcpp::Node::create_subscription<ExogT>(topic, 10, std::bind(&ExogManager<ExogT>::topic_cb, this, _1));
 
 	gpp::shared_ptr< gpp::ExogAction> exog;
 	std::vector< std::shared_ptr <gpp::Global> > global_vec = gpp::global_scope().globals();

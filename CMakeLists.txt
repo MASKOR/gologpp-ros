@@ -1,50 +1,40 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.5)
 project(gologpp_agent)
 
+# Default to C++14
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 14)
+endif()
+
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
 
 add_definitions(-DSOURCE_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}\")
+# suppress all warnings
+add_definitions(-w)
 find_package(PkgConfig)
 
-## Find catkin macros and libraries
-## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
-## is used, also find other catkin packages
+find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(rclcpp_action REQUIRED)
+find_package(rclcpp_components REQUIRED)
+find_package(std_msgs REQUIRED)
+# find_package(turtlesim REQUIRED)
 
 pkg_check_modules(readylogpp REQUIRED readylog++)
 pkg_check_modules(parsegologpp REQUIRED parsegolog++)
 
-find_package(catkin REQUIRED COMPONENTS
-	roscpp
-	rosconsole
-	std_msgs
-	genmsg
-	message_generation
-	actionlib_msgs
-	actionlib
-)
-
 set(gologpp_action_pkgs
-	turtle_actionlib
-	darknet_action_msgs
-	naoqi_wrapper_msgs
-	naoqi_bridge_msgs
-	move_base_msgs
-	opencv_apps_action_msgs
+	turtlesim
 )
 
-find_package(catkin OPTIONAL_COMPONENTS ${gologpp_action_pkgs})
+find_package(${gologpp_action_pkgs})
 
-add_definitions(-DLIBQI_VERSION=${naoqi_libqi_VERSION_MAJOR}${naoqi_libqi_VERSION_MINOR})
 if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated-declarations -Wno-placement-new")
 endif()
 
-
-catkin_package(
-	#INCLUDE_DIRS include
-	#LIBRARIES ${PROJECT_NAME}
-	CATKIN_DEPENDS actionlib_msgs actionlib roscpp
-	${gologpp_action_pkgs}
-)
 
 set(BUILD_TESTS OFF CACHE BOOL "Enable gologpp tests" FORCE)
 
@@ -56,12 +46,16 @@ add_executable(gologpp_agent
 	src/action_manager.cpp
 	src/exog_manager.cpp
 )
-
+ament_target_dependencies(gologpp_agent rclcpp rclcpp_action rclcpp_components turtlesim)
 target_include_directories(gologpp_agent PUBLIC
 	src/
-	${catkin_INCLUDE_DIRS}
 	${readylogpp_INCLUDE_DIRS}
 	${parsegologpp_INCLUDE_DIRS}
+)
+
+install(
+	TARGETS gologpp_agent
+	DESTINATION lib/${PROJECT_NAME}
 )
 
 foreach(pkg ${gologpp_action_pkgs})
@@ -73,10 +67,6 @@ endforeach()
 
 target_link_libraries(
 	gologpp_agent
-	roscpp
-	rosconsole
-	actionlib
-	${catkin_LIBRARIES}
 	${readylogpp_LIBRARIES}
 	${parsegologpp_LIBRARIES}
 )
@@ -84,5 +74,7 @@ target_link_libraries(
 target_compile_features(
 	gologpp_agent
 	PUBLIC
+	c_std_99
 	cxx_std_17
 )
+ament_package()

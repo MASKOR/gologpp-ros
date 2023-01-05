@@ -12,9 +12,11 @@
 #include <execution/platform_backend.h>
 #include <execution/activity.h>
 
-#include <actionlib/client/simple_action_client.h>
-#include <actionlib/client/terminal_state.h>
+// Add ros2 action
+#include "rclcpp_action/rclcpp_action.hpp"
+#include "rclcpp_components/register_node_macro.hpp"
 
+using namespace std::placeholders;
 
 namespace gpp = gologpp;
 
@@ -47,9 +49,14 @@ protected:
 template<class ActionT>
 class ActionManager : public AbstractActionManager {
 public:
-	using GoalT = typename ActionT::_action_goal_type::_goal_type;
+	// using GoalT = typename ActionT::_action_goal_type::_goal_type;
+	// using ResultT = typename ActionT::_action_result_type::_result_type::ConstPtr;
+	// using ClientT = typename actionlib::SimpleActionClient<ActionT>;
+	using ActionName = typename ActionT::_action_type::Name;
+	// Goal Handle
 	using ResultT = typename ActionT::_action_result_type::_result_type::ConstPtr;
-	using ClientT = typename actionlib::SimpleActionClient<ActionT>;
+	using GoalT =  typename rclcpp_action::ClientGoalHandle<ActionName>;
+	using ClientT = typename rclcpp_action::Client<ActionT>::SharedPtr;
 
 	ActionManager(const std::string &, RosBackend &backend);
 
@@ -59,7 +66,8 @@ public:
 	// Specialized for every action type in e.g. pepper_actions.cpp
 	GoalT build_goal(const gpp::Activity &);
 
-	void doneCb(const actionlib::SimpleClientGoalState &state, ResultT result);
+	// Result callback
+	void doneCb(const typename GoalT::WrappedResult &result);
 	gpp::optional<gpp::Value> to_golog_constant(ResultT);
 
 private:
@@ -74,7 +82,7 @@ class ServiceManager : public AbstractActionManager {
 public:
 	using RequestT = typename ServiceT::Request;
 	using ResponseT = typename ServiceT::Response;
-	using Client = ros::ServiceClient;
+	using Client = typename rclcpp::Client<ServiceT>::SharedPtr;
 
 	virtual void execute_current_activity() override;
 	virtual void preempt_current_activity() override;
@@ -95,8 +103,10 @@ template<class ServiceT>
 ServiceManager<ServiceT>::ServiceManager(const std::string &topic_name, RosBackend &backend)
 : AbstractActionManager (backend)
 {
-	ros::NodeHandle nh("~");
-	service_client_ = nh.serviceClient<ServiceT>(topic_name);
+	//ros::NodeHandle nh("~");
+	//service_client_ = nh.serviceClient<ServiceT>(topic_name);
+	auto agent_node = Singleton::instance();
+	service_client_ = agent_node->create_client<ServiceT>(topic_name);
 }
 
 
@@ -140,7 +150,7 @@ template<class ActionT>
 void ActionManager<ActionT>::execute_current_activity()
 {
 	current_goal_ = build_goal(*current_activity_);
-	action_client_.sendGoal(current_goal_, boost::bind(
+	action_client_.sendGoal(current_goal_, std::bind(
 		&ActionManager<ActionT>::doneCb,
 		this, _1, _2
 	) );
@@ -148,25 +158,20 @@ void ActionManager<ActionT>::execute_current_activity()
 
 
 template<class ActionT>
-void ActionManager<ActionT>::doneCb(const actionlib::SimpleClientGoalState &state, ResultT result) {
-	ROS_INFO("Finished in state [%s]", state.toString().c_str());
-	switch(state.state_) {
-	case actionlib::SimpleClientGoalState::SUCCEEDED:
+void ActionManager<ActionT>::doneCb(const typename GoalT::WrappedResult  &result) {
+	ROS_INFO("Finished in state [%s]", result.toString().c_str());
+	switch(result.code) {
+	case rclcpp_action::ResultCode::SUCCEEDED:
 		current_activity_->update(gpp::Transition::Hook::FINISH);
-		set_result(to_golog_constant(result));
+		set_result(to_golog_constant(result.result));
 		break;
-	case actionlib::SimpleClientGoalState::PREEMPTED:
-		// TODO
-		break;
-	case actionlib::SimpleClientGoalState::ABORTED:
+	case rclcpp_action::ResultCode::ABORTED:
 		current_activity_->update(gpp::Transition::Hook::FAIL);
-		set_result(to_golog_constant(result));
+		set_result(to_golog_constant(result.result));
 		break;
-	case actionlib::SimpleClientGoalState::PENDING:
-	case actionlib::SimpleClientGoalState::ACTIVE:
-	case actionlib::SimpleClientGoalState::RECALLED:
-	case actionlib::SimpleClientGoalState::REJECTED:
-	case actionlib::SimpleClientGoalState::LOST:
+	case rclcpp_action::ResultCode::CANCELED:
+	default:
+		RCLCPP_ERROR(this->get_logger(), "Unknown result code")
 		;
 	}
 }

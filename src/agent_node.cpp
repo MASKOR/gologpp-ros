@@ -19,7 +19,7 @@
 //#ifdef GOLOGPP_TEST_PARSER
 #include <parser/parser.h>
 //#endif
-#include <ros/ros.h>
+#include "rclcpp/rclcpp.hpp"
 
 
 namespace gpp = gologpp;
@@ -57,22 +57,26 @@ void load_n_exec_program(std::string program)
 
 
 
-int main(int argc, char **argv)
+int main(int argc, char *argv[])
 {
 	std::string param;
-	ros::init(argc, argv, "gologpp_agent");
-	ros::NodeHandle nh("~");
-	if (nh.getParam("program", param)) {
-		ROS_INFO("Got parameter: %s", param.c_str());
-		nh.deleteParam("program");
-		load_n_exec_program(param.c_str());
+	rclcpp::init(argc, argv);
+	//ros::NodeHandle nh("~");
+	//std::shared_ptr<rclcpp::Node> node = rclcpp::Node::make_shared("gologpp_agent");
+	auto agent_node = Singleton::instance();
+	load_n_exec_program("mapping_example");
 
-	} else {
-		ROS_INFO("Default program");
-		nh.deleteParam("program");
-		load_n_exec_program("example");
+	// if (nh.getParam("program", param)) {
+	// 	ROS_INFO("Got parameter: %s", param.c_str());
+	// 	nh.deleteParam("program");
+	// 	load_n_exec_program(param.c_str());
 
-	}
+	// } else {
+	// 	ROS_INFO("Default program");
+	// 	nh.deleteParam("program");
+	// 	load_n_exec_program("example");
+
+	// }
 	return 0;
 }
 

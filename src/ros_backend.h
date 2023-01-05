@@ -13,13 +13,38 @@
 
 #include <semantics/readylog/execution.h>
 
-#include <ros/ros.h>
+#include <functional>
+#include <future>
+#include <memory>
+#include <string>
+#include <sstream>
+
+#include "rclcpp/rclcpp.hpp"
+#include "rclcpp_action/rclcpp_action.hpp"
+#include "rclcpp_components/register_node_macro.hpp"
 
 #include <unordered_map>
 
 
 class AbstractActionManager;
 class AbstractExogManager;
+
+class Singleton
+{
+public:
+    Singleton(Singleton const&) = delete;
+    Singleton& operator=(Singleton const&) = delete;
+	//std::shared_ptr<rclcpp::Node> node = rclcpp::Node::make_shared("gologpp_agent");
+
+	static std::shared_ptr<rclcpp::Node> instance()
+    {
+        static std::shared_ptr<rclcpp::Node> node = rclcpp::Node::make_shared("gologpp_agent");
+        return node;
+    }
+
+private:
+    Singleton() {}
+};
 
 class RosBackend : public gologpp::PlatformBackend
 {
@@ -57,6 +82,7 @@ private:
 	void define_naoqi_bridge_actions();
 	void define_opencv_apps_actions();
 	void define_turtle_actions();
+	void define_turtlesim_actions();
 
 	template<class ActionT>
 	void create_ActionManager(const std::string &name);
