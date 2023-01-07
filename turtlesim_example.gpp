@@ -5,6 +5,6 @@ mapping:
 	}
 }
 
-{
+procedure main(){
 	move_theta(0.0);
 }
