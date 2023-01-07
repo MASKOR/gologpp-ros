@@ -1,0 +1,10 @@
+action move_theta(number angle) {
+mapping:
+	"/turtle1/rotate_absolute" {
+		theta = angle
+	}
+}
+
+{
+	move_theta(0.0);
+}

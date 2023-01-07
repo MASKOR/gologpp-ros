@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
 	//ros::NodeHandle nh("~");
 	//std::shared_ptr<rclcpp::Node> node = rclcpp::Node::make_shared("gologpp_agent");
 	auto agent_node = Singleton::instance();
-	load_n_exec_program("mapping_example");
+	load_n_exec_program("turtlesim_example");
 
 	// if (nh.getParam("program", param)) {
 	// 	ROS_INFO("Got parameter: %s", param.c_str());

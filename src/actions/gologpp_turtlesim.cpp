@@ -21,4 +21,4 @@ ActionManager<turtlesim::action::RotateAbsolute>::build_goal(const gpp::Activity
 
 
 void RosBackend::define_turtlesim_actions()
-{ create_ActionManager<turtlesim::action::RotateAbsolute>("turtle_theta"); }
+{ create_ActionManager<turtlesim::action::RotateAbsolute>("/turtle1/rotate_absolute"); }
