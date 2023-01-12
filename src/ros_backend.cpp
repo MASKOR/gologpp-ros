@@ -31,6 +31,12 @@ RosBackend::RosBackend()
 #ifdef turtle_actionlib_FOUND
 	define_turtle_actions();
 #endif
+
+#ifdef turtlesim FOUND
+	define_turtlesim_actions();
+#endif
+define_turtlesim_actions();
+
 	spin_exog_thread();
 }
 

@@ -6,19 +6,19 @@
 
 
 #include "turtlesim/action/rotate_absolute.hpp"
-using RotateAbsolute = turtlesim::action::RotateAbsolute;
-using GoalHandleRotateAbsolute = rclcpp_action::ClientGoalHandle<RotateAbsolute>;
+
 
 template<>
 ActionManager<turtlesim::action::RotateAbsolute>::GoalT
 ActionManager<turtlesim::action::RotateAbsolute>::build_goal(const gpp::Activity &a)
 {
-	//turtle_actionlib::ShapeGoal goal;
-	auto goal = RotateAbsolute::Goal();
+	auto goal = turtlesim::action::RotateAbsolute::Goal();
 	goal.theta = a.mapped_arg_value("theta").numeric_convert<float>();
 	return goal;
 }
 
 
 void RosBackend::define_turtlesim_actions()
-{ create_ActionManager<turtlesim::action::RotateAbsolute>("/turtle1/rotate_absolute"); }
+{
+	create_ActionManager<turtlesim::action::RotateAbsolute>("/turtle1/rotate_absolute");
+}

@@ -76,12 +76,6 @@ private:
 	virtual void terminate_() override;
 
 	// May have an implementation iff the corresponding package has been found
-	void define_naoqi_wrapper_actions();
-	void define_move_base_actions();
-	void define_darknet_actions();
-	void define_naoqi_bridge_actions();
-	void define_opencv_apps_actions();
-	void define_turtle_actions();
 	void define_turtlesim_actions();
 
 	template<class ActionT>

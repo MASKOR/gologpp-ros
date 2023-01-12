@@ -66,7 +66,7 @@ public:
 	// Result callback to transit action output to gpp agent
 	void result_callback(const typename ResultT::WrappedResult &result);
 	// ResultT::WrappedResult should be enough but rclp_action also before ::ResultT
-	gpp::optional<gpp::Value> to_golog_constant(typename rclcpp_action::ClientGoalHandle<ActionT>::WrappedResult);
+	gpp::optional<gpp::Value> to_golog_constant(typename ResultT::WrappedResult);
 
 private:
 	ClientT action_client_;
@@ -101,8 +101,6 @@ template<class ServiceT>
 ServiceManager<ServiceT>::ServiceManager(const std::string &topic_name, RosBackend &backend)
 : AbstractActionManager (backend)
 {
-	//ros::NodeHandle nh("~");
-	//service_client_ = nh.serviceClient<ServiceT>(topic_name);
 	auto agent_node = Singleton::instance();
 	service_client_ = agent_node->create_client<ServiceT>(topic_name);
 }
@@ -165,15 +163,14 @@ void ActionManager<ActionT>::execute_current_activity()
 
 template<class ActionT>
 void ActionManager<ActionT>::result_callback(const typename ResultT::WrappedResult &result) {
-	//ROS_INFO("Finished in state [%s]", result.result.toString().c_str());
 	switch(result.code) {
 	case rclcpp_action::ResultCode::SUCCEEDED:
 		current_activity_->update(gpp::Transition::Hook::FINISH);
-		set_result(to_golog_constant(result));
+		//set_result(to_golog_constant(result));
 		break;
 	case rclcpp_action::ResultCode::ABORTED:
 		current_activity_->update(gpp::Transition::Hook::FAIL);
-		set_result(to_golog_constant(result));
+		// set_result(to_golog_constant(result));
 		break;
 	case rclcpp_action::ResultCode::CANCELED:
 	default:
@@ -184,7 +181,7 @@ void ActionManager<ActionT>::result_callback(const typename ResultT::WrappedResu
 
 
 template<class ActionT>
-gpp::optional<gpp::Value> ActionManager<ActionT>::to_golog_constant(typename rclcpp_action::ClientGoalHandle<ActionT>::WrappedResult)
+gpp::optional<gpp::Value> ActionManager<ActionT>::to_golog_constant(typename ResultT::WrappedResult)
 {
 	return gpp::nullopt;
 }
