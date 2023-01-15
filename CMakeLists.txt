@@ -46,7 +46,7 @@ add_executable(gologpp_agent
 	src/action_manager.cpp
 	src/exog_manager.cpp
 )
-ament_target_dependencies(gologpp_agent rclcpp rclcpp_action rclcpp_components turtlesim)
+ament_target_dependencies(gologpp_agent rclcpp rclcpp_action rclcpp_components turtlesim std_msgs)
 target_include_directories(gologpp_agent PUBLIC
 	src/
 	${readylogpp_INCLUDE_DIRS}

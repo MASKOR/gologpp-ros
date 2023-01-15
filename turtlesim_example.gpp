@@ -1,8 +1,24 @@
+bool fluent cmdvel_state(){
+initially:
+		() = false;
+}
+
 action move_theta(number angle) {
 mapping:
 	"/turtle1/rotate_absolute" {
 		theta = angle
 	}
+precondition:
+	cmdvel_state() == true
+}
+
+exog_action cmdvel_drive(bool data) {
+mapping:
+	"/exog_event" {
+		data = data
+	}
+effect:
+	cmdvel_state() = true;
 }
 
 procedure main(){

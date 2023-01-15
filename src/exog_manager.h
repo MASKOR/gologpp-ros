@@ -39,7 +39,9 @@ template<class ExogT>
 ExogManager<ExogT>::ExogManager(RosBackend &backend, const std::string& topic, int msgs_queue_size)
 : AbstractExogManager (backend)
 {
-	exog_subscriber_ = rclcpp::Node::create_subscription<ExogT>(topic, 10, std::bind(&ExogManager<ExogT>::topic_cb, this, _1));
+	auto agent_node = Singleton::instance();
+	exog_subscriber_ = agent_node->create_subscription<ExogT>
+		(topic, 10, std::bind(&ExogManager<ExogT>::topic_cb, this, _1));
 
 	gpp::shared_ptr< gpp::ExogAction> exog;
 	std::vector< std::shared_ptr <gpp::Global> > global_vec = gpp::global_scope().globals();
@@ -48,7 +50,7 @@ ExogManager<ExogT>::ExogManager(RosBackend &backend, const std::string& topic, i
 			it != global_vec.end(); ++it){
 		if((exog = std::dynamic_pointer_cast< gpp::ExogAction>(*it))){
 
-			if(exog->mapping().backend_name() == this->exog_subscriber_.getTopic()) {
+			if(exog->mapping().backend_name() == this->exog_subscriber_->get_topic_name()) {
 				exog_ = exog;
 				break;
 			}
