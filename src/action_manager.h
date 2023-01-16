@@ -80,6 +80,7 @@ class ServiceManager : public AbstractActionManager {
 public:
 	using RequestT = typename ServiceT::Request::SharedPtr;
 	using ResponseT = typename ServiceT::Response::SharedPtr;
+	using FutureT = typename rclcpp::Client<ServiceT>::SharedFuture;
 	using Client = typename rclcpp::Client<ServiceT>::SharedPtr;
 
 	virtual void execute_current_activity() override;
@@ -120,35 +121,23 @@ template<class ServiceT>
 void ServiceManager<ServiceT>::execute_current_activity() {
 	current_request_ = build_request(*current_activity_);
 
-	std::thread service_thread( [&] (
-	RequestT current_request,
-	ResponseT current_response,
-	std::shared_ptr<gpp::Activity> current_activity
-	) {
-		auto result = service_client_->async_send_request(current_request);
-		auto agent_node = Singleton::instance();
-		// Wait for the result.
-		while (!service_client_->wait_()) {
-			if (!rclcpp::ok()) {
-				RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Interrupted while waiting for the service. Exiting.");
-				return 0;
-			}
-			RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "service not available, waiting again...");
+	while (!service_client_->wait_for_service(std::chrono::seconds(1))) {
+		if (!rclcpp::ok()) {
+			RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Interrupted while waiting for the service. Exiting.");
+			return;
 		}
-
-		if (rclcpp::spin_until_future_complete(agent_node, result) ==
-			rclcpp::FutureReturnCode::SUCCESS)
-		{
-			current_activity->update(gpp::Transition::Hook::FINISH);
-			//set_result(to_golog_constant(current_response));
-			// RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Sum: %ld", result.get()->sum);
+		RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "service not available, waiting again...");
+	}
+	
+	auto response_received_callback = [this](FutureT future_response_) {
+        if (future_response_.valid()) {
+			current_activity_->update(gpp::Transition::Hook::FINISH);
 		} else {
-			current_activity->update(gpp::Transition::Hook::FAIL);
-			//set_result(to_golog_constant(current_response));
+			current_activity_->update(gpp::Transition::Hook::FAIL);
 			RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Failed to call service");
 		}
-	},current_request_, current_response_, current_activity_);
-	service_thread.detach();
+	};
+	auto future_result = service_client_->async_send_request(current_request_, response_received_callback);
 }
 
 
