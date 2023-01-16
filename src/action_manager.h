@@ -78,8 +78,8 @@ template<class ServiceT>
 class ServiceManager : public AbstractActionManager {
 	// TODO
 public:
-	using RequestT = typename ServiceT::Request;
-	using ResponseT = typename ServiceT::Response;
+	using RequestT = typename ServiceT::Request::SharedPtr;
+	using ResponseT = typename ServiceT::Response::SharedPtr;
 	using Client = typename rclcpp::Client<ServiceT>::SharedPtr;
 
 	virtual void execute_current_activity() override;
@@ -125,12 +125,27 @@ void ServiceManager<ServiceT>::execute_current_activity() {
 	ResponseT current_response,
 	std::shared_ptr<gpp::Activity> current_activity
 	) {
-		if(service_client_.call(current_request, current_response)) {
+		auto result = service_client_->async_send_request(current_request);
+		auto agent_node = Singleton::instance();
+		// Wait for the result.
+		while (!service_client_->wait_()) {
+			if (!rclcpp::ok()) {
+				RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Interrupted while waiting for the service. Exiting.");
+				return 0;
+			}
+			RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "service not available, waiting again...");
+		}
+
+		if (rclcpp::spin_until_future_complete(agent_node, result) ==
+			rclcpp::FutureReturnCode::SUCCESS)
+		{
 			current_activity->update(gpp::Transition::Hook::FINISH);
-			set_result(to_golog_constant(current_response));
+			//set_result(to_golog_constant(current_response));
+			// RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Sum: %ld", result.get()->sum);
 		} else {
 			current_activity->update(gpp::Transition::Hook::FAIL);
-			set_result(to_golog_constant(current_response));
+			//set_result(to_golog_constant(current_response));
+			RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Failed to call service");
 		}
 	},current_request_, current_response_, current_activity_);
 	service_thread.detach();

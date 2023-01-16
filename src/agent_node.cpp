@@ -50,8 +50,6 @@ void load_n_exec_program(std::string program)
 	rosbackend->ctx_ready = true;
 	ctx.run(*mainproc);
 	rosbackend->ctx_ready = false;
-
-	gpp::ReadylogContext::shutdown();
 }
 
 
@@ -66,6 +64,8 @@ int main(int argc, char *argv[])
 	load_n_exec_program("turtlesim_example");
 
 	rclcpp::shutdown();
+	gpp::ReadylogContext::shutdown();
+
 	return 0;
 }
 

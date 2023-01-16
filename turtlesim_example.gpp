@@ -8,8 +8,15 @@ mapping:
 	"/turtle1/rotate_absolute" {
 		theta = angle
 	}
-precondition:
-	cmdvel_state() == true
+}
+
+action spawn_turtle(number x, number y, number theta) {
+mapping:
+	"/spawn" {
+		x = x,
+		y = y,
+		theta = theta
+	}
 }
 
 exog_action cmdvel_drive(bool data) {
@@ -22,8 +29,9 @@ effect:
 }
 
 procedure main(){
-	while(true) {
-		move_theta(1.0);
-		move_theta(0.0);
-	}
+
+	move_theta(1.0);
+	move_theta(0.0);
+	spawn_turtle(5.0, 5.0, 0.0);
+
 }

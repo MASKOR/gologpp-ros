@@ -5,6 +5,7 @@
 #include <execution/controller.h>
 
 #include "turtlesim/action/rotate_absolute.hpp"
+#include "turtlesim/srv/spawn.hpp"
 #include "std_msgs/msg/bool.hpp"
 
 template <>
@@ -26,8 +27,20 @@ ActionManager<turtlesim::action::RotateAbsolute>::build_goal(const gpp::Activity
 	return goal;
 }
 
+template<>
+ServiceManager<turtlesim::srv::Spawn>::RequestT
+ServiceManager<turtlesim::srv::Spawn>::build_request(const gpp::Activity &a)
+{
+	auto request = std::make_shared<turtlesim::srv::Spawn::Request>();
+	request->x = a.mapped_arg_value("x").numeric_convert<float>();
+	request->y = a.mapped_arg_value("y").numeric_convert<float>();
+	request->theta = a.mapped_arg_value("theta").numeric_convert<float>();
+	return request;
+}
+
 void RosBackend::define_turtlesim_actions()
 {
 	create_ActionManager<turtlesim::action::RotateAbsolute>("/turtle1/rotate_absolute");
+	create_ServiceManager<turtlesim::srv::Spawn>("/spawn");
 	create_ExogManger<std_msgs::msg::Bool>("/exog_event");
 }
