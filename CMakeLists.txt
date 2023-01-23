@@ -13,17 +13,12 @@ endif()
 add_definitions(-DSOURCE_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}\")
 # suppress all warnings
 add_definitions(-w)
-find_package(PkgConfig)
 
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_action REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(std_msgs REQUIRED)
-# find_package(turtlesim REQUIRED)
-
-pkg_check_modules(readylogpp REQUIRED readylog++)
-pkg_check_modules(parsegologpp REQUIRED parsegolog++)
 
 set(gologpp_action_pkgs
 	turtlesim
@@ -38,8 +33,6 @@ endif()
 
 set(BUILD_TESTS OFF CACHE BOOL "Enable gologpp tests" FORCE)
 
-link_directories(${readylogpp_LIBRARY_DIRS} ${parsegologpp_LIBRARY_DIRS})
-
 add_executable(gologpp_agent
 	src/agent_node.cpp
 	src/ros_backend.cpp
@@ -49,8 +42,8 @@ add_executable(gologpp_agent
 ament_target_dependencies(gologpp_agent rclcpp rclcpp_action rclcpp_components turtlesim std_msgs)
 target_include_directories(gologpp_agent PUBLIC
 	src/
-	${readylogpp_INCLUDE_DIRS}
-	${parsegologpp_INCLUDE_DIRS}
+	include/golog++
+	include/eclipse
 )
 
 install(
@@ -67,8 +60,16 @@ endforeach()
 
 target_link_libraries(
 	gologpp_agent
-	${readylogpp_LIBRARIES}
-	${parsegologpp_LIBRARIES}
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/libeclipse.so
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/libgolog++.so.0.1.0
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/libtaptenc-golog++.so.0.1.0
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/libreadylog++.so.0.1.0
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/libparsegolog++.so.0.1.0
+)
+
+install(
+  DIRECTORY lib/
+  DESTINATION lib
 )
 
 target_compile_features(
