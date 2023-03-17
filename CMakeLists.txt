@@ -20,16 +20,16 @@ find_package(rclcpp REQUIRED)
 find_package(rclcpp_action REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(std_msgs REQUIRED)
-# find_package(turtlesim REQUIRED)
+find_package(turtlesim REQUIRED)
+find_package(webots_spot_msgs REQUIRED)
 
 pkg_check_modules(readylogpp REQUIRED readylog++)
 pkg_check_modules(parsegologpp REQUIRED parsegolog++)
 
 set(gologpp_action_pkgs
 	turtlesim
+	webots_spot_msgs
 )
-
-find_package(${gologpp_action_pkgs})
 
 if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated-declarations -Wno-placement-new")
@@ -46,7 +46,7 @@ add_executable(gologpp_agent
 	src/action_manager.cpp
 	src/exog_manager.cpp
 )
-ament_target_dependencies(gologpp_agent rclcpp rclcpp_action rclcpp_components turtlesim std_msgs)
+ament_target_dependencies(gologpp_agent rclcpp rclcpp_action rclcpp_components turtlesim webots_spot_msgs std_msgs)
 target_include_directories(gologpp_agent PUBLIC
 	src/
 	${readylogpp_INCLUDE_DIRS}

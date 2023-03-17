@@ -61,13 +61,10 @@ int main(int argc, char *argv[])
 	rclcpp::init(argc, argv);
 
 	auto agent_node = Singleton::instance();
-	load_n_exec_program("turtlesim_example");
+	load_n_exec_program("webots_spot_msgs_example");
 
 	rclcpp::shutdown();
 	gpp::ReadylogContext::shutdown();
 
 	return 0;
 }
-
-
-

@@ -79,6 +79,7 @@ private:
 
 	// May have an implementation iff the corresponding package has been found
 	void define_turtlesim_actions();
+	void define_webots_spot_msgs_actions();
 
 	template<class ActionT>
 	void create_ActionManager(const std::string &name);
