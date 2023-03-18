@@ -28,7 +28,7 @@ namespace gpp = gologpp;
 
 void load_n_exec_program(std::string program)
 {
-	gpp::parser::parse_file(SOURCE_DIR "/"+program+".gpp");
+	gpp::parser::parse_file(program);
 
 	gpp::shared_ptr<gpp::Reference<gpp::Procedure>> mainproc {
 		gpp::global_scope().lookup_global<gpp::Procedure>("main")->make_ref({})
@@ -57,11 +57,18 @@ void load_n_exec_program(std::string program)
 
 int main(int argc, char *argv[])
 {
-	std::string param;
 	rclcpp::init(argc, argv);
+	std::string param;
 
 	auto agent_node = Singleton::instance();
-	load_n_exec_program("webots_spot_msgs_example");
+	std::string gpp_code = "turtlesim_example";
+	gpp_code = SOURCE_DIR "/"+gpp_code+".gpp";
+
+    if (!agent_node->has_parameter("gpp_code"))
+        agent_node->declare_parameter("gpp_code", gpp_code);
+	agent_node->get_parameter("gpp_code", gpp_code);
+
+	load_n_exec_program(gpp_code);
 
 	rclcpp::shutdown();
 	gpp::ReadylogContext::shutdown();
