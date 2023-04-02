@@ -37,6 +37,7 @@ RosBackend::RosBackend()
 #endif
 define_turtlesim_actions();
 define_webots_spot_msgs_actions();
+define_nav2_msgs_actions();
 
 	spin_exog_thread();
 }
