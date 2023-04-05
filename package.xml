@@ -21,6 +21,7 @@
   <depend>std_msgs</depend>
   <depend>action_msgs</depend>
   <depend>turtlesim</depend>
+  <depend>gpp_action_examples_interface</depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

@@ -1,6 +1,20 @@
-bool fluent cmdvel_state(){
+bool fluent exog_state(){
 initially:
 		() = false;
+}
+
+string fluent string_response() {
+initially:
+	() = "";
+}
+
+action senses_string(string source) {
+senses:
+	string_response()
+mapping:
+	"/response_string" {
+		source = source
+	}
 }
 
 action move_theta(number angle) {
@@ -19,19 +33,18 @@ mapping:
 	}
 }
 
-exog_action cmdvel_drive(bool data) {
+exog_action exog_trigger(bool data) {
 mapping:
 	"/exog_event" {
 		data = data
 	}
 effect:
-	cmdvel_state() = true;
+	exog_state() = true;
 }
 
 procedure main(){
-
 	move_theta(1.0);
 	move_theta(0.0);
 	spawn_turtle(5.0, 5.0, 0.0);
-
+	senses_string("a");
 }

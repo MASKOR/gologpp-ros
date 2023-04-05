@@ -20,12 +20,13 @@ find_package(rclcpp REQUIRED)
 find_package(rclcpp_action REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(std_msgs REQUIRED)
-# find_package(turtlesim REQUIRED)
+find_package(gpp_action_examples_interface REQUIRED)
+find_package(turtlesim REQUIRED)
 
 pkg_check_modules(readylogpp REQUIRED readylog++)
 pkg_check_modules(parsegologpp REQUIRED parsegolog++)
 
-set(gologpp_action_pkgs
+ set(gologpp_action_pkgs
 	turtlesim
 )
 
@@ -46,7 +47,7 @@ add_executable(gologpp_agent
 	src/action_manager.cpp
 	src/exog_manager.cpp
 )
-ament_target_dependencies(gologpp_agent rclcpp rclcpp_action rclcpp_components turtlesim std_msgs)
+ament_target_dependencies(gologpp_agent rclcpp rclcpp_action rclcpp_components turtlesim std_msgs gpp_action_examples_interface)
 target_include_directories(gologpp_agent PUBLIC
 	src/
 	${readylogpp_INCLUDE_DIRS}
