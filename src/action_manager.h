@@ -79,8 +79,7 @@ class ServiceManager : public AbstractActionManager {
 	// TODO
 public:
 	using RequestT = typename ServiceT::Request::SharedPtr;
-	using ResponseT = typename ServiceT::Response::SharedPtr;
-	using FutureT = typename rclcpp::Client<ServiceT>::SharedFuture;
+	using ResponseT = typename rclcpp::Client<ServiceT>::SharedFuture;
 	using Client = typename rclcpp::Client<ServiceT>::SharedPtr;
 
 	virtual void execute_current_activity() override;
@@ -128,12 +127,14 @@ void ServiceManager<ServiceT>::execute_current_activity() {
 		}
 		RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "service not available, waiting again...");
 	}
-	
-	auto response_received_callback = [this](FutureT future_response_) {
+
+	auto response_received_callback = [this](ResponseT future_response_) {
         if (future_response_.valid()) {
 			current_activity_->update(gpp::Transition::Hook::FINISH);
+			set_result(to_golog_constant(future_response_));
 		} else {
 			current_activity_->update(gpp::Transition::Hook::FAIL);
+			set_result(to_golog_constant(future_response_));
 			RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Failed to call service");
 		}
 	};

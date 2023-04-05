@@ -26,6 +26,7 @@ pkg_check_modules(parsegologpp REQUIRED parsegolog++)
 
 set(gologpp_action_pkgs
 	turtlesim
+	gpp_action_examples_interface
 	nav2_msgs
 	webots_spot_msgs
 )

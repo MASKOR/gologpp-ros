@@ -8,7 +8,9 @@
 #include "turtlesim/srv/spawn.hpp"
 #include "std_msgs/msg/bool.hpp"
 
-template <>
+#include "gpp_action_examples_interface/srv/names.hpp"
+
+template<>
 std::unordered_map< std::string, gpp::unique_ptr<gpp::Value> >
 ExogManager<std_msgs::msg::Bool>::params_to_map(const std_msgs::msg::Bool::ConstPtr& msg) {
 
@@ -38,9 +40,28 @@ ServiceManager<turtlesim::srv::Spawn>::build_request(const gpp::Activity &a)
 	return request;
 }
 
+template<>
+ServiceManager<gpp_action_examples_interface::srv::Names>::RequestT
+ServiceManager<gpp_action_examples_interface::srv::Names>::build_request(const gpp::Activity &a)
+{
+	auto request = std::make_shared<gpp_action_examples_interface::srv::Names::Request>();
+	request->source = std::string(a.mapped_arg_value("source"));
+
+	return request;
+}
+
+template<>
+gpp::optional<gpp::Value>
+ServiceManager<gpp_action_examples_interface::srv::Names>::to_golog_constant(ResponseT result){
+	return gpp::Value(gpp::get_type<gpp::StringType>(), result.get()->target);
+}
+
 void RosBackend::define_turtlesim_actions()
 {
 	create_ActionManager<turtlesim::action::RotateAbsolute>("/turtle1/rotate_absolute");
+
 	create_ServiceManager<turtlesim::srv::Spawn>("/spawn");
+	create_ServiceManager<gpp_action_examples_interface::srv::Names>("/response_string");
+
 	create_ExogManger<std_msgs::msg::Bool>("/exog_event");
 }
