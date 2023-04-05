@@ -10,7 +10,7 @@ initially:
 
 action senses_string(string source) {
 senses:
-	string_response()
+	string_response() = "0";
 mapping:
 	"/response_string" {
 		source = source
@@ -48,4 +48,6 @@ procedure main(){
 	move_theta(0.0);
 	spawn_turtle(5.0, 5.0, 0.0);
 
+	senses_string("a");
+	senses_string(string_response());
 }
