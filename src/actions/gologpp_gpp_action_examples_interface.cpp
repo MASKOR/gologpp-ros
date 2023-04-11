@@ -11,8 +11,7 @@ ServiceManager<gpp_action_examples_interface::srv::Print>::RequestT
 ServiceManager<gpp_action_examples_interface::srv::Print>::build_request(const gpp::Activity &a)
 {
 	auto request = std::make_shared<gpp_action_examples_interface::srv::Print::Request>();
-	request->request_print = std::string(a.mapped_arg_value("source"));
-
+	request->request_print = std::string(a.mapped_arg_value("text"));
 	return request;
 }
 
