@@ -1,36 +1,20 @@
-bool fluent exog_state(){
+string fluent loc(string arg) {
 initially:
-		() = false;
+	("a") = "";
+	("b") = "";
+	("c") = "";
 }
 
-string fluent string_response() {
-initially:
-	() = "";
-}
-
-action senses_string(string source) {
-senses:
-	string_response() = "0";
+action print_string(string source) {
 mapping:
-	"/response_string" {
+	"/print_string" {
 		source = source
 	}
 }
 
-action move_theta(number angle) {
-mapping:
-	"/turtle1/rotate_absolute" {
-		theta = angle
-	}
-}
-
-action spawn_turtle(number x, number y, number theta) {
-mapping:
-	"/spawn" {
-		x = x,
-		y = y,
-		theta = theta
-	}
+bool fluent exog_state(){
+initially:
+		() = false;
 }
 
 exog_action exog_trigger(bool data) {
@@ -42,12 +26,40 @@ effect:
 	exog_state() = true;
 }
 
+number fluent delta_result() {
+initially:
+	() = 0.0;
+}
+
+string fluent string_response() {
+initially:
+	() = "";
+}
+
+string exog_function sense_result(string ros_action_name);
+
+// action move_theta(number angle) {
+// senses:
+// 	delta_result() = sense_result("/turtle1/rotate_absolute");
+// mapping:
+// 	"/turtle1/rotate_absolute" {
+// 		theta = angle
+// 	}
+// }
+
+action spawn_turtle(number x, number y, number theta) {
+senses:
+	string_response() = sense_result("/spawn");
+mapping:
+	"/spawn" {
+		x = x,
+		y = y,
+		theta = theta
+	}
+}
+
 procedure main(){
-
-	move_theta(1.0);
-	move_theta(0.0);
-	spawn_turtle(5.0, 5.0, 0.0);
-
-	senses_string("a");
-	senses_string(string_response());
+	//move_theta(0.3);
+	spawn_turtle(0.5, 0.5, 0.0);
+	print_string(string_response());
 }
