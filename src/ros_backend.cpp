@@ -32,12 +32,13 @@ RosBackend::RosBackend()
 	define_turtle_actions();
 #endif
 
-#ifdef turtlesim FOUND
+#ifdef turtlesim_FOUND
 	define_turtlesim_actions();
 #endif
-define_turtlesim_actions();
 
-define_action_examples_actions();
+#ifdef gpp_action_examples_interface_FOUND
+	define_action_examples_actions();
+#endif
 
 	spin_exog_thread();
 }
