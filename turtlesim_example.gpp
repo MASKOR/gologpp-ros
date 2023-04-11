@@ -5,10 +5,10 @@ initially:
 	("c") = "";
 }
 
-action print_string(string source) {
+action print_string(string text) {
 mapping:
 	"/print_string" {
-		source = source
+		text = text
 	}
 }
 
@@ -38,14 +38,16 @@ initially:
 
 string exog_function sense_result(string ros_action_name);
 
-// action move_theta(number angle) {
-// senses:
-// 	delta_result() = sense_result("/turtle1/rotate_absolute");
-// mapping:
-// 	"/turtle1/rotate_absolute" {
-// 		theta = angle
-// 	}
-// }
+number exog_function sense_number(string ros_action_name);
+
+action move_theta(number angle) {
+senses:
+	delta_result() = sense_number("/turtle1/rotate_absolute");
+mapping:
+	"/turtle1/rotate_absolute" {
+		theta = angle
+	}
+}
 
 action spawn_turtle(number x, number y, number theta) {
 senses:
@@ -59,7 +61,7 @@ mapping:
 }
 
 procedure main(){
-	//move_theta(0.3);
-	spawn_turtle(0.5, 0.5, 0.0);
+	move_theta(0.3);
+	spawn_turtle(delta_result()+1, delta_result()+1, 0.0);
 	print_string(string_response());
 }

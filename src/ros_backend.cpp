@@ -107,7 +107,7 @@ gpp::Value RosBackend::eval_exog_function(
 	const string &backend_name,
 	const std::unordered_map<string, Value> &args
 ) {
-	if (backend_name == "sense_result") {
+	if (backend_name == "sense_result" || backend_name == "sense_number") {
 		string act_name = static_cast<string>(args.at("ros_action_name"));
 		AbstractActionManager &act_mgr = *action_managers_.at(act_name);
 
@@ -133,7 +133,7 @@ gpp::Value RosBackend::eval_exog_function(
 	else
 		throw gologpp::UserError(
 			"No exog_function '" + backend_name + "'. "
-			"Only 'sense_result(ros_action_name, ros_action_args...)' is currently supported"
+			"Only 'sense_result(ros_action_name) or sense_number(ros_action_name)' is currently supported"
 		);
 }
 
