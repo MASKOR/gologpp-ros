@@ -37,6 +37,8 @@ RosBackend::RosBackend()
 #endif
 define_turtlesim_actions();
 
+define_action_examples_actions();
+
 	spin_exog_thread();
 }
 
@@ -94,7 +96,6 @@ gpp::Value RosBackend::eval_exog_function(
 ) {
 	if (backend_name == "sense_result") {
 		string act_name = static_cast<string>(args.at("ros_action_name"));
-
 		AbstractActionManager &act_mgr = *action_managers_.at(act_name);
 
 		if (!act_mgr.current_activity()->target()->senses())

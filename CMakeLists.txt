@@ -65,6 +65,8 @@ foreach(pkg ${gologpp_action_pkgs})
 		target_compile_definitions(gologpp_agent PUBLIC "-D${pkg}_FOUND")
 	endif()
 endforeach()
+target_sources(gologpp_agent PRIVATE "src/actions/gologpp_gpp_action_examples_interface.cpp")
+target_compile_definitions(gologpp_agent PUBLIC "-D${pkg}_FOUND")
 
 target_link_libraries(
 	gologpp_agent

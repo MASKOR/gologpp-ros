@@ -171,11 +171,11 @@ void ActionManager<ActionT>::result_callback(const typename ResultT::WrappedResu
 	switch(result.code) {
 	case rclcpp_action::ResultCode::SUCCEEDED:
 		current_activity_->update(gpp::Transition::Hook::FINISH);
-		//set_result(to_golog_constant(result));
+		set_result(to_golog_constant(result));
 		break;
 	case rclcpp_action::ResultCode::ABORTED:
 		current_activity_->update(gpp::Transition::Hook::FAIL);
-		// set_result(to_golog_constant(result));
+		set_result(to_golog_constant(result));
 		break;
 	case rclcpp_action::ResultCode::CANCELED:
 	default:
