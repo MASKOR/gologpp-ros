@@ -52,6 +52,9 @@ RosBackend::RosBackend()
 	define_nav2_msgs_actions();
 #endif
 
+#ifdef spot_msgs_FOUND
+	define_spot_actions();
+#endif
 	spin_exog_thread();
 }
 

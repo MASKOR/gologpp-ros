@@ -19,8 +19,12 @@
   <depend>rclcpp_action</depend>
   <depend>rclcpp_components</depend>
   <depend>std_msgs</depend>
+  <depend>geometry_msgs</depend>
   <depend>action_msgs</depend>
   <depend>turtlesim</depend>
+  <depend>spot_msgs</depend>
+  <build_depend>builtin_interfaces</build_depend>
+
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

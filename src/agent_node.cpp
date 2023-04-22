@@ -61,8 +61,8 @@ int main(int argc, char *argv[])
 	std::string param;
 
 	auto agent_node = Singleton::instance();
-	std::string gpp_code = "turtlesim_example";
-	gpp_code = SOURCE_DIR "/"+gpp_code+".gpp";
+	std::string gpp_code = "spot";
+	gpp_code = SOURCE_DIR "/agents/"+gpp_code+".gpp";
 
     if (!agent_node->has_parameter("gpp_code"))
         agent_node->declare_parameter("gpp_code", gpp_code);
