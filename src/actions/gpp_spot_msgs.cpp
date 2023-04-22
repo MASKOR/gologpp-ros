@@ -27,8 +27,10 @@ ActionManager<spot_msgs::action::Trajectory>::build_goal(const gpp::Activity &a)
     target_pose.pose.position.y = a.mapped_arg_value("posY").numeric_convert<float>();
     target_pose.pose.position.z = 0.0; // is not used
 
+    float yaw =  a.mapped_arg_value("yaw").numeric_convert<float>();
     tf2::Quaternion q;
-    q.setRPY(0.0,0.0,0.0);
+    q.setRPY(0.0,0.0,yaw);
+
     target_pose.pose.orientation.x = q.x();
     target_pose.pose.orientation.y = q.y();
     target_pose.pose.orientation.z = q.z();
