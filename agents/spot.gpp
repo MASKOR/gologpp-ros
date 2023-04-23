@@ -9,5 +9,5 @@ mapping:
 }
 
 procedure main(){
-	navigateTo("body", 1.0, 0.0, 90.0);
+	navigateTo("test_frame", 0.0, 0.0, 0.0);
 }

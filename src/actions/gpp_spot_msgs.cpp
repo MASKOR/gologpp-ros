@@ -5,7 +5,13 @@
 #include <execution/controller.h>
 
 #include "tf2/LinearMath/Quaternion.h"
+#include "tf2/exceptions.h"
+#include "tf2_ros/transform_listener.h"
+#include "tf2_ros/buffer.h"
+
 #include "spot_msgs/action/trajectory.hpp"
+#include "geometry_msgs/msg/transform_stamped.hpp"
+#include "geometry_msgs/msg/twist.hpp"
 #include "geometry_msgs/msg/pose_stamped.hpp"
 #include "builtin_interfaces/msg/duration.h"
 #include "builtin_interfaces/msg/time.hpp"
@@ -18,31 +24,67 @@ ActionManager<spot_msgs::action::Trajectory>::build_goal(const gpp::Activity &a)
     auto agent_node = Singleton::instance();
 	auto goal = spot_msgs::action::Trajectory::Goal();
     auto target_pose = geometry_msgs::msg::PoseStamped();
-
+    auto frame = std::string(a.mapped_arg_value("frame_id"));
     builtin_interfaces::msg::Time time = agent_node->get_clock()->now();
-    //auto time_msg = time.to_msg();
-    target_pose.header.stamp = time;
-    target_pose.header.frame_id = std::string(a.mapped_arg_value("frame_id"));
-    target_pose.pose.position.x = a.mapped_arg_value("posX").numeric_convert<float>();
-    target_pose.pose.position.y = a.mapped_arg_value("posY").numeric_convert<float>();
-    target_pose.pose.position.z = 0.0; // is not used
-
-    float yaw =  a.mapped_arg_value("yaw").numeric_convert<float>();
     tf2::Quaternion q;
-    q.setRPY(0.0,0.0,yaw);
-
-    target_pose.pose.orientation.x = q.x();
-    target_pose.pose.orientation.y = q.y();
-    target_pose.pose.orientation.z = q.z();
-    target_pose.pose.orientation.w = q.w();
-
+    float yaw = 0;
     auto duration = builtin_interfaces::msg::Duration();
+
+    target_pose.header.stamp = time;
     duration.sec = 10;
     duration.nanosec = 0.0;
-    goal.target_pose = target_pose;
+
     goal.duration = duration;
-    goal.precise_positioning = false;
-	return goal;
+    goal.precise_positioning = false;//bool(a.mapped_arg_value("precise_positioning"));
+
+    if (frame == "body"){
+        target_pose.header.frame_id = std::string(a.mapped_arg_value("frame_id"));
+        target_pose.pose.position.x = a.mapped_arg_value("posX").numeric_convert<float>();
+        target_pose.pose.position.y = a.mapped_arg_value("posY").numeric_convert<float>();
+        target_pose.pose.position.z = 0.0; // is not used
+
+        yaw =  a.mapped_arg_value("yaw").numeric_convert<float>();
+
+        q.setRPY(0.0,0.0,yaw);
+
+        target_pose.pose.orientation.x = q.x();
+        target_pose.pose.orientation.y = q.y();
+        target_pose.pose.orientation.z = q.z();
+        target_pose.pose.orientation.w = q.w();
+        goal.target_pose = target_pose;
+
+        return goal;
+
+    }else{
+        std::unique_ptr<tf2_ros::Buffer> tf_buffer_;
+        geometry_msgs::msg::TransformStamped t;
+        // Look up for the transformation between target_frame and body frames
+        // and send goal relativ from body
+        try {
+          t = tf_buffer_->lookupTransform(
+            frame, "body",
+            time);
+        } catch (const tf2::TransformException & ex) {
+          RCLCPP_INFO(
+            agent_node->get_logger(), "Could not transform %s to %s: %s",
+            frame.c_str(), "body", ex.what());
+          return goal;
+        }
+
+        target_pose.header.frame_id = "body";
+        target_pose.pose.position.x = t.transform.translation.x;
+        target_pose.pose.position.y = t.transform.translation.y;
+        target_pose.pose.position.z = 0.0; // is not used
+
+        target_pose.pose.orientation.x = 0.0;
+        target_pose.pose.orientation.y = 0.0;
+        target_pose.pose.orientation.z = 0.0;
+        target_pose.pose.orientation.w = t.transform.rotation.w;
+
+        goal.target_pose = target_pose;
+
+        return goal;
+    }
 }
 
 
