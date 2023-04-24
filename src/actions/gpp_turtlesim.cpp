@@ -8,15 +8,15 @@
 #include "turtlesim/srv/spawn.hpp"
 #include "std_msgs/msg/bool.hpp"
 
-template<>
-std::unordered_map< std::string, gpp::unique_ptr<gpp::Value> >
-ExogManager<std_msgs::msg::Bool>::params_to_map(const std_msgs::msg::Bool::ConstPtr& msg) {
+// template<>
+// std::unordered_map< std::string, gpp::unique_ptr<gpp::Value> >
+// ExogManager<std_msgs::msg::Bool>::params_to_map(const std_msgs::msg::Bool::ConstPtr& msg) {
 
-	gpp::unique_ptr<gpp::Value> param (new gpp::Value(gpp::get_type<gpp::BoolType>(), bool(msg->data)));
-	std::unordered_map< std::string, gpp::unique_ptr<gpp::Value> > params_to_map;
-	params_to_map.insert({"data", std::move(param)});
-	return params_to_map;
-}
+// 	gpp::unique_ptr<gpp::Value> param (new gpp::Value(gpp::get_type<gpp::BoolType>(), bool(msg->data)));
+// 	std::unordered_map< std::string, gpp::unique_ptr<gpp::Value> > params_to_map;
+// 	params_to_map.insert({"data", std::move(param)});
+// 	return params_to_map;
+// }
 
 template<>
 ActionManager<turtlesim::action::RotateAbsolute>::GoalT
