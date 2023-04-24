@@ -68,6 +68,7 @@ ActionManager<spot_msgs::action::Trajectory>::build_goal(const gpp::Activity &a)
           RCLCPP_INFO(
             agent_node->get_logger(), "Could not transform %s to %s: %s",
             frame.c_str(), "body", ex.what());
+            target_pose.header.frame_id = "ABORT_ACTION";
           return goal;
         }
 
