@@ -96,17 +96,17 @@ template<>
 ServiceManager<std_srvs::srv::Trigger>::RequestT
 ServiceManager<std_srvs::srv::Trigger>::build_request(const gpp::Activity &a)
 {
-	auto request = std::make_shared<std_srvs::srv::Trigger::Request>();
-	return request;
+  auto request = std::make_shared<std_srvs::srv::Trigger::Request>();
+  return request;
 }
 
 template<>
 ServiceManager<std_srvs::srv::SetBool>::RequestT
 ServiceManager<std_srvs::srv::SetBool>::build_request(const gpp::Activity &a)
 {
-	auto request = std::make_shared<std_srvs::srv::SetBool::Request>();
+  auto request = std::make_shared<std_srvs::srv::SetBool::Request>();
   request->data = bool(a.mapped_arg_value("data"));
-	return request;
+  return request;
 }
 
 void RosBackend::define_spot_actions()
