@@ -74,11 +74,15 @@ procedure main(){
 		navigateTo("frame1", 0.0, 0.0, 0.0);
 		stop();
 		navigateTo("frame2", 0.0, 0.0, 0.0);
-		stop()
+		stop();
 		navigateTo("frame3", 0.0, 0.0, 0.0);
+		stop();
 		navigateTo("frame4", 0.0, 0.0, 0.0);
+		stop();
 		navigateTo("frame5", 0.0, 0.0, 0.0);
+		stop();
 		navigateTo("frame6", 0.0, 0.0, 0.0);
+		stop();
 		navigateTo("frame7", 0.0, 0.0, 0.0);
 		navigateTo("frame8", 0.0, 0.0, 0.0);
 		navigateTo("frame9", 0.0, 0.0, 0.0);
