@@ -10,12 +10,16 @@
 #include "tf2_ros/buffer.h"
 
 #include "spot_msgs/action/trajectory.hpp"
+
 #include "geometry_msgs/msg/transform_stamped.hpp"
 #include "geometry_msgs/msg/twist.hpp"
 #include "geometry_msgs/msg/pose_stamped.hpp"
 #include "builtin_interfaces/msg/duration.h"
 #include "builtin_interfaces/msg/time.hpp"
 
+#include "std_srvs/srv/trigger.hpp"
+
+#include "std_srvs/srv/set_bool.hpp"
 
 template<>
 ActionManager<spot_msgs::action::Trajectory>::GoalT
@@ -88,8 +92,39 @@ ActionManager<spot_msgs::action::Trajectory>::build_goal(const gpp::Activity &a)
     }
 }
 
+template<>
+ServiceManager<std_srvs::srv::Trigger>::RequestT
+ServiceManager<std_srvs::srv::Trigger>::build_request(const gpp::Activity &a)
+{
+	auto request = std::make_shared<std_srvs::srv::Trigger::Request>();
+	return request;
+}
+
+template<>
+ServiceManager<std_srvs::srv::SetBool>::RequestT
+ServiceManager<std_srvs::srv::SetBool>::build_request(const gpp::Activity &a)
+{
+	auto request = std::make_shared<std_srvs::srv::SetBool::Request>();
+  request->data = bool(a.mapped_arg_value("data"));
+	return request;
+}
 
 void RosBackend::define_spot_actions()
 {
 	create_ActionManager<spot_msgs::action::Trajectory>("/trajectory");
+
+  create_ServiceManager<std_srvs::srv::Trigger>("/claim");
+  create_ServiceManager<std_srvs::srv::Trigger>("/release");
+  create_ServiceManager<std_srvs::srv::Trigger>("/stop");
+  create_ServiceManager<std_srvs::srv::Trigger>("/self_right");
+  create_ServiceManager<std_srvs::srv::Trigger>("/sit");
+  create_ServiceManager<std_srvs::srv::Trigger>("/stand");
+  create_ServiceManager<std_srvs::srv::Trigger>("/power_on");
+  create_ServiceManager<std_srvs::srv::Trigger>("/power_off");
+  create_ServiceManager<std_srvs::srv::Trigger>("/estop/hard");
+  create_ServiceManager<std_srvs::srv::Trigger>("/estop/gentle");
+  create_ServiceManager<std_srvs::srv::Trigger>("/estop/release");
+
+  create_ServiceManager<std_srvs::srv::SetBool>("/clear_behavior_fault");
+
 }

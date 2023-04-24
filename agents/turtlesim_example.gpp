@@ -63,5 +63,5 @@ mapping:
 procedure main(){
 	move_theta(0.3);
 	spawn_turtle(delta_result()+1, delta_result()+1, 0.0);
-	print_string(string_response());
+	//print_string(string_response());
 }
