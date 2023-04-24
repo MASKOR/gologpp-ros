@@ -1,0 +1,48 @@
+bool fluent exog_state_next_TF(){
+initially:
+		() = false;
+}
+
+exog_action exog_trigger_next_TF(bool data) {
+mapping:
+	"/exog_event_next_TF" {
+		data = data
+	}
+effect:
+	exog_state_next_TF() = true;
+}
+
+bool fluent exog_state_next_Lap(){
+initially:
+		() = false;
+}
+
+exog_action exog_trigger_next_Lap(bool data) {
+mapping:
+	"/exog_event_next_Lap" {
+		data = data
+	}
+effect:
+	exog_state_next_Lap() = true;
+}
+
+action navigateTo(string target_frame, number x, number y, number yaw) {
+mapping:
+	"/trajectory" {
+		frame_id = target_frame,
+        posX = x,
+        posY = y,
+        yaw = yaw
+	}
+}
+
+procedure main(){
+	while(exog_state_next_Lap()) {
+		navigateTo("frame1", 0.0, 0.0, 0.0);
+		test(exog_state_next_TF());
+		exog_state_next_TF() = false;
+		navigateTo("frame2", 0.0, 0.0, 0.0);
+		test(exog_state_next_TF());
+		exog_state_next_TF() = false;
+	}
+}
