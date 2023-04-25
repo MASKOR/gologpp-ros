@@ -33,6 +33,6 @@ ActionManager<gpp_action_examples_interface::action::TrajectoryToFrame>::build_g
 
 void RosBackend::define_action_examples_actions()
 {
-	create_ActionManager<gpp_action_examples_interface::action::TrajectoryToFrame>("/trajectory_to_frame_as");
+	create_ActionManager<gpp_action_examples_interface::action::TrajectoryToFrame>("/trajectoryToFrame");
 	create_ServiceManager<gpp_action_examples_interface::srv::Print>("/print_string");
 }
