@@ -5,6 +5,7 @@
 #include <execution/controller.h>
 
 #include "gpp_action_examples_interface/srv/print.hpp"
+#include "gpp_action_examples_interface/action/trajectory_to_frame.hpp"
 
 template<>
 ServiceManager<gpp_action_examples_interface::srv::Print>::RequestT
@@ -21,7 +22,17 @@ ServiceManager<gpp_action_examples_interface::srv::Print>::to_golog_constant(Res
 	return gpp::Value(gpp::get_type<gpp::StringType>(), result.get()->response_print);
 }
 
+template<>
+ActionManager<gpp_action_examples_interface::action::TrajectoryToFrame>::GoalT
+ActionManager<gpp_action_examples_interface::action::TrajectoryToFrame>::build_goal(const gpp::Activity &a)
+{
+	auto goal = gpp_action_examples_interface::action::TrajectoryToFrame::Goal();
+	goal.frame_id = std::string(a.mapped_arg_value("frame_id"));
+	return goal;
+}
+
 void RosBackend::define_action_examples_actions()
 {
+	create_ActionManager<gpp_action_examples_interface::action::TrajectoryToFrame>("/trajectory_to_frame_as");
 	create_ServiceManager<gpp_action_examples_interface::srv::Print>("/print_string");
 }
