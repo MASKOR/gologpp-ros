@@ -1,0 +1,74 @@
+// bool fluent exog_state_next_TF(){
+// initially:
+// 		() = false;
+// }
+
+// exog_action exog_trigger_next_TF(bool data) {
+// mapping:
+// 	"/exog_event_next_TF" {
+// 		data = data
+// 	}
+// effect:
+// 	exog_state_next_TF() = true;
+// }
+
+// bool fluent exog_state_next_Lap(){
+// initially:
+// 		() = false;
+// }
+
+// exog_action exog_trigger_next_Lap(bool data) {
+// mapping:
+// 	"/exog_event_next_Lap" {
+// 		data = data
+// 	}
+// effect:
+// 	exog_state_next_Lap() = true;
+// }
+
+action navigateToFrame(string target_frame) {
+mapping:
+	"/trajectory_to_frame_as" {
+		frame_id = target_frame
+	}
+}
+
+// action clear_behavior_fault(bool data) {
+// mapping:
+// 	"/clear_behavior_fault" {
+//         data = data
+// 	}
+// }
+
+action stop(number data) {
+mapping:
+	"/stop" {
+		data = data
+	}
+}
+
+// action power_on() {
+// mapping:
+// 	"/power_on" {}
+// }
+
+// action claim() {
+// mapping:
+// 	"/claim" {}
+// }
+
+// action sit() {
+// mapping:
+// 	"/sit" {}
+// }
+
+// action stand() {
+// mapping:
+// 	"/stand" {}
+// }
+
+
+procedure main(){
+	stop(1.0);
+	navigateToFrame("frame1");
+}
