@@ -28,7 +28,7 @@
 
 action navigateToFrame(string target_frame) {
 mapping:
-	"/trajectory_to_frame_as" {
+	"trajectoryToFrame" {
 		frame_id = target_frame
 	}
 }
@@ -42,9 +42,7 @@ mapping:
 
 action stop(number data) {
 mapping:
-	"/stop" {
-		data = data
-	}
+	"/stop" {data = data}
 }
 
 // action power_on() {
@@ -69,6 +67,6 @@ mapping:
 
 
 procedure main(){
-	stop(1.0);
+	//stop(1.0);
 	navigateToFrame("frame1");
 }
