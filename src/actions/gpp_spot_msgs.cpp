@@ -27,7 +27,7 @@ ActionManager<spot_msgs::action::Trajectory>::GoalT
 ActionManager<spot_msgs::action::Trajectory>::build_goal(const gpp::Activity &a)
 {
     auto agent_node = Singleton::instance();
-	auto goal = spot_msgs::action::Trajectory::Goal();
+	  auto goal = spot_msgs::action::Trajectory::Goal();
     auto target_pose = geometry_msgs::msg::PoseStamped();
     auto frame = std::string(a.mapped_arg_value("frame_id"));
     builtin_interfaces::msg::Time time = agent_node->get_clock()->now();
@@ -62,20 +62,36 @@ ActionManager<spot_msgs::action::Trajectory>::build_goal(const gpp::Activity &a)
 
     }else{
         std::unique_ptr<tf2_ros::Buffer> tf_buffer_;
+        tf_buffer_ = std::make_unique<tf2_ros::Buffer>(agent_node->get_clock());
         geometry_msgs::msg::TransformStamped t;
         // Look up for the transformation between target_frame and body frames
         // and send goal relativ from body
         try {
           t = tf_buffer_->lookupTransform(
-            frame, "body",
-            time);
+            "body", frame,
+            tf2::TimePointZero);
         } catch (const tf2::TransformException & ex) {
           RCLCPP_INFO(
             agent_node->get_logger(), "Could not transform %s to %s: %s",
             frame.c_str(), "body", ex.what());
             target_pose.header.frame_id = "ABORT_ACTION";
           return goal;
-        }
+          }
+          catch (tf2::ConnectivityException& e) {
+            RCLCPP_WARN(agent_node->get_logger(), e.what());
+            target_pose.header.frame_id = "ABORT_ACTION";
+          return goal;
+          }
+          catch (tf2::ExtrapolationException& e) {
+            RCLCPP_WARN(agent_node->get_logger(), e.what());
+            target_pose.header.frame_id = "ABORT_ACTION";
+          return goal;
+          }
+          catch (tf2::LookupException& e) {
+            RCLCPP_WARN(agent_node->get_logger(), e.what());
+            target_pose.header.frame_id = "ABORT_ACTION";
+          return goal;
+          }
 
         target_pose.header.frame_id = "body";
         target_pose.pose.position.x = t.transform.translation.x;
