@@ -6,6 +6,7 @@
 
 #include "gpp_action_examples_interface/srv/print.hpp"
 #include "gpp_action_examples_interface/action/trajectory_to_frame.hpp"
+#include "gpp_action_examples_interface/action/play_audio.hpp"
 
 template<>
 ServiceManager<gpp_action_examples_interface::srv::Print>::RequestT
@@ -31,8 +32,18 @@ ActionManager<gpp_action_examples_interface::action::TrajectoryToFrame>::build_g
 	return goal;
 }
 
+template<>
+ActionManager<gpp_action_examples_interface::action::PlayAudio>::GoalT
+ActionManager<gpp_action_examples_interface::action::PlayAudio>::build_goal(const gpp::Activity &a)
+{
+	auto goal = gpp_action_examples_interface::action::PlayAudio::Goal();
+	goal.audio_file = std::string(a.mapped_arg_value("audio_file"));
+	return goal;
+}
+
 void RosBackend::define_action_examples_actions()
 {
 	create_ActionManager<gpp_action_examples_interface::action::TrajectoryToFrame>("trajectoryToFrame");
+	create_ActionManager<gpp_action_examples_interface::action::PlayAudio>("play_audio");
 	create_ServiceManager<gpp_action_examples_interface::srv::Print>("/print_string");
 }

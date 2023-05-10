@@ -33,6 +33,13 @@ mapping:
 	}
 }
 
+action playSound(string audio) {
+mapping:
+	"play_audio" {
+		audio_file = audio
+	}
+}
+
 // action clear_behavior_fault(bool data) {
 // mapping:
 // 	"/clear_behavior_fault" {
@@ -67,6 +74,10 @@ mapping:
 
 
 procedure main(){
-	//stop(1.0);
+	start(playSound("Rickroll"));
 	navigateToFrame("frame1");
+	stop(playSound("Rickroll"));
+	navigateToFrame("frame2");
+	navigateToFrame("frame3");
+	navigateToFrame("frame4");
 }
