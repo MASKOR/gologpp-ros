@@ -52,6 +52,43 @@ mapping:
 	"/stop" {data = data}
 }
 
+action increaseHeight() {
+mapping:
+	"body_pose_service" {
+		px = 0.0,
+		py = 0.0,
+		pz = 0.2,
+		ox = 0.0,
+		oy = 0.0,
+		oz = 0.0,
+		ow = 1.0
+	}
+}
+action reduceHeight() {
+mapping:
+	"body_pose_service" {
+		px = 0.0,
+		py = 0.0,
+		pz = -0.2,
+		ox = 0.0,
+		oy = 0.0,
+		oz = 0.0,
+		ow = 1.0
+	}
+}
+action normalPose() {
+mapping:
+	"body_pose_service" {
+		px = 0.0,
+		py = 0.0,
+		pz = 0.0,
+		ox = 0.0,
+		oy = 0.0,
+		oz = 0.0,
+		ow = 1.0
+	}
+}
+
 // action power_on() {
 // mapping:
 // 	"/power_on" {}
@@ -76,8 +113,10 @@ mapping:
 procedure main(){
 	start(playSound("Rickroll"));
 	navigateToFrame("frame1");
-	stop(playSound("Rickroll"));
+	increaseHeight();
 	navigateToFrame("frame2");
+	reduceHeight();
 	navigateToFrame("frame3");
+	normalPose();
 	navigateToFrame("frame4");
 }
