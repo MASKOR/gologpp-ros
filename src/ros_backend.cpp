@@ -36,6 +36,10 @@ RosBackend::RosBackend()
 	define_turtlesim_actions();
 #endif
 
+#ifdef gpp_action_examples_interface_FOUND
+	define_action_examples_actions();
+#endif
+
 #ifdef turtlesim_FOUND
 	define_turtlesim_actions();
 #endif
@@ -110,34 +114,27 @@ gpp::Value RosBackend::eval_exog_function(
 	const string &backend_name,
 	const std::unordered_map<string, Value> &args
 ) {
-	if (backend_name == "sense_result" || backend_name == "sense_number") {
-		string act_name = static_cast<string>(args.at("ros_action_name"));
-		AbstractActionManager &act_mgr = *action_managers_.at(act_name);
+	string act_name = static_cast<string>(args.at("ros_action_name"));
+	AbstractActionManager &act_mgr = *action_managers_.at(act_name);
 
-		if (!act_mgr.current_activity()->target()->senses())
-			throw gologpp::UserError(
-				backend_name + ": " + act_mgr.current_activity()->target()->str()
-				+ " is not a sensing action"
-			);
-
-		auto opt_result = act_mgr.result();
-
-		if (!opt_result)
-			throw gologpp::UserError(
-				backend_name + ": " + act_mgr.current_activity()->str()
-				+ " has not provided a sensing result"
-			);
-
-		if (opt_result.value().type() <= return_type)
-			return opt_result.value();
-		else
-			throw gologpp::TypeError(opt_result.value(), return_type);
-	}
-	else
+	if (!act_mgr.current_activity()->target()->senses())
 		throw gologpp::UserError(
-			"No exog_function '" + backend_name + "'. "
-			"Only 'sense_result(ros_action_name) or sense_number(ros_action_name)' is currently supported"
+			backend_name + ": " + act_mgr.current_activity()->target()->str()
+			+ " is not a sensing action"
 		);
+
+	auto opt_result = act_mgr.result();
+
+	if (!opt_result)
+		throw gologpp::UserError(
+			backend_name + ": " + act_mgr.current_activity()->str()
+			+ " has not provided a sensing result"
+		);
+
+	if (opt_result.value().type() <= return_type)
+		return opt_result.value();
+	else
+		throw gologpp::TypeError(opt_result.value(), return_type);
 }
 
 void RosBackend::terminate_()

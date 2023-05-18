@@ -1,0 +1,67 @@
+string fluent loc(string arg) {
+initially:
+	("a") = "";
+	("b") = "";
+	("c") = "";
+}
+
+action print_string(string text) {
+mapping:
+	"/print_string" {
+		text = text
+	}
+}
+
+bool fluent exog_state(){
+initially:
+		() = false;
+}
+
+exog_action exog_trigger(bool data) {
+mapping:
+	"/exog_event" {
+		data = data
+	}
+effect:
+	exog_state() = true;
+}
+
+number fluent delta_result() {
+initially:
+	() = 0.0;
+}
+
+string fluent string_response() {
+initially:
+	() = "";
+}
+
+string exog_function sense_result(string ros_action_name);
+
+number exog_function sense_number(string ros_action_name);
+
+action move_theta(number angle) {
+senses:
+	delta_result() = sense_number("/turtle1/rotate_absolute");
+mapping:
+	"/turtle1/rotate_absolute" {
+		theta = angle
+	}
+}
+
+action spawn_turtle(number x, number y, number theta) {
+senses:
+	string_response() = sense_result("/spawn");
+mapping:
+	"/spawn" {
+		x = x,
+		y = y,
+		theta = theta
+	}
+}
+
+procedure main(){
+	move_theta(0.3);
+	spawn_turtle(delta_result()+1, delta_result()+1, 0.0);
+	print_string(string_response());
+}
