@@ -1,0 +1,106 @@
+bool fluent exog_state_next_TF(){
+initially:
+		() = false;
+}
+
+exog_action exog_trigger_next_TF(bool data) {
+mapping:
+	"/exog_event_next_TF" {
+		data = data
+	}
+effect:
+	exog_state_next_TF() = true;
+}
+
+bool fluent exog_state_next_Lap(){
+initially:
+		() = false;
+}
+
+exog_action exog_trigger_next_Lap(bool data) {
+mapping:
+	"/exog_event_next_Lap" {
+		data = data
+	}
+effect:
+	exog_state_next_Lap() = true;
+}
+
+action navigateTo(string target_frame, number x, number y, number yaw) {
+mapping:
+	"/trajectory" {
+		frame_id = target_frame,
+        posX = x,
+        posY = y,
+        yaw = yaw
+	}
+}
+
+action clear_behavior_fault(bool data) {
+mapping:
+	"/clear_behavior_fault" {
+        data = data
+	}
+}
+
+action stop() {
+mapping:
+	"/stop" {}
+}
+
+action power_on() {
+mapping:
+	"/power_on" {}
+}
+
+action claim() {
+mapping:
+	"/claim" {}
+}
+
+action sit() {
+mapping:
+	"/sit" {}
+}
+
+action stand() {
+mapping:
+	"/stand" {}
+}
+
+
+procedure main(){
+	//while(exog_state_next_Lap()) {
+		navigateTo("frame1", 0.0, 0.0, 0.0);
+		stop();
+		navigateTo("frame2", 0.0, 0.0, 0.0);
+		stop();
+		navigateTo("frame3", 0.0, 0.0, 0.0);
+		stop();
+		navigateTo("frame4", 0.0, 0.0, 0.0);
+		test(exog_state_next_TF());
+		// stop();
+		// navigateTo("frame5", 0.0, 0.0, 0.0);
+		// stop();
+		// navigateTo("frame6", 0.0, 0.0, 0.0);
+		// stop();
+		// navigateTo("frame7", 0.0, 0.0, 0.0);
+		// navigateTo("frame8", 0.0, 0.0, 0.0);
+		// navigateTo("frame9", 0.0, 0.0, 0.0);
+		// navigateTo("frame10", 0.0, 0.0, 0.0);
+		// navigateTo("frame11", 0.0, 0.0, 0.0);
+		// navigateTo("frame12", 0.0, 0.0, 0.0);
+		// navigateTo("frame11", 0.0, 0.0, 0.0);
+		// navigateTo("frame10", 0.0, 0.0, 0.0);
+		// navigateTo("frame9", 0.0, 0.0, 0.0);
+		// navigateTo("frame8", 0.0, 0.0, 0.0);
+		// navigateTo("frame7", 0.0, 0.0, 0.0);
+		// navigateTo("frame6", 0.0, 0.0, 0.0);
+		// navigateTo("frame5", 0.0, 0.0, 0.0);
+		// navigateTo("frame4", 0.0, 0.0, 0.0);
+		// navigateTo("frame3", 0.0, 0.0, 0.0);
+		// navigateTo("frame2", 0.0, 0.0, 0.0);
+		// navigateTo("frame1", 0.0, 0.0, 0.0);
+		navigateTo("origin", 0.0, 0.0, 0.0);
+	//}
+}

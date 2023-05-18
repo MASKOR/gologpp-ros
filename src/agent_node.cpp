@@ -61,8 +61,20 @@ int main(int argc, char *argv[])
 	std::string param;
 
 	auto agent_node = Singleton::instance();
-	std::string gpp_code = "turtlesim_example";
-	gpp_code = SOURCE_DIR "/"+gpp_code+".gpp";
+	std::string gpp_code = "";
+
+    if ( (argc <= 1) || (argv[argc-1] == NULL) ) // there is NO input...
+    {
+		gpp_code = "turtlesim_example";
+        std::cerr << "No agent provided in the argument! Turtlesim example started!" << std::endl;
+    }
+    else // there is an input...
+    {
+		gpp_code = argv[argc-1];
+		RCLCPP_INFO_STREAM(agent_node->get_logger(), "Starting Golog++ agent: " << gpp_code);
+    }
+
+	gpp_code = SOURCE_DIR "/agents/"+gpp_code+".gpp";
 
     if (!agent_node->has_parameter("gpp_code"))
         agent_node->declare_parameter("gpp_code", gpp_code);

@@ -20,6 +20,10 @@ find_package(rclcpp REQUIRED)
 find_package(rclcpp_action REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(std_srvs REQUIRED)
+find_package(tf2 REQUIRED)
+find_package(tf2_ros REQUIRED)
+find_package(builtin_interfaces REQUIRED)
 
 pkg_check_modules(readylogpp REQUIRED readylog++)
 pkg_check_modules(parsegologpp REQUIRED parsegolog++)
@@ -29,6 +33,7 @@ set(gologpp_action_pkgs
 	gpp_action_examples_interface
 	nav2_msgs
 	webots_spot_msgs
+	spot_msgs
 )
 
 set(found_action_pkgs)
@@ -54,7 +59,7 @@ add_executable(gologpp_agent
 	src/action_manager.cpp
 	src/exog_manager.cpp
 )
-ament_target_dependencies(gologpp_agent rclcpp rclcpp_action rclcpp_components std_msgs ${found_action_pkgs})
+ament_target_dependencies(gologpp_agent rclcpp rclcpp_action rclcpp_components builtin_interfaces tf2 tf2_ros std_msgs std_srvs geometry_msgs ${found_action_pkgs})
 target_include_directories(gologpp_agent PUBLIC
 	src/
 	${readylogpp_INCLUDE_DIRS}
