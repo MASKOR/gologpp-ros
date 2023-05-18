@@ -1,5 +1,0 @@
-topic: ~example_topic()
-language: ged
-
-u: ([Ja]) Okay sensor werden hinzugefügt $smach_outcome=true
-u: ([Nein]) Okay, dann nicht $smach_outcome=false

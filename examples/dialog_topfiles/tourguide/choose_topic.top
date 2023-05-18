@@ -1,5 +1,0 @@
-topic: ~example_topic()
-language: ged
-
-u: (navigation) okay, navigation $smach_outcome="navigation"
-u: (agent)		okay, agent $smach_outcome="agent"

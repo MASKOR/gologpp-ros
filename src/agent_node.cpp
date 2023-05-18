@@ -28,7 +28,7 @@ namespace gpp = gologpp;
 
 void load_n_exec_program(std::string program)
 {
-	gpp::parser::parse_file(SOURCE_DIR "/"+program+".gpp");
+	gpp::parser::parse_file(program);
 
 	gpp::shared_ptr<gpp::Reference<gpp::Procedure>> mainproc {
 		gpp::global_scope().lookup_global<gpp::Procedure>("main")->make_ref({})
@@ -57,17 +57,33 @@ void load_n_exec_program(std::string program)
 
 int main(int argc, char *argv[])
 {
-	std::string param;
 	rclcpp::init(argc, argv);
+	std::string param;
 
 	auto agent_node = Singleton::instance();
-	load_n_exec_program("turtlesim_example");
+	std::string gpp_code = "";
+
+    if ( (argc <= 1) || (argv[argc-1] == NULL) ) // there is NO input...
+    {
+		gpp_code = "turtlesim_example";
+        std::cerr << "No agent provided in the argument! Turtlesim example started!" << std::endl;
+    }
+    else // there is an input...
+    {
+		gpp_code = argv[argc-1];
+		RCLCPP_INFO_STREAM(agent_node->get_logger(), "Starting Golog++ agent: " << gpp_code);
+    }
+
+	gpp_code = SOURCE_DIR "/agents/"+gpp_code+".gpp";
+
+    if (!agent_node->has_parameter("gpp_code"))
+        agent_node->declare_parameter("gpp_code", gpp_code);
+	agent_node->get_parameter("gpp_code", gpp_code);
+
+	load_n_exec_program(gpp_code);
 
 	rclcpp::shutdown();
 	gpp::ReadylogContext::shutdown();
 
 	return 0;
 }
-
-
-

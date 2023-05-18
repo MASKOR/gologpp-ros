@@ -40,6 +40,25 @@ RosBackend::RosBackend()
 	define_action_examples_actions();
 #endif
 
+#ifdef turtlesim_FOUND
+	define_turtlesim_actions();
+#endif
+
+#ifdef gpp_action_examples_interface_FOUND
+	define_action_examples_actions();
+#endif
+
+#ifdef webots_spot_msgs_FOUND
+	define_webots_spot_msgs_actions();
+#endif
+
+#ifdef nav2_msgs_FOUND
+	define_nav2_msgs_actions();
+#endif
+
+#ifdef spot_msgs_FOUND
+	define_spot_actions();
+#endif
 	spin_exog_thread();
 }
 
