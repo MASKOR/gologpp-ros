@@ -1,5 +1,0 @@
-topic:~example_topic()
-language: enu
-
-
-u: ([e:FrontTactilTouched e:MiddleTactilTouched e:RearTactilTouched]) $smach_outcome=true

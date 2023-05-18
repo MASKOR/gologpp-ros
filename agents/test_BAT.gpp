@@ -1,31 +1,3 @@
-// bool fluent exog_state_next_TF(){
-// initially:
-// 		() = false;
-// }
-
-// exog_action exog_trigger_next_TF(bool data) {
-// mapping:
-// 	"/exog_event_next_TF" {
-// 		data = data
-// 	}
-// effect:
-// 	exog_state_next_TF() = true;
-// }
-
-// bool fluent exog_state_next_Lap(){
-// initially:
-// 		() = false;
-// }
-
-// exog_action exog_trigger_next_Lap(bool data) {
-// mapping:
-// 	"/exog_event_next_Lap" {
-// 		data = data
-// 	}
-// effect:
-// 	exog_state_next_Lap() = true;
-// }
-
 action navigateToFrame(string target_frame) {
 mapping:
 	"trajectoryToFrame" {
