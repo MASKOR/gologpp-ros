@@ -28,6 +28,10 @@ export PATH=/opt/eclipse_basic/bin/x86_64_linux:$PATH
 export CPLUS_INCLUDE_PATH=/opt/eclipse_basic/include/x86_64_linux:$CPLUS_INCLUDE_PATH' >> ~/.bashrc
 . ~/.bashrc
 ```
+## To install .gpp VSCode extension
+```
+wget https://github.com/RRL-ALeRT/gologpp-ros/raw/ros2/gologpp-0.0.1.vsix && code --install-extension gologpp-0.0.1.vsix && rm gologpp-0.0.1.vsix
+```
 
 ## For Blocksworld example in webots with spot and manipulator, run following commands in terminal one by one. Use separate tab for each.
 ```
