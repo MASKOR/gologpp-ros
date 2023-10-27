@@ -45,7 +45,7 @@ RosBackend::RosBackend()
 #endif
 
 #ifdef gpp_action_examples_interface_FOUND
-	define_action_examples_actions();
+	define_gpp_action_examples_actions();
 #endif
 
 #ifdef webots_spot_msgs_FOUND

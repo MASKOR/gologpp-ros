@@ -20,8 +20,6 @@
 #include "std_srvs/srv/trigger.hpp"
 #include "std_srvs/srv/set_bool.hpp"
 
-#include "std_msgs/msg/bool.hpp"
-
 template<>
 ActionManager<spot_msgs::action::Trajectory>::GoalT
 ActionManager<spot_msgs::action::Trajectory>::build_goal(const gpp::Activity &a)
