@@ -57,7 +57,7 @@ ServiceManager<gpp_action_examples_interface::srv::SpotBodyPose>::build_request(
 	return request;
 }
 
-void RosBackend::define_action_examples_actions()
+void RosBackend::define_gpp_action_examples_actions()
 {
 	create_ActionManager<gpp_action_examples_interface::action::TrajectoryToFrame>("trajectoryToFrame");
 	create_ActionManager<gpp_action_examples_interface::action::PlayAudio>("play_audio");

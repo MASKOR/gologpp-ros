@@ -17,6 +17,7 @@
 #include "builtin_interfaces/msg/duration.h"
 #include "builtin_interfaces/msg/time.hpp"
 
+#include "std_msgs/msg/bool.hpp"
 #include "std_srvs/srv/trigger.hpp"
 #include "std_srvs/srv/set_bool.hpp"
 
