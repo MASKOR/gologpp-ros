@@ -17,10 +17,9 @@
 #include "builtin_interfaces/msg/duration.h"
 #include "builtin_interfaces/msg/time.hpp"
 
+#include "std_msgs/msg/bool.hpp"
 #include "std_srvs/srv/trigger.hpp"
 #include "std_srvs/srv/set_bool.hpp"
-
-#include "std_msgs/msg/bool.hpp"
 
 template<>
 ActionManager<spot_msgs::action::Trajectory>::GoalT
@@ -124,16 +123,6 @@ ServiceManager<std_srvs::srv::SetBool>::build_request(const gpp::Activity &a)
   auto request = std::make_shared<std_srvs::srv::SetBool::Request>();
   request->data = bool(a.mapped_arg_value("data"));
   return request;
-}
-
-template<>
-std::unordered_map< std::string, gpp::unique_ptr<gpp::Value> >
-ExogManager<std_msgs::msg::Bool>::params_to_map(const std_msgs::msg::Bool::ConstPtr& msg) {
-
-	gpp::unique_ptr<gpp::Value> param (new gpp::Value(gpp::get_type<gpp::BoolType>(), bool(msg->data)));
-	std::unordered_map< std::string, gpp::unique_ptr<gpp::Value> > params_to_map;
-	params_to_map.insert({"data", std::move(param)});
-	return params_to_map;
 }
 
 void RosBackend::define_spot_actions()

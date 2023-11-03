@@ -24,7 +24,6 @@
   <depend>action_msgs</depend>
   <depend>turtlesim</depend>
   <depend>spot_msgs</depend>
-  <depend>gpp_action_examples_interface</depend>
   <build_depend>builtin_interfaces</build_depend>
 
 
