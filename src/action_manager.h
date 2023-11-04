@@ -149,7 +149,11 @@ template<class ActionT>
 void ActionManager<ActionT>::preempt_current_activity()
 {
 	//Cancel goal
-	//action_client_.cancelGoal();
+	if (!action_client_->wait_for_action_server(std::chrono::seconds(5))) {
+    RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Action server not available after waiting");
+	}
+	action_client_->async_cancel_all_goals();
+	RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Cancellation was requested.");
 }
 
 
@@ -178,9 +182,11 @@ void ActionManager<ActionT>::result_callback(const typename ResultT::WrappedResu
 		set_result(to_golog_constant(result));
 		break;
 	case rclcpp_action::ResultCode::CANCELED:
+		current_activity_->update(gpp::Transition::Hook::CANCEL);
+		set_result(to_golog_constant(result));
+		break;
 	default:
-		RCLCPP_ERROR(Singleton::instance()->get_logger(), "Unknown result code")
-		;
+		RCLCPP_ERROR(Singleton::instance()->get_logger(), "Unknown result code");
 	}
 }
 
