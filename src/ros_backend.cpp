@@ -37,14 +37,6 @@ RosBackend::RosBackend()
 #endif
 
 #ifdef gpp_action_examples_interface_FOUND
-	define_action_examples_actions();
-#endif
-
-#ifdef turtlesim_FOUND
-	define_turtlesim_actions();
-#endif
-
-#ifdef gpp_action_examples_interface_FOUND
 	define_gpp_action_examples_actions();
 #endif
 
@@ -68,11 +60,11 @@ RosBackend::~RosBackend()
 
 
 
-void RosBackend::preempt_activity(shared_ptr<Activity> trans)
+void RosBackend::preempt_activity(shared_ptr<Activity> a)
 {
 	// TODO: Tell ActionManager to preempt
 	//gpp::shared_ptr<gpp::Activity> a = std::make_shared<gpp::Activity>(trans);
-	//get_ActionManager(a).preempt(a);
+	get_ActionManager(a).preempt(a);
 }
 
 
