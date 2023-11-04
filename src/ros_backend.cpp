@@ -37,14 +37,6 @@ RosBackend::RosBackend()
 #endif
 
 #ifdef gpp_action_examples_interface_FOUND
-	define_action_examples_actions();
-#endif
-
-#ifdef turtlesim_FOUND
-	define_turtlesim_actions();
-#endif
-
-#ifdef gpp_action_examples_interface_FOUND
 	define_gpp_action_examples_actions();
 #endif
 
