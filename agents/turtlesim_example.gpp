@@ -60,8 +60,15 @@ mapping:
 	}
 }
 
+action move_circle(number seconds) {
+mapping:
+	"move_circle" {
+		seconds = seconds
+	}
+}
+
+
 procedure main(){
-	move_theta(0.3);
-	spawn_turtle(delta_result()+1, delta_result()+1, 0.0);
-	//print_string(string_response());
+	move_circle(10.0);
+	test(exog_state());
 }

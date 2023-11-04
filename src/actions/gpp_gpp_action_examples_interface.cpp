@@ -8,6 +8,7 @@
 #include "gpp_action_examples_interface/srv/print.hpp"
 #include "gpp_action_examples_interface/action/trajectory_to_frame.hpp"
 #include "gpp_action_examples_interface/action/play_audio.hpp"
+#include "gpp_action_examples_interface/action/durative.hpp"
 
 template<>
 ServiceManager<gpp_action_examples_interface::srv::Print>::RequestT
@@ -43,6 +44,16 @@ ActionManager<gpp_action_examples_interface::action::PlayAudio>::build_goal(cons
 }
 
 template<>
+ActionManager<gpp_action_examples_interface::action::Durative>::GoalT
+ActionManager<gpp_action_examples_interface::action::Durative>::build_goal(const gpp::Activity &a)
+{
+	auto goal = gpp_action_examples_interface::action::Durative::Goal();
+	goal.duration.sec = a.mapped_arg_value("seconds").numeric_convert<float>();
+	return goal;
+}
+
+
+template<>
 ServiceManager<gpp_action_examples_interface::srv::SpotBodyPose>::RequestT
 ServiceManager<gpp_action_examples_interface::srv::SpotBodyPose>::build_request(const gpp::Activity &a)
 {
@@ -59,6 +70,7 @@ ServiceManager<gpp_action_examples_interface::srv::SpotBodyPose>::build_request(
 
 void RosBackend::define_gpp_action_examples_actions()
 {
+	create_ActionManager<gpp_action_examples_interface::action::Durative>("move_circle");
 	create_ActionManager<gpp_action_examples_interface::action::TrajectoryToFrame>("trajectoryToFrame");
 	create_ActionManager<gpp_action_examples_interface::action::PlayAudio>("play_audio");
 	create_ServiceManager<gpp_action_examples_interface::srv::Print>("/print_string");
