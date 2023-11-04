@@ -182,7 +182,7 @@ void ActionManager<ActionT>::result_callback(const typename ResultT::WrappedResu
 		set_result(to_golog_constant(result));
 		break;
 	case rclcpp_action::ResultCode::CANCELED:
-		current_activity_->update(gpp::Transition::Hook::CANCEL);
+		current_activity_->update(gpp::Transition::Hook::FAIL);
 		set_result(to_golog_constant(result));
 		break;
 	default:
