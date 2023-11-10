@@ -71,23 +71,23 @@ ActionManager<spot_msgs::action::Trajectory>::build_goal(const gpp::Activity &a)
             tf2::TimePointZero);
         } catch (const tf2::TransformException & ex) {
           RCLCPP_INFO(
-            agent_node->get_logger(), "Could not transform %s to %s: %s",
+            LOGGER, "Could not transform %s to %s: %s",
             frame.c_str(), "body", ex.what());
             target_pose.header.frame_id = "ABORT_ACTION";
           return goal;
           }
           catch (tf2::ConnectivityException& e) {
-            RCLCPP_WARN(agent_node->get_logger(), e.what());
+            RCLCPP_WARN(LOGGER, e.what());
             target_pose.header.frame_id = "ABORT_ACTION";
           return goal;
           }
           catch (tf2::ExtrapolationException& e) {
-            RCLCPP_WARN(agent_node->get_logger(), e.what());
+            RCLCPP_WARN(LOGGER, e.what());
             target_pose.header.frame_id = "ABORT_ACTION";
           return goal;
           }
           catch (tf2::LookupException& e) {
-            RCLCPP_WARN(agent_node->get_logger(), e.what());
+            RCLCPP_WARN(LOGGER, e.what());
             target_pose.header.frame_id = "ABORT_ACTION";
           return goal;
           }
