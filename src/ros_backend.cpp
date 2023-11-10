@@ -79,7 +79,16 @@ void RosBackend::execute_activity(shared_ptr<Activity> a)
 
 AbstractActionManager& RosBackend::get_ActionManager(shared_ptr<Activity> a)
 {
-	return *action_managers_.find(std::string(a->mapped_name()))->second;
+    auto it = action_managers_.find(std::string(a->mapped_name()));
+
+    if (it == action_managers_.end())
+    {
+        RCLCPP_ERROR_STREAM(rclcpp::get_logger("gpp_ros_backend"), std::string(a->mapped_name()) << " not found");
+        rclcpp::shutdown();
+        exit(0);
+    }
+
+    return *it->second.get();
 }
 
 
