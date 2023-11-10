@@ -35,7 +35,6 @@ ros2 launch webots_spot moveit_launch.py
 ```
 ```
 ros2 service call /Spot/blocksworld_pose webots_spot_msgs/srv/SpotMotion
-ros2 run webots_spot gpp_blocksworld_server
 ```
 ```
 ros2 launch webots_spot blocksworld_launch.py
