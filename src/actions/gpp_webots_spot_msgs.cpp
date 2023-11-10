@@ -10,7 +10,6 @@
 #include "webots_spot_msgs/srv/spot_height.hpp"
 #include "webots_spot_msgs/action/peak_and_detect_object.hpp"
 
-
 template<>
 gpp::optional<gpp::Value>
 ServiceManager<webots_spot_msgs::srv::BlockPose>::to_golog_constant(ResponseT result){
@@ -70,6 +69,8 @@ ActionManager<webots_spot_msgs::action::PeakAndDetectObject>::build_goal(const g
 
 void RosBackend::define_webots_spot_msgs_actions()
 {
+	built_interface_names.push_back("webots_spot_msgs");
+
 	create_ServiceManager<webots_spot_msgs::srv::BlockPose>("/get_block_pose");
 	create_ActionManager<webots_spot_msgs::action::Stack>("/stack");
 	create_ServiceManager<webots_spot_msgs::srv::SpotMotion>("/Spot/lie_down");

@@ -53,6 +53,8 @@ ServiceManager<turtlesim::srv::Spawn>::to_golog_constant(ResponseT result){
 
 void RosBackend::define_turtlesim_actions()
 {
+	built_interface_names.push_back("turtlesim");
+
 	create_ActionManager<turtlesim::action::RotateAbsolute>("/turtle1/rotate_absolute");
 
 	create_ServiceManager<turtlesim::srv::Spawn>("/spawn");

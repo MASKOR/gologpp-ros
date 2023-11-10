@@ -49,8 +49,15 @@ RosBackend::RosBackend()
 #endif
 
 #ifdef spot_msgs_FOUND
-	define_spot_actions();
+	define_spot_msgs_actions();
 #endif
+
+	std::string built_interfaces_string = "";
+	for (auto& name: built_interface_names)
+	{
+		built_interfaces_string += name + " ";
+	}
+	RCLCPP_INFO_STREAM(LOGGER, "Managers from " << built_interfaces_string << "are available");
 	spin_exog_thread();
 }
 

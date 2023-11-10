@@ -125,8 +125,10 @@ ServiceManager<std_srvs::srv::SetBool>::build_request(const gpp::Activity &a)
   return request;
 }
 
-void RosBackend::define_spot_actions()
+void RosBackend::define_spot_msgs_actions()
 {
+	built_interface_names.push_back("spot_msgs");
+
   create_ActionManager<spot_msgs::action::Trajectory>("/trajectory");
 
   create_ServiceManager<std_srvs::srv::Trigger>("/claim");
