@@ -14,7 +14,7 @@
 template<>
 gpp::optional<gpp::Value>
 ServiceManager<webots_spot_msgs::srv::BlockPose>::to_golog_constant(ResponseT result){
-	return gpp::Value(gpp::get_type<gpp::StringType>(), result.get()->location);
+	return gpp::Value(gpp::get_type<gpp::SymbolType>(), result.get()->location);
 }
 
 template<>
