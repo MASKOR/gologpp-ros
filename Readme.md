@@ -2,7 +2,7 @@
 ## Golog++
 ```
 cd
-wget https://github.com/RRL-ALeRT/gologpp-ros/raw/ros2/gologpp.deb
+wget https://github.com/MASKOR/gologpp-ros/raw/ros2/gologpp.deb
 sudo dpkg -i gologpp.deb
 rm gologpp.deb
 ```
