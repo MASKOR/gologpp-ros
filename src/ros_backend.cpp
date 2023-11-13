@@ -90,7 +90,7 @@ AbstractActionManager& RosBackend::get_ActionManager(shared_ptr<Activity> a)
 
     if (it == action_managers_.end())
     {
-        RCLCPP_ERROR_STREAM(LOGGER, std::string(a->mapped_name()) << " not found");
+        RCLCPP_ERROR_STREAM(LOGGER, std::string(a->mapped_name()) << " is not defined");
         rclcpp::shutdown();
         exit(0);
     }
