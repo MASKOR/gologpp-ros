@@ -82,7 +82,7 @@ private:
 
 	// May have an implementation if the corresponding package has been found
 	void define_turtlesim_actions();
-	void define_gpp_action_examples_actions();
+	void define_gpp_action_examples_interface_actions();
 	void define_webots_spot_msgs_actions();
 	void define_nav2_msgs_actions();
 	void define_spot_msgs_actions();

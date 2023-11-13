@@ -68,7 +68,7 @@ ServiceManager<gpp_action_examples_interface::srv::SpotBodyPose>::build_request(
 	return request;
 }
 
-void RosBackend::define_gpp_action_examples_actions()
+void RosBackend::define_gpp_action_examples_interface_actions()
 {
 	built_interface_names.push_back("gpp_action_examples");
 
