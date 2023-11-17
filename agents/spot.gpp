@@ -1,13 +1,13 @@
 action navigateTo(string target_frame, number x, number y, number yaw) {
 mapping:
-	"/trajectory" {
-		frame_id = target_frame,
+    "/trajectory" {
+        frame_id = target_frame,
         posX = x,
         posY = y,
         yaw = yaw
-	}
+    }
 }
 
 procedure main(){
-	navigateTo("test_frame", 0.0, 0.0, 0.0);
+    navigateTo("test_frame", 0.0, 0.0, 0.0);
 }

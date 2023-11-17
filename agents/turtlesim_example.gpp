@@ -1,39 +1,39 @@
 string fluent loc(string arg) {
 initially:
-	("a") = "";
-	("b") = "";
-	("c") = "";
+    ("a") = "";
+    ("b") = "";
+    ("c") = "";
 }
 
 action print_string(string text) {
 mapping:
-	"/print_string" {
-		text = text
-	}
+    "/print_string" {
+        text = text
+    }
 }
 
 bool fluent exog_state(){
 initially:
-		() = false;
+        () = false;
 }
 
 exog_action exog_trigger(bool data) {
 mapping:
-	"/exog_event" {
-		data = data
-	}
+    "/exog_event" {
+        data = data
+    }
 effect:
-	exog_state() = true;
+    exog_state() = true;
 }
 
 number fluent delta_result() {
 initially:
-	() = 0.0;
+    () = 0.0;
 }
 
 string fluent string_response() {
 initially:
-	() = "";
+    () = "";
 }
 
 string exog_function sense_result(string ros_action_name);
@@ -42,33 +42,33 @@ number exog_function sense_number(string ros_action_name);
 
 action move_theta(number angle) {
 senses:
-	delta_result() = sense_number("/turtle1/rotate_absolute");
+    delta_result() = sense_number("/turtle1/rotate_absolute");
 mapping:
-	"/turtle1/rotate_absolute" {
-		theta = angle
-	}
+    "/turtle1/rotate_absolute" {
+        theta = angle
+    }
 }
 
 action spawn_turtle(number x, number y, number theta) {
 senses:
-	string_response() = sense_result("/spawn");
+    string_response() = sense_result("/spawn");
 mapping:
-	"/spawn" {
-		x = x,
-		y = y,
-		theta = theta
-	}
+    "/spawn" {
+        x = x,
+        y = y,
+        theta = theta
+    }
 }
 
 action move_circle(number seconds) {
 mapping:
-	"move_circle" {
-		seconds = seconds
-	}
+    "move_circle" {
+        seconds = seconds
+    }
 }
 
 
 procedure main(){
-	move_circle(10.0);
-	test(exog_state());
+    move_circle(10.0);
+    test(exog_state());
 }

@@ -1,5 +1,3 @@
-#include "exog_manager.h"
+#include "gologpp_agent/exog_manager.h"
 
-AbstractExogManager::AbstractExogManager(RosBackend &backend)
-: backend(backend)
-{}
+AbstractExogManager::AbstractExogManager(const RosBackend& backend) : backend(backend) {}
