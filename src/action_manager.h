@@ -17,7 +17,6 @@
 #include "rclcpp_components/register_node_macro.hpp"
 
 using namespace std::placeholders;
-
 namespace gpp = gologpp;
 
 
@@ -122,10 +121,10 @@ void ServiceManager<ServiceT>::execute_current_activity() {
 
 	while (!service_client_->wait_for_service(std::chrono::seconds(1))) {
 		if (!rclcpp::ok()) {
-			RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Interrupted while waiting for the service. Exiting.");
+			RCLCPP_ERROR(LOGGER, "Interrupted while waiting for the service. Exiting.");
 			return;
 		}
-		RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "service not available, waiting again...");
+		RCLCPP_WARN_STREAM(LOGGER, "Service " << std::string(current_activity_->mapped_name()) << " not available, waiting again...");
 	}
 
 	auto response_received_callback = [this](ResponseT future_response_) {
@@ -135,7 +134,7 @@ void ServiceManager<ServiceT>::execute_current_activity() {
 		} else {
 			current_activity_->update(gpp::Transition::Hook::FAIL);
 			set_result(to_golog_constant(future_response_));
-			RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Failed to call service");
+			RCLCPP_ERROR_STREAM(LOGGER, "Failed to call service " << std::string(current_activity_->mapped_name()));
 		}
 	};
 	auto future_result = service_client_->async_send_request(current_request_, response_received_callback);
@@ -149,11 +148,8 @@ template<class ActionT>
 void ActionManager<ActionT>::preempt_current_activity()
 {
 	//Cancel goal
-	if (!action_client_->wait_for_action_server(std::chrono::seconds(5))) {
-    RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Action server not available after waiting");
-	}
 	action_client_->async_cancel_all_goals();
-	RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Cancellation was requested.");
+	RCLCPP_ERROR(LOGGER, "Cancellation was requested.");
 }
 
 
@@ -164,8 +160,17 @@ void ActionManager<ActionT>::execute_current_activity()
 	//ClientT is shared ptr otherwise useable for SendGoalOption
 	auto send_goal_options = typename rclcpp_action::Client<ActionT>::SendGoalOptions();
 
-    send_goal_options.result_callback =
-      std::bind(&ActionManager<ActionT>::result_callback, this, _1);
+	send_goal_options.result_callback =
+		std::bind(&ActionManager<ActionT>::result_callback, this, _1);
+
+    while (!action_client_->wait_for_action_server(std::chrono::seconds(1))) {
+		if (!rclcpp::ok()) {
+			RCLCPP_ERROR(LOGGER, "Interrupted while waiting for the action. Exiting.");
+			return;
+		}
+		RCLCPP_WARN_STREAM(LOGGER, "Action " << std::string(current_activity_->mapped_name()) << " not available, waiting again");
+	}
+
 	action_client_->async_send_goal(current_goal_, send_goal_options);
 }
 
@@ -186,7 +191,7 @@ void ActionManager<ActionT>::result_callback(const typename ResultT::WrappedResu
 		set_result(to_golog_constant(result));
 		break;
 	default:
-		RCLCPP_ERROR(Singleton::instance()->get_logger(), "Unknown result code");
+		RCLCPP_ERROR(LOGGER, "Unknown result code");
 	}
 }
 

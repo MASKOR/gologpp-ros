@@ -37,7 +37,7 @@ RosBackend::RosBackend()
 #endif
 
 #ifdef gpp_action_examples_interface_FOUND
-	define_gpp_action_examples_actions();
+	define_gpp_action_examples_interface_actions();
 #endif
 
 #ifdef webots_spot_msgs_FOUND
@@ -49,8 +49,15 @@ RosBackend::RosBackend()
 #endif
 
 #ifdef spot_msgs_FOUND
-	define_spot_actions();
+	define_spot_msgs_actions();
 #endif
+
+	std::string built_interfaces_string = "";
+	for (auto& name: built_interface_names)
+	{
+		built_interfaces_string += name + " ";
+	}
+	RCLCPP_INFO_STREAM(LOGGER, "Managers from " << built_interfaces_string << "are available");
 	spin_exog_thread();
 }
 
@@ -79,7 +86,16 @@ void RosBackend::execute_activity(shared_ptr<Activity> a)
 
 AbstractActionManager& RosBackend::get_ActionManager(shared_ptr<Activity> a)
 {
-	return *action_managers_.find(std::string(a->mapped_name()))->second;
+    auto it = action_managers_.find(std::string(a->mapped_name()));
+
+    if (it == action_managers_.end())
+    {
+        RCLCPP_ERROR_STREAM(LOGGER, std::string(a->mapped_name()) << " is not defined");
+        rclcpp::shutdown();
+        exit(0);
+    }
+
+    return *it->second.get();
 }
 
 

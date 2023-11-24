@@ -27,6 +27,7 @@
 
 #include <unordered_map>
 
+static const rclcpp::Logger LOGGER = rclcpp::get_logger("gpp_ros_backend");
 
 class AbstractActionManager;
 class AbstractExogManager;
@@ -77,12 +78,14 @@ public:
 private:
 	virtual void terminate_() override;
 
-	// May have an implementation iff the corresponding package has been found
+	std::vector<std::string> built_interface_names;
+
+	// May have an implementation if the corresponding package has been found
 	void define_turtlesim_actions();
-	void define_gpp_action_examples_actions();
+	void define_gpp_action_examples_interface_actions();
 	void define_webots_spot_msgs_actions();
 	void define_nav2_msgs_actions();
-	void define_spot_actions();
+	void define_spot_msgs_actions();
 
 	template<class ActionT>
 	void create_ActionManager(const std::string &name);

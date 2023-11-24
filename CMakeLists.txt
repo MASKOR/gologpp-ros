@@ -11,6 +11,9 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 add_definitions(-DSOURCE_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}\")
+
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+
 # suppress all warnings
 add_definitions(-w)
 find_package(PkgConfig)
@@ -24,6 +27,7 @@ find_package(std_srvs REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(builtin_interfaces REQUIRED)
+find_package(EclipseClp REQUIRED)
 
 pkg_check_modules(readylogpp REQUIRED readylog++)
 pkg_check_modules(parsegologpp REQUIRED parsegolog++)
@@ -50,7 +54,7 @@ endif()
 
 set(BUILD_TESTS OFF CACHE BOOL "Enable gologpp tests" FORCE)
 
-link_directories(${readylogpp_LIBRARY_DIRS} ${parsegologpp_LIBRARY_DIRS})
+link_directories(${readylogpp_LIBRARY_DIRS} ${parsegologpp_LIBRARY_DIRS} ${ECLIPSE_LIBRARY_DIRS})
 
 add_executable(gologpp_agent
 	src/agent_node.cpp
@@ -59,10 +63,12 @@ add_executable(gologpp_agent
 	src/exog_manager.cpp
 )
 ament_target_dependencies(gologpp_agent rclcpp rclcpp_action rclcpp_components builtin_interfaces tf2 tf2_ros std_msgs std_srvs geometry_msgs ${found_action_pkgs})
+target_link_libraries(gologpp_agent ${ECLIPSE_LIBRARIES})
 target_include_directories(gologpp_agent PUBLIC
 	src/
 	${readylogpp_INCLUDE_DIRS}
 	${parsegologpp_INCLUDE_DIRS}
+	${ECLIPSE_INCLUDE_DIRS}
 )
 
 install(

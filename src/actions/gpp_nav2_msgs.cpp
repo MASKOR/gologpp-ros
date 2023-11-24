@@ -28,5 +28,7 @@ ActionManager<nav2_msgs::action::NavigateToPose>::build_goal(const gpp::Activity
 
 void RosBackend::define_nav2_msgs_actions()
 {
+	built_interface_names.push_back("nav2_msgs");
+
 	create_ActionManager<nav2_msgs::action::NavigateToPose>("/navigate_to_pose");
 }
