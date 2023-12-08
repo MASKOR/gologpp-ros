@@ -1,94 +1,94 @@
 action navigateToFrame(string target_frame) {
 mapping:
-	"trajectoryToFrame" {
-		frame_id = target_frame
-	}
+    "trajectoryToFrame" {
+        frame_id = target_frame
+    }
 }
 
 action playSound(string audio) {
 mapping:
-	"play_audio" {
-		audio_file = audio
-	}
+    "play_audio" {
+        audio_file = audio
+    }
 }
 
 // action clear_behavior_fault(bool data) {
 // mapping:
-// 	"/clear_behavior_fault" {
+//     "/clear_behavior_fault" {
 //         data = data
-// 	}
+//     }
 // }
 
 action stop(number data) {
 mapping:
-	"/stop" {data = data}
+    "/stop" {data = data}
 }
 
 action increaseHeight() {
 mapping:
-	"body_pose_service" {
-		px = 0.0,
-		py = 0.0,
-		pz = 0.2,
-		ox = 0.0,
-		oy = 0.0,
-		oz = 0.0,
-		ow = 1.0
-	}
+    "body_pose_service" {
+        px = 0.0,
+        py = 0.0,
+        pz = 0.2,
+        ox = 0.0,
+        oy = 0.0,
+        oz = 0.0,
+        ow = 1.0
+    }
 }
 action reduceHeight() {
 mapping:
-	"body_pose_service" {
-		px = 0.0,
-		py = 0.0,
-		pz = -0.2,
-		ox = 0.0,
-		oy = 0.0,
-		oz = 0.0,
-		ow = 1.0
-	}
+    "body_pose_service" {
+        px = 0.0,
+        py = 0.0,
+        pz = -0.2,
+        ox = 0.0,
+        oy = 0.0,
+        oz = 0.0,
+        ow = 1.0
+    }
 }
 action normalPose() {
 mapping:
-	"body_pose_service" {
-		px = 0.0,
-		py = 0.0,
-		pz = 0.0,
-		ox = 0.0,
-		oy = 0.0,
-		oz = 0.0,
-		ow = 1.0
-	}
+    "body_pose_service" {
+        px = 0.0,
+        py = 0.0,
+        pz = 0.0,
+        ox = 0.0,
+        oy = 0.0,
+        oz = 0.0,
+        ow = 1.0
+    }
 }
 
 // action power_on() {
 // mapping:
-// 	"/power_on" {}
+//     "/power_on" {}
 // }
 
 // action claim() {
 // mapping:
-// 	"/claim" {}
+//     "/claim" {}
 // }
 
 // action sit() {
 // mapping:
-// 	"/sit" {}
+//     "/sit" {}
 // }
 
 // action stand() {
 // mapping:
-// 	"/stand" {}
+//     "/stand" {}
 // }
 
 
 procedure main(){
-	start(playSound("Rickroll"));
-	navigateToFrame("frame1");
-	increaseHeight();
-	navigateToFrame("frame2");
-	reduceHeight();
-	navigateToFrame("frame3");
-	normalPose();
-	navigateToFrame("frame4");
+    start(playSound("Rickroll"));
+    navigateToFrame("frame1");
+    increaseHeight();
+    navigateToFrame("frame2");
+    reduceHeight();
+    navigateToFrame("frame3");
+    normalPose();
+    navigateToFrame("frame4");
 }

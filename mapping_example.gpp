@@ -1,20 +1,20 @@
 action movetoframe(string id) {
 mapping:
-	move_base {
-		x = 0,
-		y = 0,
-		yaw = 0,
-		frame_id = id
-	}
+    move_base {
+        x = 0,
+        y = 0,
+        yaw = 0,
+        frame_id = id
+    }
 }
 
 
 action go_to(number x, number y, number yaw) {
 mapping:
-	"move_base" {
-		x = x,
-		y = y,
-		yaw = yaw,
-		frame_id = "base_link"
-	}
+    "move_base" {
+        x = x,
+        y = y,
+        yaw = yaw,
+        frame_id = "base_link"
+    }
 }
