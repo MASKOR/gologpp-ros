@@ -38,6 +38,7 @@ pkg_check_modules(parsegologpp REQUIRED parsegolog++)
     nav2_msgs
     webots_spot_msgs
     spot_msgs
+    mbf_msgs
 )
 
 set(found_action_pkgs)

@@ -1,0 +1,17 @@
+action navigateTo(string target_frame, number x, number y, number yaw) {
+mapping:
+    "/move_base_flex/move_base" {
+        frame_id = target_frame,
+        px = x,
+        py = y,
+        pz = 0.0,
+        ox = 0.0,
+        oy = 0.0,
+        oz = yaw,
+        ow = 1.0
+    }
+}
+
+procedure main(){
+    navigateTo("map", 0.0, 0.0, 0.0);
+}
