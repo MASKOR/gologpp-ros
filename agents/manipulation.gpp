@@ -1,0 +1,56 @@
+// Example for the webots_spot_manipulation package (Kinova Gen3 on Spot):
+// ros2 launch webots_spot_manipulation manipulator_server.launch.py
+
+// Move the end effector relative to its current pose [m], [rad].
+// frame: "" = base_link, "end_effector_link" = tool frame
+action moveDelta(number x, number y, number z, number roll, number pitch, number yaw, string frame) {
+mapping:
+    "/move_delta" {
+        dx = x,
+        dy = y,
+        dz = z,
+        droll = roll,
+        dpitch = pitch,
+        dyaw = yaw,
+        frame_id = frame,
+        velocity_scaling = 0.0
+    }
+}
+
+// Move the end effector to a TF frame with an offset in base_link [m], keep the current orientation
+action moveToFrame(string target, number x, number y, number z) {
+mapping:
+    "/move_to_frame" {
+        target_frame = target,
+        ox = x,
+        oy = y,
+        oz = z,
+        orientation_mode = 0,
+        qx = 0.0,
+        qy = 0.0,
+        qz = 0.0,
+        qw = 1.0,
+        velocity_scaling = 0.0
+    }
+}
+
+// command: 0 = OPEN, 1 = CLOSE, 2 = POSITION (finger_joint position [rad])
+action gripper(number cmd, number pos) {
+mapping:
+    "/gripper" {
+        command = cmd,
+        position = pos,
+        max_effort = 0.0
+    }
+}
+
+procedure main(){
+    gripper(0, 0.0);
+    moveDelta(0.5, 0.0, 0.1, 0.0, 0.0, 0.0, "");
+    moveDelta(-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, "");
+    gripper(1, 0.0);
+    moveDelta(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, "");
+
+    // Move to the TF frame "man_test", 5 cm above it, keep the current orientation
+    moveToFrame("man_test", 0.0, 0.0, 0.05);
+}

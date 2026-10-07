@@ -52,6 +52,10 @@ RosBackend::RosBackend() {
   define_mbf_msgs_actions();
 #endif
 
+#ifdef man_interfaces_FOUND
+  define_man_interfaces_actions();
+#endif
+
   std::string built_interfaces_string = "";
   for (auto& name : built_interface_names) {
     built_interfaces_string += name + " ";

@@ -39,6 +39,7 @@ pkg_check_modules(parsegologpp REQUIRED parsegolog++)
     webots_spot_msgs
     spot_msgs
     mbf_msgs
+    man_interfaces
 )
 
 set(found_action_pkgs)

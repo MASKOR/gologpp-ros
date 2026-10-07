@@ -25,6 +25,7 @@
   <depend>turtlesim</depend>
   <depend>spot_msgs</depend>
   <depend>mbf_msgs</depend>
+  <depend>man_interfaces</depend>
   <build_depend>builtin_interfaces</build_depend>
 
 
